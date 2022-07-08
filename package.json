@@ -1,0 +1,46 @@
+{
+    "name": "dexback",
+    "version": "1.0.0",
+    "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
+    "main": "index.ts",
+    "scripts": {
+        "test": "jest",
+        "build": "rm -rf dist && tsc --project tsconfig.json",
+        "dev": "nodemon --ignore dist --ignore node_modules",
+        "start": "node dist/app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@ssh.dev.azure.com:v3/criptocountry/Criptocountry/DexBack"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@types/bcrypt": "^5.0.0",
+        "bcrypt": "^5.0.1",
+        "bcryptjs": "^2.4.3",
+        "dotenv": "^16.0.1",
+        "express": "^4.18.1",
+        "express-validator": "^6.14.2",
+        "jsonwebtoken": "^8.5.1",
+        "mssql": "^8.1.0",
+        "nodemon": "^2.0.16",
+        "swagger-express-ts": "^1.1.0",
+        "swagger-ui-express": "^4.4.0",
+        "ts-node": "^10.7.0"
+    },
+    "devDependencies": {
+        "@types/cors": "^2.8.12",
+        "@types/express": "^4.17.13",
+        "@types/jest": "^28.1.4",
+        "@types/jsonwebtoken": "^8.5.8",
+        "@types/morgan": "^1.9.3",
+        "@types/mssql": "^7.1.5",
+        "@types/supertest": "^2.0.12",
+        "jest": "^28.1.2",
+        "morgan": "^1.10.0",
+        "supertest": "^6.2.4",
+        "ts-jest": "^28.0.5",
+        "typescript": "^4.6.4"
+    }
+}
