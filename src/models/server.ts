@@ -1,56 +1,67 @@
-import express from "express";
+import express, { Application } from "express";
 import cors from "cors";
+import db from "../database/connection";
 
-
-const { dbConnection } = require('../database/config');
 
 class Server {
 
-    app: any;
-    port: any;
-    usuariosPath: any;
-    authPath: any;
+    private app: Application;
+    private port: string;
+    private apiPaths = {
+        usuarios: '/api/usuarios'
 
+    }
 
     constructor() {
         this.app = express();
-        this.port = process.env.PORT;
+        this.port = process.env.PORT || "8002";
 
-        this.usuariosPath = '/api/usuarios';
-        this.authPath = '/api/auth';
 
         // Conectar a base de datos
-        this.conectarDB();
+        //this.conectarDB();
 
         // Middlewares
-        this.middlewares();
+        // this.middlewares();
 
         // Rutas de mi aplicación
         this.routes();
 
-        this.errors();
+        this.dbConnection();
+
+        //this.errors();
     }
 
-    async conectarDB() {
-        await dbConnection();
+    async dbConnection() {
+
+        try {
+
+            await db.authenticate()
+            console.log("Database online!!")
+
+        } catch (error: any) {
+            throw new Error(error)
+
+        }
+
     }
 
 
     middlewares() {
 
         // CORS
-        this.app.use(cors());
+        //this.app.use(cors());
 
         // Lectura y parseo del body
-        this.app.use(express.json());
+        //this.app.use(express.json());
 
 
     }
 
     routes() {
 
-        this.app.use(this.authPath, require('../routes/auth'));
-        this.app.use(this.usuariosPath, require('../routes/usuarios'));
+        //this.app.use(this.authPath, require('../routes/auth'));
+        this.app.use(this.apiPaths.usuarios, require('../router/usersModule/rolesRoute'));
+
     }
 
     listen() {
@@ -71,4 +82,4 @@ class Server {
 
 
 
-module.exports = Server;
+export default Server;
