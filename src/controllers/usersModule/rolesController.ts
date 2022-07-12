@@ -14,7 +14,7 @@ const rolesController = {
             })
         }
 
-        res.json({
+        res.status(200).json({
             roles
         })
 

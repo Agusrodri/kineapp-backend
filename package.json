@@ -7,7 +7,7 @@
         "test": "jest",
         "build": "rm -rf dist && tsc --project tsconfig.json",
         "dev": "nodemon --ignore dist --ignore node_modules",
-        "start": "node dist/app.js"
+        "start": "node ."
     },
     "repository": {
         "type": "git",
