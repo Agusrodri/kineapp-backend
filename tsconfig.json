@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "target": "es2020",
+        "outDir": "dist",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "sourceMap": true,
+        "baseUrl": "./src",
+        "incremental": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true
+    },
+    "ts-node": {
+        "transpileOnly": false
+    },
+    "include": [
+        "src/**/*.ts",
+        "index.tsts",
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}
