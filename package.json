@@ -7,7 +7,7 @@
         "test": "jest",
         "build": "rm -rf dist && tsc --project tsconfig.json",
         "dev": "nodemon --ignore dist --ignore node_modules",
-        "start": "nodemon index.ts"
+        "start": "ts-node index.ts"
     },
     "repository": {
         "type": "git",
@@ -31,7 +31,8 @@
         "sequelize": "^6.21.2",
         "swagger-express-ts": "^1.1.0",
         "swagger-ui-express": "^4.4.0",
-        "ts-node": "^10.7.0"
+        "ts-node": "^10.8.2",
+        "TypeScript": "npm:typescript@^4.7.4"
     },
     "devDependencies": {
         "@types/cors": "^2.8.12",
