@@ -3,6 +3,9 @@
     "version": "1.0.0",
     "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
     "main": "index.ts",
+    "engines": {
+        "node": "16.15.1"
+    },
     "scripts": {
         "test": "jest",
         "build": "rm -rf dist && tsc --project tsconfig.json",
@@ -26,12 +29,9 @@
         "express-validator": "^6.14.2",
         "heroku": "^7.60.2",
         "jsonwebtoken": "^8.5.1",
-        "mssql": "^8.1.0",
         "mysql2": "^2.3.3",
         "nodemon": "^2.0.16",
         "sequelize": "^6.21.2",
-        "swagger-express-ts": "^1.1.0",
-        "swagger-ui-express": "^4.4.0",
         "ts-node": "^10.8.2",
         "TypeScript": "npm:typescript@^4.7.4"
     },
@@ -41,9 +41,6 @@
         "@types/jest": "^28.1.4",
         "@types/jsonwebtoken": "^8.5.8",
         "@types/morgan": "^1.9.3",
-        "@types/mssql": "^7.1.5",
-        "@types/supertest": "^2.0.12",
-        "jest": "^28.1.2",
         "morgan": "^1.10.0",
         "supertest": "^6.2.4",
         "ts-jest": "^28.0.5",
