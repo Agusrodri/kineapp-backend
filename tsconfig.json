@@ -5,14 +5,14 @@
         "outDir": "dist",
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "sourceMap": true,
         "baseUrl": "./src",
         "incremental": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "skipLibCheck": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
     },
     "ts-node": {
         "transpileOnly": false
