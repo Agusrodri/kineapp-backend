@@ -15,6 +15,7 @@ const rolesController = {
         }
 
         res.status(200).json({
+            msg: "Get Roles Works!",
             roles
         })
 
