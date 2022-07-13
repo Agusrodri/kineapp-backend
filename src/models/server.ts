@@ -1,4 +1,4 @@
-import express, { Application } from "express/index";
+import express, { Application } from "express";
 //import cors from "cors";
 import db from "../database/connection";
 
