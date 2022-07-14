@@ -6,5 +6,6 @@ const router = Router()
 
 
 router.get("/roles", rolesController.getRoles);
+router.get("/roles/:id", rolesController.getRolById);
 
 module.exports = router

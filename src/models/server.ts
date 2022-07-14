@@ -17,8 +17,6 @@ class Server {
         this.port = process.env.PORT || "8002";
 
 
-        // Conectar a base de datos
-        //this.conectarDB();
 
         // Middlewares
         // this.middlewares();
