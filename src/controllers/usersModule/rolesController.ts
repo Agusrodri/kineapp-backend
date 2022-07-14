@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import { Op } from "sequelize"
 
 import Rol from "../../models/entities/rol";
@@ -94,6 +94,42 @@ const rolesController = {
             });
 
         }
+
+    },
+
+    updateRolById: async (req: Request, res: Response, next: NextFunction) => {
+
+        const { id } = req.params
+
+        const { nombreRol, descripcionRol } = req.body
+
+
+
+    },
+
+    getPermisos: async (req: Request, res: Response, next: NextFunction) => {
+
+        try {
+
+            const permisosAll = await Permiso.findAll()
+
+            if (!permisosAll) {
+                res.status(404).json({
+                    msg: "No existen permisos"
+                })
+            }
+
+            res.status(200).json(permisosAll)
+
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                msg: 'Error - Hable con el administrador'
+            });
+
+        }
+
 
     }
 
