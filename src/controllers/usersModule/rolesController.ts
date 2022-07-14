@@ -32,7 +32,6 @@ const rolesController = {
 
         }
 
-
     },
 
     getRolById: async (req: Request, res: Response) => {
@@ -103,8 +102,4 @@ const rolesController = {
 }
 
 export default rolesController;
-
-
-
-
 

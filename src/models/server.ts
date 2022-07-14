@@ -1,5 +1,5 @@
 import express, { Application } from "express";
-//import cors from "cors";
+import cors from "cors";
 import db from "../database/connection";
 
 
