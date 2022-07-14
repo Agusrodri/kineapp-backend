@@ -19,7 +19,7 @@ class Server {
 
 
         // Middlewares
-        // this.middlewares();
+        this.middlewares();
 
         // Rutas de mi aplicación
         this.routes();
@@ -47,7 +47,7 @@ class Server {
     middlewares() {
 
         // CORS
-        //this.app.use(cors());
+        this.app.use(cors());
 
         // Lectura y parseo del body
         //this.app.use(express.json());
