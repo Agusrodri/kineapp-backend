@@ -9,71 +9,94 @@ const rolesController = {
 
     getRoles: async (req: Request, res: Response) => {
 
-        const roles = await Rol.findAll()
+        try {
 
-        if (!roles) {
-            res.status(404).json({
-                msg: "No existen roles"
+            const roles = await Rol.findAll()
+
+            if (!roles) {
+                res.status(404).json({
+                    msg: "No existen roles"
+                })
+            }
+
+            res.status(200).json({
+                roles
             })
+
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                msg: 'Error - Hable con el administrador'
+            });
+
         }
 
-        res.status(200).json({
-            roles
-        })
 
     },
 
     getRolById: async (req: Request, res: Response) => {
 
-        const { id } = req.params
+        try {
 
-        const rol = await Rol.findAll({
-            attributes: ['nombreRol', 'descripcionRol'],
-            where: {
-                id: id
+            const { id } = req.params
+
+            const rol = await Rol.findAll({
+                attributes: ['nombreRol', 'descripcionRol'],
+                where: {
+                    id: id
+                }
+            })
+
+            const rolPermiso = await RolPermiso.findAll({
+                attributes: ['habilitadoPermiso', 'fk_idPermiso'],
+                where: {
+                    fk_idRol: id
+                }
+            })
+
+            const idPermisos = []
+
+            for (let i = 0; i < rolPermiso.length; i++) {
+                idPermisos[i] = rolPermiso[i]['dataValues']['fk_idPermiso']
+
             }
-        })
 
-        const rolPermiso = await RolPermiso.findAll({
-            attributes: ['habilitadoPermiso', 'fk_idPermiso'],
-            where: {
-                fk_idRol: id
-            }
-        })
+            const permisos = await Permiso.findAll({
+                attributes: ['nombrePermiso'],
+                where: {
+                    id: {
+                        [Op.or]: idPermisos
+                    }
+                }
+            })
 
-        const idPermisos = []
+            const permisosJson = [{
+                nombrePermiso: "",
+                habilitadoPermiso: true
+            }]
 
-        for (let i = 0; i < rolPermiso.length; i++) {
-            idPermisos[i] = rolPermiso[i]['dataValues']['fk_idPermiso']
+            for (let j = 0; j < rolPermiso.length; j++) {
+                permisosJson[j] = {
+                    nombrePermiso: permisos[j]['dataValues']['nombrePermiso'],
+                    habilitadoPermiso: rolPermiso[j]['dataValues']['habilitadoPermiso']
 
-        }
-
-        const permisos = await Permiso.findAll({
-            attributes: ['nombrePermiso'],
-            where: {
-                id: {
-                    [Op.or]: idPermisos
                 }
             }
-        })
 
-        const permisosJson = [{
-            nombrePermiso: "",
-            habilitadoPermiso: true
-        }]
+            res.status(200).json({
+                rol,
+                permisosJson
+            })
 
-        for (let j = 0; j < rolPermiso.length; j++) {
-            permisosJson[j] = {
-                nombrePermiso: permisos[j]['dataValues']['nombrePermiso'],
-                habilitadoPermiso: rolPermiso[j]['dataValues']['habilitadoPermiso']
 
-            }
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                msg: 'Error - Hable con el administrador'
+            });
+
         }
-
-        res.status(200).json({
-            rol,
-            permisosJson
-        })
 
     }
 
