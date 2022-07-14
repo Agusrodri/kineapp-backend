@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import db from "../database/connection";
 
@@ -59,6 +59,10 @@ class Server {
 
         //this.app.use(this.authPath, require('../routes/auth'));
         this.app.use(this.apiPaths.usuarios, require('../router/usersModule/rolesRoute'));
+        this.app.use((req: Request, res: Response, next: NextFunction) => {
+            res.setHeader("Access-Control-Allow-Origin", "http://localhost:8100");
+            res.setHeader("Access-Control-Allow-Methods", "POST,GET,PUT,DELETE,PATCH,HEAD,OPTIONS");
+        })
 
     }
 
