@@ -165,6 +165,10 @@ const rolesController = {
 
             const activo = req.body
 
+            if (activo) {
+                throw new Error("Error: sólo se permite realizar bajas")
+            }
+
             rolToDelete.update(activo)
 
             res.status(200).json({
