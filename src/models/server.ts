@@ -10,7 +10,6 @@ class Server {
     private port: string;
     private apiPaths = {
         usuarios: '/api/usuarios'
-
     }
 
     constructor() {

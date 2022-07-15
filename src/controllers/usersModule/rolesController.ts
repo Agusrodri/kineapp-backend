@@ -4,7 +4,7 @@ import { Op, Sequelize } from "sequelize"
 import Rol from "../../models/entities/rol";
 import RolPermiso from "../../models/entities/rolPermiso";
 import Permiso from "../../models/entities/permiso";
-import { updateLanguageServiceSourceFile } from "typescript";
+
 
 const rolesController = {
 
@@ -142,6 +142,40 @@ const rolesController = {
                 msg: 'Error - Hable con el administrador'
             });
 
+        }
+
+    },
+
+    deleteRolById: async (req: Request, res: Response, next: NextFunction) => {
+
+        try {
+
+            const { id } = req.params
+
+            const rolToDelete = await Rol.findOne({
+                where: {
+                    id: id
+                }
+            })
+
+            if (!rolToDelete) {
+                throw new Error(`Error: no existe el rol con id -${id}-`)
+
+            }
+
+            const activo = req.body
+
+            rolToDelete.update(activo)
+
+            res.status(200).json({
+                msg: `Rol con id ${id} eliminado`
+            })
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                msg: 'Error - Hable con el administrador'
+            });
         }
 
     },

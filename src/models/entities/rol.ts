@@ -10,6 +10,10 @@ const Rol = db.define('Role', {
 
     descripcionRol: {
         type: DataTypes.STRING
+    },
+
+    activo: {
+        type: DataTypes.BOOLEAN
     }
 })
 
