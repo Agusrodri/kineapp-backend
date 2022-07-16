@@ -7,14 +7,14 @@ import refactors from "../../helpers/refactorParameter";
 
 const router = Router()
 
-
 router.get("/roles", rolesController.getRoles);
 
 router.get("/roles/:id", rolesController.getRolById);
 
 router.put("/roles/editar/:id", [
     refactors.refactorNombreRol,
-    check('nombreRol').isString().custom(dbValidators.existsRolWithName),
+    dbValidators.isCurrentRol,
+    dbValidators.existsRolWithName,
     validateRequest
 ], rolesController.updateRolById);
 
@@ -24,10 +24,8 @@ router.delete("/roles/eliminar/:id", rolesController.deleteRolById);
 
 router.post("/roles/crear", [
     refactors.refactorNombreRol,
-    check('nombreRol').isString().custom(dbValidators.existsRolWithName),
+    dbValidators.existsRolWithName,
     validateRequest
 ], rolesController.createRol);
-
-
 
 module.exports = router
