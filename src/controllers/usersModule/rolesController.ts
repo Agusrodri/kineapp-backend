@@ -32,6 +32,53 @@ const rolesController = {
 
     },
 
+    createRol: async (req: Request, res: Response) => {
+
+        try {
+
+            const { nombreRol, descripcionRol, permisos } = req.body
+
+            const nuevoRol = await Rol.create({
+                nombreRol: nombreRol,
+                descripcionRol: descripcionRol,
+                activo: true
+            })
+
+            const findIdNuevoRol = await Rol.findOne({
+                attributes: ["id"],
+                where: {
+                    nombreRol: nombreRol,
+                    descripcionRol: descripcionRol
+                }
+            })
+
+            const idNuevoRol = findIdNuevoRol['dataValues']['id']
+
+            for (let i = 0; i < permisos.length; i++) {
+
+                await RolPermiso.create({
+                    fk_idPermiso: permisos[i]['idPermiso'],
+                    fk_idRol: idNuevoRol,
+                    habilitadoPermiso: permisos[i]['habilitadoPermiso']
+                })
+
+            }
+
+            res.status(200).json({
+                msg: `Rol con nombre -${nombreRol}- y id -${idNuevoRol}- creado`
+            })
+
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                msg: 'Error - Hable con el administrador'
+            });
+
+        }
+
+    },
+
     getRolById: async (req: Request, res: Response) => {
 
         try {
@@ -98,7 +145,7 @@ const rolesController = {
 
     },
 
-    updateRolById: async (req: Request, res: Response, next: NextFunction) => {
+    updateRolById: async (req: Request, res: Response) => {
 
         try {
 

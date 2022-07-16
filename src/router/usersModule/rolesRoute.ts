@@ -10,5 +10,6 @@ router.get("/roles/:id", rolesController.getRolById);
 router.put("/roles/editar/:id", rolesController.updateRolById);
 router.get("/roles/permisos/all", rolesController.getPermisos);
 router.delete("/roles/eliminar/:id", rolesController.deleteRolById);
+router.post("/roles/crear", rolesController.createRol);
 
 module.exports = router
