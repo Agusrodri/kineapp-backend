@@ -11,7 +11,7 @@ const dbValidators = {
             }
         })
 
-        if (rol) {
+        if (rol.length > 0) {
             throw new Error(`El rol con nombre -${nombreRol}- ya existe`)
         }
 
