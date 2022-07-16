@@ -212,7 +212,7 @@ const rolesController = {
 
             const activo = req.body
 
-            if (activo) {
+            if (activo['activo'] == true) {
                 throw new Error("Error: sólo se permite realizar bajas")
             }
 
