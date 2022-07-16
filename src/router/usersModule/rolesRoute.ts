@@ -24,6 +24,7 @@ router.delete("/roles/eliminar/:id", rolesController.deleteRolById);
 
 router.post("/roles/crear", [
     refactors.refactorNombreRol,
+    dbValidators.runNextMiddleware,
     dbValidators.existsRolWithName,
     validateRequest
 ], rolesController.createRol);

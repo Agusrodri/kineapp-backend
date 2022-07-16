@@ -3,6 +3,13 @@ import Rol from "../models/entities/rol";
 
 const dbValidators = {
 
+    runNextMiddleware: async (req: Request, res: Response, next: NextFunction) => {
+
+        req.shouldRunNextMiddleware = true
+        next()
+
+    },
+
     existsRolWithName: async (req: Request, res: Response, next: NextFunction) => {
 
         try {
