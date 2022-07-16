@@ -99,6 +99,7 @@ const rolesController = {
                 }
             })
 
+
             const idPermisos = []
 
             for (let i = 0; i < rolPermiso.length; i++) {
@@ -115,19 +116,17 @@ const rolesController = {
                 }
             })
 
-            const permisosJson = [{
-                idPermiso: 0,
-                nombrePermiso: "",
-                habilitadoPermiso: true
-            }]
+            const permisosJson = []
 
             for (let j = 0; j < rolPermiso.length; j++) {
-                permisosJson[j] = {
+
+                let permisoJson = {
                     idPermiso: permisos[j]['dataValues']['id'],
                     nombrePermiso: permisos[j]['dataValues']['nombrePermiso'],
                     habilitadoPermiso: rolPermiso[j]['dataValues']['habilitadoPermiso']
-
                 }
+
+                permisosJson.push(permisoJson)
             }
 
             res.status(200).json({
@@ -253,7 +252,7 @@ const rolesController = {
 
         }
 
-    }
+    },
 
 }
 
