@@ -32,6 +32,8 @@ const dbValidators = {
                     throw new Error(`El rol con nombre -${nombreRol}- ya existe`)
                 }
 
+                next()
+
 
             }
 
