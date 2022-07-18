@@ -12,7 +12,11 @@ const rolesController = {
 
         try {
 
-            const roles = await Rol.findAll()
+            const roles = await Rol.findAll({
+                where: {
+                    activo: 1
+                }
+            })
 
             if (!roles) {
                 res.status(404).json({
@@ -208,13 +212,7 @@ const rolesController = {
 
             }
 
-            const activo = req.body
-
-            if (activo['activo'] != false) {
-                throw new Error("sólo se permite realizar bajas")
-            }
-
-            rolToDelete.update(activo)
+            rolToDelete.update({ activo: false })
 
             res.status(200).json({
                 msg: `Rol con id ${id} eliminado`
