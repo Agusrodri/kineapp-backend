@@ -14,7 +14,7 @@ const rolesController = {
 
             const roles = await Rol.findAll({
                 where: {
-                    activo: 1
+                    activo: true
                 }
             })
 
