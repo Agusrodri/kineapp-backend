@@ -52,7 +52,8 @@ const rolesController = {
                 attributes: ["id"],
                 where: {
                     nombreRol: nombreRol,
-                    descripcionRol: descripcionRol
+                    descripcionRol: descripcionRol,
+                    activo: true
                 }
             })
 

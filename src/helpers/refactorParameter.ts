@@ -12,8 +12,6 @@ const refactors = {
         req.body['nombreRol'] = nombreRol.toLowerCase()
 
         next()
-
-
     }
 
 }

@@ -24,16 +24,16 @@ const dbValidators = {
 
                 const rol = await Rol.findAll({
                     where: {
-                        nombreRol: nombreRol
+                        nombreRol: nombreRol,
+                        activo: true
                     }
                 })
 
                 if (rol.length > 0) {
-                    throw new Error(`El rol con nombre -${nombreRol}- ya existe`)
+                    throw new Error(`El rol con nombre ${nombreRol} ya existe`)
                 }
 
                 next()
-
 
             }
 
