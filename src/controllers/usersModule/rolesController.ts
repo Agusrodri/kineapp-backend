@@ -99,7 +99,6 @@ const rolesController = {
                 }
             })
 
-
             const idPermisos = []
 
             for (let i = 0; i < rolPermiso.length; i++) {
@@ -211,8 +210,8 @@ const rolesController = {
 
             const activo = req.body
 
-            if (activo['activo'] == true) {
-                throw new Error("Error: sólo se permite realizar bajas")
+            if (activo['activo'] != false) {
+                throw new Error("sólo se permite realizar bajas")
             }
 
             rolToDelete.update(activo)
@@ -224,7 +223,7 @@ const rolesController = {
         } catch (error) {
             console.log(error)
             res.status(500).json({
-                msg: 'Error - Hable con el administrador'
+                msg: `${error}`
             });
         }
 

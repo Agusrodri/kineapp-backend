@@ -45,7 +45,6 @@ const dbValidators = {
 
         }
 
-
     },
 
     isCurrentRol: async (req: Request, res: Response, next: NextFunction) => {
@@ -79,9 +78,6 @@ const dbValidators = {
                 msg: `${error}`
             })
         }
-
-
-
 
     }
 
