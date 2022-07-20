@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express"
+import RolInterno from "../models/entities/rolInterno";
 import Rol from "../models/entities/rol";
 
 const dbValidators = {
@@ -79,7 +80,44 @@ const dbValidators = {
             })
         }
 
-    }
+    },
+
+    existsRolInternoWithName: async (req: Request, res: Response, next: NextFunction) => {
+
+        try {
+
+            if (!req.shouldRunNextMiddleware) {
+
+                next()
+
+            } else {
+
+                const { nombreRol } = req.body
+
+                const rol = await RolInterno.findAll({
+                    where: {
+                        nombreRolInterno: nombreRol,
+                        activo: true
+                    }
+                })
+
+                if (rol.length > 0) {
+                    throw new Error(`El rol con nombre ${nombreRol} ya existe`)
+                }
+
+                next()
+
+            }
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                msg: `${error}`
+            });
+
+        }
+
+    },
 
 }
 
