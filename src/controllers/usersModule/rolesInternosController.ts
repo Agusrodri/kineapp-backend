@@ -119,7 +119,7 @@ const rolesInternosController = {
             }
 
             const permisos = await PermisoInterno.findAll({
-                attributes: ['id', 'nombrePermisoInterno'],
+                attributes: ['id', 'nombrePermiso'],
                 where: {
                     id: {
                         [Op.or]: idPermisos
@@ -133,7 +133,7 @@ const rolesInternosController = {
 
                 let permisoJson = {
                     idPermiso: permisos[j]['dataValues']['id'],
-                    nombrePermiso: permisos[j]['dataValues']['nombrePermisoInterno'],
+                    nombrePermiso: permisos[j]['dataValues']['nombrePermiso'],
                     habilitadoPermiso: rolPermiso[j]['dataValues']['habilitadoPermiso']
                 }
 
