@@ -10,6 +10,10 @@ const PjRolInterno = db.define('PjRolInterno', {
 
     fk_idRolInterno: {
         type: DataTypes.INTEGER
+    },
+
+    activo: {
+        type: DataTypes.BOOLEAN
     }
 
 })

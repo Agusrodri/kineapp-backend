@@ -142,27 +142,21 @@ const rolesInternosController = {
 
             const { idPersonaJuridica, idRolInterno } = req.params
 
-            const pjrolinternos = await PjRolInterno.findAll({
+            const pjrolinterno = await PjRolInterno.findOne({
                 where: {
                     fk_idPersonaJuridica: idPersonaJuridica,
-                    fk_idRolInterno: idRolInterno
+                    fk_idRolInterno: idRolInterno,
+                    activo: true
                 }
             })
 
-            if (pjrolinternos.length > 0) {
+            if (pjrolinterno) {
 
-                const rolToDelete = await RolInterno.findOne({
-                    where: {
-                        id: idRolInterno
-                    }
-                })
-
-                rolToDelete.update({ activo: false })
+                pjrolinterno.update({ activo: false })
 
                 res.status(200).json({
                     msg: "Rol interno eliminado"
                 })
-
 
             } else {
                 throw new Error(`La persona jurídica no contiene el rol seleccionado`)
