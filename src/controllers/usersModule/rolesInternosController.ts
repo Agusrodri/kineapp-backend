@@ -91,7 +91,7 @@ const rolesInternosController = {
             })
 
             res.status(200).json({
-                msg: "Rol creado"
+                msg: `Rol ${nombreRol} creado con id ${idNuevoRol}`
             })
 
 
