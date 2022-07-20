@@ -9,6 +9,10 @@ const router = Router()
 
 router.get("/rolesinternos/:idPersonaJuridica", rolesInternosController.getRolesInternos);
 
+router.get("/rolesinternos/:idPersonaJuridica/:idRolInterno", rolesInternosController.getRolInternoById);
+
+router.get("/rolesinternos/permisosInternos/get/all", rolesInternosController.getPermisosInternos);
+
 router.post("/rolesinternos/crear/:idPersonaJuridica", [
     refactors.refactorNombreRol,
     dbValidators.runNextMiddleware,
@@ -16,6 +20,13 @@ router.post("/rolesinternos/crear/:idPersonaJuridica", [
     validateRequest
 ], rolesInternosController.createRolInterno);
 
-router.delete("/rolesinternos/eliminar/:idPersonaJuridica/:idRolInterno", rolesInternosController.deleteRolInternoById)
+router.delete("/rolesinternos/eliminar/:idPersonaJuridica/:idRolInterno", rolesInternosController.deleteRolInternoById);
+
+router.put("/rolesinternos/editar/:idPersonaJuridica/:idRolInterno", [
+    refactors.refactorNombreRol,
+    dbValidators.isCurrentRolInterno,
+    dbValidators.existsRolInternoWithName,
+    validateRequest
+], rolesInternosController.updateRolInternoById);
 
 module.exports = router

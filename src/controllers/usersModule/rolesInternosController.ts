@@ -3,7 +3,7 @@ import { Op, Sequelize, where } from "sequelize"
 import RolInterno from "../../models/entities/rolInterno"
 import RolInternoPermisoInterno from "../../models/entities/rolInternoPermisoInterno"
 import PersonaJuridica from "../../models/entities/personaJuridica"
-import PjRolInterno from "../../models/entities/pjRolInterno"
+import PermisoInterno from "../../models/entities/permisoInterno"
 
 
 const rolesInternosController = {
@@ -14,29 +14,14 @@ const rolesInternosController = {
 
             const { idPersonaJuridica } = req.params
 
-            const pjrolinternos = await PjRolInterno.findAll({
+            const rolesinternos = await RolInterno.findAll({
                 where: {
                     fk_idPersonaJuridica: idPersonaJuridica
                 }
-            }
-            )
-
-            const rolesInternos = []
-
-            for (let i = 0; i < pjrolinternos.length; i++) {
-
-                let rolInterno = await RolInterno.findAll({
-                    where: {
-                        id: pjrolinternos[i]['dataValues']['fk_idRolInterno']
-                    }
-                })
-
-                rolesInternos[i] = rolInterno[0]['dataValues']
-
-            }
+            })
 
             res.status(200).json(
-                rolesInternos
+                rolesinternos
             )
 
 
@@ -61,6 +46,7 @@ const rolesInternosController = {
             await RolInterno.create({
                 nombreRolInterno: nombreRol,
                 descripcion: descripcionRol,
+                fk_idPersonaJuridica: idPersonaJuridica,
                 activo: true
             })
 
@@ -69,6 +55,7 @@ const rolesInternosController = {
                 where: {
                     nombreRolInterno: nombreRol,
                     descripcion: descripcionRol,
+                    fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
                 }
             })
@@ -80,15 +67,10 @@ const rolesInternosController = {
                 await RolInternoPermisoInterno.create({
                     fk_idPermisoInterno: permisos[i]['idPermiso'],
                     fk_idRolInterno: idNuevoRol,
-                    habilitado: permisos[i]['habilitadoPermiso']
+                    habilitadoPermiso: permisos[i]['habilitadoPermiso']
                 })
 
             }
-
-            await PjRolInterno.create({
-                fk_idPersonaJuridica: idPersonaJuridica,
-                fk_idRolInterno: idNuevoRol
-            })
 
             res.status(200).json({
                 msg: `Rol ${nombreRol} creado con id ${idNuevoRol}`
@@ -109,6 +91,59 @@ const rolesInternosController = {
 
         try {
 
+            const { idPersonaJuridica, idRolInterno } = req.params
+
+            const rol = await RolInterno.findAll({
+                where: {
+                    id: idRolInterno,
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            if (!rol) {
+                throw new Error("No existe el rol interno solicitado")
+            }
+
+            const rolPermiso = await RolInternoPermisoInterno.findAll({
+                attributes: ['habilitadoPermiso', 'fk_idPermisoInterno'],
+                where: {
+                    fk_idRolInterno: idRolInterno
+                }
+            })
+
+            const idPermisos = []
+
+            for (let i = 0; i < rolPermiso.length; i++) {
+                idPermisos[i] = rolPermiso[i]['dataValues']['fk_idPermisoInterno']
+            }
+
+            const permisos = await PermisoInterno.findAll({
+                attributes: ['id', 'nombrePermisoInterno'],
+                where: {
+                    id: {
+                        [Op.or]: idPermisos
+                    }
+                }
+            })
+
+            const permisosJson = []
+
+            for (let j = 0; j < rolPermiso.length; j++) {
+
+                let permisoJson = {
+                    idPermiso: permisos[j]['dataValues']['id'],
+                    nombrePermiso: permisos[j]['dataValues']['nombrePermisoInterno'],
+                    habilitadoPermiso: rolPermiso[j]['dataValues']['habilitadoPermiso']
+                }
+
+                permisosJson.push(permisoJson)
+            }
+
+            res.status(200).json({
+                rol,
+                permisosJson
+            })
 
 
         } catch (error) {
@@ -124,6 +159,43 @@ const rolesInternosController = {
     updateRolInternoById: async (req: Request, res: Response) => {
 
         try {
+
+            const { idPersonaJuridica, idRolInterno } = req.params
+
+            const { body } = req
+
+            const rolInterno = await RolInterno.findOne({
+                where: {
+                    id: idRolInterno,
+                    fk_idPersonaJuridica: idPersonaJuridica
+                }
+            })
+
+            if (!rolInterno) {
+                return res.status(404).json({
+                    msg: `Rol interno a editar no encontrado`
+                })
+            }
+
+            await rolInterno.update(body)
+
+            for (let x = 0; x < body.permisos.length; x++) {
+
+                const rolPermisoUpdate = await RolInternoPermisoInterno.findOne({
+                    where: {
+                        fk_idRolInterno: idRolInterno,
+                        fk_idPermisoInterno: body.permisos[x]["idPermiso"]
+                    }
+                })
+
+                await rolPermisoUpdate.update({ habilitadoPermiso: body.permisos[x]['habilitadoPermiso'] })
+
+            }
+
+            res.status(200).json({
+                msg: `Rol actualizado`
+
+            })
 
 
         } catch (error) {
@@ -142,17 +214,17 @@ const rolesInternosController = {
 
             const { idPersonaJuridica, idRolInterno } = req.params
 
-            const pjrolinterno = await PjRolInterno.findOne({
+            const rolinternoToDelete = await RolInterno.findOne({
                 where: {
+                    id: idRolInterno,
                     fk_idPersonaJuridica: idPersonaJuridica,
-                    fk_idRolInterno: idRolInterno,
                     activo: true
                 }
             })
 
-            if (pjrolinterno) {
+            if (rolinternoToDelete) {
 
-                pjrolinterno.update({ activo: false })
+                rolinternoToDelete.update({ activo: false })
 
                 res.status(200).json({
                     msg: "Rol interno eliminado"
@@ -174,6 +246,16 @@ const rolesInternosController = {
     getPermisosInternos: async (req: Request, res: Response, next: NextFunction) => {
 
         try {
+
+            const permisosinternosAll = await PermisoInterno.findAll()
+
+            if (!permisosinternosAll) {
+                res.status(404).json({
+                    msg: "No existen permisos"
+                })
+            }
+
+            res.status(200).json(permisosinternosAll)
 
 
 

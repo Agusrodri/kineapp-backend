@@ -4,16 +4,20 @@ import db from "../../database/connection";
 
 const RolInterno = db.define('RolInterno', {
 
-    nombreRolInterno: {
+    nombreRol: {
         type: DataTypes.STRING
     },
 
-    descripcion: {
+    descripcionRol: {
         type: DataTypes.STRING
     },
 
     activo: {
         type: DataTypes.BOOLEAN
+    },
+
+    fk_idPersonaJuridica: {
+        type: DataTypes.INTEGER
     }
 })
 

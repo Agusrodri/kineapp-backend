@@ -4,7 +4,7 @@ import db from "../../database/connection";
 
 const RolInternoPermisoInterno = db.define('RolInternoPermisoInterno', {
 
-    habilitado: {
+    habilitadoPermiso: {
         type: DataTypes.BOOLEAN
     },
 

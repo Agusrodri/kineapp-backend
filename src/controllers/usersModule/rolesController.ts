@@ -177,7 +177,7 @@ const rolesController = {
                     }
                 })
 
-                rolPermisoUpdate.update(body.permisos[x])
+                await rolPermisoUpdate.update(body.permisos[x])
 
             }
 

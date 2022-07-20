@@ -92,11 +92,14 @@ const dbValidators = {
 
             } else {
 
+                const { idPersonaJuridica } = req.params
+
                 const { nombreRol } = req.body
 
                 const rol = await RolInterno.findAll({
                     where: {
-                        nombreRolInterno: nombreRol,
+                        nombreRol: nombreRol,
+                        fk_idPersonaJuridica: idPersonaJuridica,
                         activo: true
                     }
                 })
@@ -118,6 +121,41 @@ const dbValidators = {
         }
 
     },
+
+    isCurrentRolInterno: async (req: Request, res: Response, next: NextFunction) => {
+
+        try {
+
+            const { idRolInterno } = req.params
+
+            const { nombreRol } = req.body
+
+            const rol = await RolInterno.findAll({
+                attributes: ['nombreRol'],
+                where: {
+                    id: idRolInterno,
+                    nombreRol: nombreRol
+                }
+            })
+
+            if (rol.length > 0) {
+
+                req.shouldRunNextMiddleware = false
+                next()
+
+            } else {
+                req.shouldRunNextMiddleware = true
+                next()
+            }
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            })
+        }
+
+    },
+
 
 }
 
