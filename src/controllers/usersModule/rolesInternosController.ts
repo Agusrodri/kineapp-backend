@@ -45,7 +45,7 @@ const rolesInternosController = {
             const { nombreRol, descripcionRol, permisos } = req.body
 
             await RolInterno.create({
-                nombreRolInterno: nombreRol,
+                nombreRol: nombreRol,
                 descripcion: descripcionRol,
                 fk_idPersonaJuridica: idPersonaJuridica,
                 activo: true
@@ -54,7 +54,7 @@ const rolesInternosController = {
             const findIdNuevoRol = await RolInterno.findOne({
                 attributes: ["id"],
                 where: {
-                    nombreRolInterno: nombreRol,
+                    nombreRol: nombreRol,
                     descripcion: descripcionRol,
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
