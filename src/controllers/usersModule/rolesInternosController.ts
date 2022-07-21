@@ -16,7 +16,8 @@ const rolesInternosController = {
 
             const rolesinternos = await RolInterno.findAll({
                 where: {
-                    fk_idPersonaJuridica: idPersonaJuridica
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    activo: true
                 }
             })
 
