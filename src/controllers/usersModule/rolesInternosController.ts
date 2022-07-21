@@ -46,7 +46,7 @@ const rolesInternosController = {
 
             await RolInterno.create({
                 nombreRol: nombreRol,
-                descripcion: descripcionRol,
+                descripcionRol: descripcionRol,
                 fk_idPersonaJuridica: idPersonaJuridica,
                 activo: true
             })
@@ -55,7 +55,7 @@ const rolesInternosController = {
                 attributes: ["id"],
                 where: {
                     nombreRol: nombreRol,
-                    descripcion: descripcionRol,
+                    descripcionRol: descripcionRol,
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
                 }
