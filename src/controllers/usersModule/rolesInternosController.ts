@@ -154,7 +154,6 @@ const rolesInternosController = {
             });
 
         }
-
     },
 
     updateRolInternoById: async (req: Request, res: Response) => {
