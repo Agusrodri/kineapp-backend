@@ -10,6 +10,10 @@ const UsuarioRol = db.define('UsuarioRole', {
 
     fk_idRol: {
         type: DataTypes.INTEGER
+    },
+
+    fk_idPersonaJuridica: {
+        type: DataTypes.INTEGER
     }
 
 })
