@@ -18,6 +18,14 @@ const PersonaJuridica = db.define('PersonaJuridica', {
 
     fk_idUsuarios: {
         type: DataTypes.INTEGER
+    },
+
+    activo: {
+        type: DataTypes.BOOLEAN
+    },
+
+    cuit: {
+        type: DataTypes.BOOLEAN
     }
 
 })

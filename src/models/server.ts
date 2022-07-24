@@ -56,6 +56,7 @@ class Server {
 
         this.app.use(this.apiPaths.usuarios, require('../router/usersModule/rolesRoute'));
         this.app.use(this.apiPaths.usuarios, require('../router/usersModule/rolesInternosRoute'));
+        this.app.use(this.apiPaths.usuarios, require('../router/usersModule/institucionesRoute'));
 
         //autorizar frontend para evitar error de CORS
         this.app.use((req: Request, res: Response, next: NextFunction) => {
