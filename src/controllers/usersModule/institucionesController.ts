@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express"
+import fs from 'fs'
 import Usuario from "../../models/entities/usuario";
 import PersonaJuridica from "../../models/entities/personaJuridica";
 import UsuarioRol from "../../models/entities/usuarioRol";
 import Rol from "../../models/entities/rol";
+import File from "../../models/utility/file";
 
 const institucionesController = {
 
@@ -98,6 +100,40 @@ const institucionesController = {
                 msg: `${error}`
             });
 
+        }
+
+    },
+
+    uploadFile: async (req: Request, res: Response) => {
+
+        try {
+
+            console.log(req.file);
+
+            if (req.file == undefined) {
+                throw new Error("Debe seleccionar un archivo.")
+            }
+
+            const file = await File.create({
+                nombre: req.file.originalname,
+                data: fs.readFileSync(
+                    __dirname + "/public/files/uploads" + req.file.filename
+                )
+            })
+
+            fs.writeFileSync(
+                __dirname + "/public/files/tmp/" + file['dataValues']['nombre'], file['dataValues']['data']
+            )
+
+            res.status(200).json({
+                msg: "Archivo subido con éxito."
+            })
+
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
         }
 
     }

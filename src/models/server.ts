@@ -1,6 +1,7 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+
 import db from "../database/connection";
 
 
@@ -49,6 +50,12 @@ class Server {
         // Lectura y parseo del body
         this.app.use(express.json());
 
+        this.app.use(
+            bodyParser.urlencoded({
+                extended: true,
+            })
+        );
+
     }
 
     routes() {
@@ -57,6 +64,8 @@ class Server {
         this.app.use(this.apiPaths.usuarios, require('../router/usersModule/rolesRoute'));
         this.app.use(this.apiPaths.usuarios, require('../router/usersModule/rolesInternosRoute'));
         this.app.use(this.apiPaths.usuarios, require('../router/usersModule/institucionesRoute'));
+        this.app.use(this.apiPaths.usuarios, require('../router/filesRoute/filesRoute'));
+
 
         //autorizar frontend para evitar error de CORS
         this.app.use((req: Request, res: Response, next: NextFunction) => {
