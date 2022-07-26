@@ -25,7 +25,7 @@ const fileController = {
 
         const queryObject = url.parse(req.url, true).query;
 
-        const directoryPath = globalThis.__basedir + "/resources/static/assets/files/" + req.path;
+        const directoryPath = globalThis.__basedir + "/resources/static/assets/files/" + queryObject['path'] + "/";
 
         fs.readdir(directoryPath, function (err, files) {
             if (err) {
@@ -34,13 +34,13 @@ const fileController = {
                 });
             }
             let fileInfos = [];
-            files.forEach((file) => {
+            files.forEach(file => {
                 fileInfos.push({
                     name: file,
-                    url: globalThis.__baseurl + file,
+                    url: globalThis.__baseurl + "usuarios/file/" + file,
                 });
             });
-            res.status(200).send(fileInfos);
+            res.status(200).json(fileInfos);
         });
     },
 

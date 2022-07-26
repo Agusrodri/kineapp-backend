@@ -7,5 +7,6 @@ const router = Router()
 
 router.post("/upload", uploadFile.single('file'), fileController.upload);
 router.get("/file", fileController.download)
+router.get("/getFiles", fileController.getListFiles)
 
 module.exports = router
