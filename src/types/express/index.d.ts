@@ -4,7 +4,9 @@ declare global {
     namespace Express {
         interface Request {
             shouldRunNextMiddleware?: Record<boolean, any>,
-            file?: any
+            file?: any,
+            typeFile?: string
+
         }
     }
 }

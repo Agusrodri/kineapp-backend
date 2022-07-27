@@ -4,7 +4,6 @@ import Usuario from "../../models/entities/usuario";
 import PersonaJuridica from "../../models/entities/personaJuridica";
 import UsuarioRol from "../../models/entities/usuarioRol";
 import Rol from "../../models/entities/rol";
-import File from "../../models/utility/file";
 
 const institucionesController = {
 
@@ -104,7 +103,7 @@ const institucionesController = {
 
     },
 
-    uploadFile: async (req: Request, res: Response) => {
+    /* uploadFile: async (req: Request, res: Response) => {
 
         try {
 
@@ -136,7 +135,7 @@ const institucionesController = {
             });
         }
 
-    }
+    } */
 
 }
 

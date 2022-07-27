@@ -26,6 +26,18 @@ const PersonaJuridica = db.define('PersonaJuridica', {
 
     cuit: {
         type: DataTypes.BOOLEAN
+    },
+
+    habMinisterioSalud: {
+        type: DataTypes.STRING
+    },
+
+    habMunicipal: {
+        type: DataTypes.STRING
+    },
+
+    habSuperintendencia: {
+        type: DataTypes.STRING
     }
 
 })

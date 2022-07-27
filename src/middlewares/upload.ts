@@ -1,20 +1,18 @@
 import multer from 'multer';
-import util from 'util'
-import { NextFunction, Request, Response } from "express"
+import { Request } from "express"
 import url from 'url'
 
 const maxSize = 2 * 1024 * 1024;
 
-
 const fileFilter = (req: Request, file, cb) => {
 
-    if (file.mimetype.split('/')[1] === 'pdf') {
+    if (file.mimetype.split('/')[1] === req.typeFile) {
 
         cb(null, true);
 
     } else {
 
-        cb("Sólo se permiten archivos de tipo PDF", false);
+        cb(`Sólo se permiten archivos de tipo ${req.typeFile.toUpperCase()}`, false);
 
     }
 };
