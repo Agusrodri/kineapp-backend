@@ -52,7 +52,7 @@ const institucionesController = {
 
             //obtener los datos de la institucion que necesitamos enviar al front
 
-            const { nombre, razonSocial, domicilio, fk_idUsuarios, cuit } = institucion['dataValues']
+            const { nombre, razonSocial, domicilio, fk_idUsuarios, cuit, habMinisterioSalud, habMunicipal, habSuperintendencia } = institucion['dataValues']
 
             //buscar al usuario asociado a esa persona jurídica
 
@@ -88,7 +88,10 @@ const institucionesController = {
                 email: email,
                 domicilio: domicilio,
                 telefono: telefono,
-                nombreRol: nombreRol
+                nombreRol: nombreRol,
+                habMinisterioSalud: habMinisterioSalud,
+                habMunicipal: habMunicipal,
+                habSuperintendencia: habSuperintendencia
             }
 
             res.status(200).json(responseJson)
@@ -103,39 +106,6 @@ const institucionesController = {
 
     },
 
-    /* uploadFile: async (req: Request, res: Response) => {
-
-        try {
-
-            console.log(req.file);
-
-            if (req.file == undefined) {
-                throw new Error("Debe seleccionar un archivo.")
-            }
-
-            const file = await File.create({
-                nombre: req.file.originalname,
-                data: fs.readFileSync(
-                    __dirname + "/public/files/uploads" + req.file.filename
-                )
-            })
-
-            fs.writeFileSync(
-                __dirname + "/public/files/tmp/" + file['dataValues']['nombre'], file['dataValues']['data']
-            )
-
-            res.status(200).json({
-                msg: "Archivo subido con éxito."
-            })
-
-
-        } catch (error) {
-            res.status(500).json({
-                msg: `${error}`
-            });
-        }
-
-    } */
 
 }
 
