@@ -106,6 +106,28 @@ const institucionesController = {
 
     },
 
+    createInstitucion: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idUsuario } = req.params
+
+            const { nombre, cuit, razonSocial, email, domicilio, telefono, nombreRol } = req.body
+
+            const usuario = await Usuario.findByPk(idUsuario)
+            //continuar
+
+
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+
+
+    }
+
 
 }
 
