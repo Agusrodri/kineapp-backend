@@ -22,5 +22,4 @@ router.get("/downloadHabilitacion/:path/:fileName", fileController.downloadHabil
 router.get("/getHabilitaciones/:path", fileController.getHabilitacionesFiles)
 
 
-
 module.exports = router
