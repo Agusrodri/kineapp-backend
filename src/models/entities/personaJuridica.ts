@@ -5,7 +5,8 @@ import db from "../../database/connection";
 const PersonaJuridica = db.define('PersonaJuridica', {
 
     nombre: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        unique: true
     },
 
     razonSocial: {
@@ -38,6 +39,10 @@ const PersonaJuridica = db.define('PersonaJuridica', {
 
     habSuperintendencia: {
         type: DataTypes.STRING
+    },
+
+    habilitado: {
+        type: DataTypes.BOOLEAN
     }
 
 })

@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import uploadFile from '../../middlewares/upload'
+import nodeMailer from 'nodemailer'
 import fs from 'fs'
 import url from 'url'
 import PersonaJuridica from "../../models/entities/personaJuridica"
@@ -36,7 +37,7 @@ const fileController = {
 
             } else if (queryObject['path'].includes("habSuperintendencia")) {
 
-                personaJuridica.update({ habSuperintendencia: `${globalThis.__baseurl}usuarios/downloadHabilitacion/${pathSplit}/file-id-${id}.pdf` })
+                await personaJuridica.update({ habSuperintendencia: `${globalThis.__baseurl}usuarios/downloadHabilitacion/${pathSplit}/file-id-${id}.pdf` })
 
             } else {
                 throw new Error("No se encuentra la ruta especificada")
@@ -100,6 +101,36 @@ const fileController = {
 
         });
 
+    },
+
+    email: (req: Request, res: Response) => {
+
+        const transporter = nodeMailer.createTransport({
+
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: '4devteam.utn@gmail.com',
+                pass: 'AhdXJ8c->U47-zuv'
+            }
+        });
+
+        const mailOptions = {
+            from: '4devteam.utn@gmail.com', // sender address
+            to: "agusrodriguez2456@gmail.com", // list of receivers
+            subject: "Prueba", // Subject line
+            text: "Hola que tal", // plain text body
+            //html: '<b>NodeJS Email Tutorial</b>' // html body
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return console.log(error);
+            }
+            console.log('Message %s sent: %s', info.messageId, info.response);
+            res.status(200).json({ msg: "Email enviado" })
+        });
     }
 
 };

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import fs from 'fs'
+import nodeMailer from 'nodemailer'
 import Usuario from "../../models/entities/usuario";
 import PersonaJuridica from "../../models/entities/personaJuridica";
 import UsuarioRol from "../../models/entities/usuarioRol";
@@ -66,8 +67,7 @@ const institucionesController = {
 
             const usuarioRol = await UsuarioRol.findOne({
                 where: {
-                    fk_idUsuario: fk_idUsuarios,
-                    fk_idPersonaJuridica: idPersonaJuridica
+                    fk_idUsuario: fk_idUsuarios
                 }
             })
 
@@ -110,13 +110,55 @@ const institucionesController = {
 
         try {
 
-            const { idUsuario } = req.params
+            const { nombre, cuit, razonSocial, email, domicilio, telefono, idRol, link } = req.body
 
-            const { nombre, cuit, razonSocial, email, domicilio, telefono, nombreRol } = req.body
+            //crear usuario
+            const nuevoUsuario = await Usuario.create({ username: null, password: null, email: email, telefono: telefono })
 
-            const usuario = await Usuario.findByPk(idUsuario)
-            //continuar
+            const idNuevoUsuario = nuevoUsuario['dataValues']['id']
 
+            await UsuarioRol.create({ fk_idUsuario: idNuevoUsuario, fk_idRol: idRol })
+
+            //crear persona jurídica
+            await PersonaJuridica.create({
+                nombre: nombre,
+                razonSocial: razonSocial,
+                domicilio: domicilio,
+                cuit: cuit,
+                fk_idUsuarios: idNuevoUsuario,
+                habilitado: false,
+                activo: true
+            })
+
+            //enviar email
+            const transporter = nodeMailer.createTransport({
+                host: 'smtp.elasticemail.com',
+                port: 2525,
+                auth: {
+                    user: '4devteam.utn@gmail.com',
+                    pass: 'D100A4CC8DD477EC6F17BF177463F4BBF514'
+                }
+            });
+
+            const mailOptions = {
+                from: '4devteam.utn@gmail.com',
+                to: email,
+                subject: "Verificación cuenta kineapp",
+                text: link,
+                //html: '<b>NodeJS Email Tutorial</b>' // html body
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return console.log(error);
+                }
+                console.log('Message %s sent: %s', info.messageId, info.response);
+                res.status(200).json({ msg: "Email enviado" })
+            });
+
+            res.status(200).json({
+                msg: `Institución con nombre ${nombre} creada correctamente. Se envió un email a la dirección ${email} para verificación.`
+            })
 
 
         } catch (error) {
@@ -124,6 +166,12 @@ const institucionesController = {
                 msg: `${error}`
             });
         }
+
+    },
+
+    validarInstitucion: async (req: Request, res: Response) => {
+
+
 
 
     }

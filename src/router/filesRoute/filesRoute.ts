@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { check } from "express-validator";
+import nodeMailer from 'nodemailer'
 import validatePDF from "../../middlewares/validatePDF";
 import fileController from "../../controllers/files/fileController";
 import uploadFile from "../../middlewares/upload";
@@ -19,5 +20,7 @@ router.post("/uploadHabilitaciones", [
 router.get("/downloadHabilitacion/:path/:fileName", fileController.downloadHabilitaciones)
 
 router.get("/getHabilitaciones/:path", fileController.getHabilitacionesFiles)
+
+
 
 module.exports = router
