@@ -4,10 +4,6 @@ import db from "../../database/connection";
 
 const Usuario = db.define('Usuario', {
 
-    username: {
-        type: DataTypes.STRING
-    },
-
     password: {
         type: DataTypes.STRING
     },
