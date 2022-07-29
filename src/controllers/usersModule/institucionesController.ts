@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import fs from 'fs'
+import bcrypt from 'bcrypt';
 import nodeMailer from 'nodemailer'
 import Usuario from "../../models/entities/usuario";
 import PersonaJuridica from "../../models/entities/personaJuridica";
@@ -130,6 +130,8 @@ const institucionesController = {
                 activo: true
             })
 
+            const nuevoLink = `${link}/${idNuevoUsuario}`
+
             //enviar email
             const transporter = nodeMailer.createTransport({
                 host: 'smtp.elasticemail.com',
@@ -144,8 +146,7 @@ const institucionesController = {
                 from: '4devteam.utn@gmail.com',
                 to: email,
                 subject: "Verificación cuenta kineapp",
-                text: link,
-                //html: '<b>NodeJS Email Tutorial</b>' // html body
+                html: `<a href=${nuevoLink}>Click aquí para verificar tu cuenta</a>` // html body
             };
 
             transporter.sendMail(mailOptions, (error, info) => {
@@ -171,10 +172,31 @@ const institucionesController = {
 
     validarInstitucion: async (req: Request, res: Response) => {
 
+        try {
+            const { idUsuario } = req.params
+            const { password } = req.body
+
+            const usuarioToUpdate = await Usuario.findByPk(idUsuario)
+
+            const salt = bcrypt.genSaltSync(12);
+            const encriptedPassword = bcrypt.hashSync(password, salt);
+
+            await usuarioToUpdate.update({ password: encriptedPassword })
+
+            res.status(200).json({
+                msg: `Contraseña del usuario agregada con éxito.`
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+
+        }
 
 
+    },
 
-    }
 
 
 }

@@ -8,6 +8,7 @@ const router = Router()
 router.get("/instituciones", institucionesController.getInstituciones);
 router.get("/instituciones/:idPersonaJuridica", institucionesController.getInstitucionById);
 router.post("/instituciones/crear", institucionesController.createInstitucion);
-router.put("/instituciones/validar", institucionesController.validarInstitucion)
+router.put("/instituciones/validar/:idUsuario", institucionesController.validarInstitucion);
+
 
 module.exports = router
