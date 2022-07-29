@@ -23,7 +23,7 @@ const institucionesController = {
                 res.status(200).json(instituciones)
 
             } else {
-                throw new Error("No existen instituciones cargadas")
+                throw new Error("No existen instituciones cargadas.")
 
             }
 
@@ -50,6 +50,10 @@ const institucionesController = {
                     activo: true
                 }
             })
+
+            if (!institucion) {
+                throw new Error("No se encontró la institución.")
+            }
 
             //obtener los datos de la institucion que necesitamos enviar al front
 
@@ -114,7 +118,6 @@ const institucionesController = {
 
             //crear usuario
             const nuevoUsuario = await Usuario.create({ password: null, email: email, telefono: telefono })
-
             const idNuevoUsuario = nuevoUsuario['dataValues']['id']
 
             await UsuarioRol.create({ fk_idUsuario: idNuevoUsuario, fk_idRol: idRol })
@@ -175,9 +178,7 @@ const institucionesController = {
         try {
             const { idUsuario } = req.params
             const { password } = req.body
-
             const usuarioToUpdate = await Usuario.findByPk(idUsuario)
-
             const salt = bcrypt.genSaltSync(12);
             const encriptedPassword = bcrypt.hashSync(password, salt);
 
@@ -196,6 +197,63 @@ const institucionesController = {
 
 
     },
+
+    updateInstitucionById: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idUsuario } = req.params
+            const { id } = req.body
+            const usuarioRolToUpdate = await UsuarioRol.findOne({
+                where: {
+                    fk_idUsuario: idUsuario
+                }
+            })
+
+            await usuarioRolToUpdate.update({ fk_idRol: id })
+
+            res.status(200).json({
+                msg: `Institución actualizada con éxito.`
+            })
+
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+
+    },
+
+    deleteInstitucionById: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idPersonaJuridica } = req.params
+            const institucionToDelete = await PersonaJuridica.findOne({
+                where: {
+                    id: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            if (!institucionToDelete) {
+                throw new Error("No se encontró a la institución.")
+            }
+
+            await institucionToDelete.update({ activo: false })
+
+            res.status(200).json({
+                msg: `La institución se eliminó correctamente.`
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+
+    }
 
 
 
