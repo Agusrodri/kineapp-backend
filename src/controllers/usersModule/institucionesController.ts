@@ -113,7 +113,7 @@ const institucionesController = {
             const { nombre, cuit, razonSocial, email, domicilio, telefono, idRol, link } = req.body
 
             //crear usuario
-            const nuevoUsuario = await Usuario.create({ username: null, password: null, email: email, telefono: telefono })
+            const nuevoUsuario = await Usuario.create({ password: null, email: email, telefono: telefono })
 
             const idNuevoUsuario = nuevoUsuario['dataValues']['id']
 
