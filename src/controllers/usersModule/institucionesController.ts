@@ -123,7 +123,7 @@ const institucionesController = {
             await UsuarioRol.create({ fk_idUsuario: idNuevoUsuario, fk_idRol: idRol })
 
             //crear persona jurídica
-            await PersonaJuridica.create({
+            const nuevaInstitucion = await PersonaJuridica.create({
                 nombre: nombre,
                 razonSocial: razonSocial,
                 domicilio: domicilio,
@@ -133,7 +133,9 @@ const institucionesController = {
                 activo: true
             })
 
-            const nuevoLink = `${link}/${idNuevoUsuario}`
+            const idNuevaInstitucion = nuevaInstitucion['dataValues']['id']
+
+            const nuevoLink = `${link}/${idNuevoUsuario}/${idNuevaInstitucion}`
 
             //enviar email
             const transporter = nodeMailer.createTransport({
