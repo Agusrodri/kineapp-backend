@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import db from "../../database/connection";
+import db from "../../../database/connection";
 
 
 const Permiso = db.define('Permiso', {
@@ -15,6 +15,10 @@ const Permiso = db.define('Permiso', {
     nombreMenu: {
         type: DataTypes.STRING
     },
+
+    rutaFront: {
+        type: DataTypes.STRING
+    }
 
 })
 

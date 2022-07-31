@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express"
 import bcrypt from 'bcrypt';
 import nodeMailer from 'nodemailer'
-import Usuario from "../../models/entities/usuario";
-import PersonaJuridica from "../../models/entities/personaJuridica";
-import UsuarioRol from "../../models/entities/usuarioRol";
-import Rol from "../../models/entities/rol";
+import Usuario from "../../models/entities/usersModule/usuario";
+import PersonaJuridica from "../../models/entities/usersModule/personaJuridica";
+import UsuarioRol from "../../models/entities/usersModule/usuarioRol";
+import Rol from "../../models/entities/usersModule/rol";
+import sendEmail from "../../helpers/send-email";
 
 const institucionesController = {
 
@@ -31,9 +32,7 @@ const institucionesController = {
             res.status(500).json({
                 msg: `${error}`
             });
-
         }
-
     },
 
     getInstitucionById: async (req: Request, res: Response) => {
@@ -43,7 +42,6 @@ const institucionesController = {
             const { idPersonaJuridica } = req.params
 
             //buscar la institucion con el id
-
             const institucion = await PersonaJuridica.findOne({
                 where: {
                     id: idPersonaJuridica,
@@ -56,19 +54,15 @@ const institucionesController = {
             }
 
             //obtener los datos de la institucion que necesitamos enviar al front
-
             const { nombre, razonSocial, domicilio, fk_idUsuarios, cuit, habMinisterioSalud, habMunicipal, habSuperintendencia } = institucion['dataValues']
 
             //buscar al usuario asociado a esa persona jurídica
-
             const usuarioInstitucion = await Usuario.findByPk(fk_idUsuarios)
 
             //obtener los datos del usuario que necesitamos enviar al front
-
             const { email, telefono } = usuarioInstitucion['dataValues']
 
             //obtener el rol de ese usuario asociado a la persona juridica
-
             const usuarioRol = await UsuarioRol.findOne({
                 where: {
                     fk_idUsuario: fk_idUsuarios
@@ -80,11 +74,9 @@ const institucionesController = {
             const rol = await Rol.findByPk(idRolUsuario)
 
             //obtener los datos del rol a enviar al front
-
             const nombreRol = rol['dataValues']['nombreRol']
 
             //response final
-
             const responseJson = {
                 nombre: nombre,
                 cuit: cuit,
@@ -100,14 +92,11 @@ const institucionesController = {
 
             res.status(200).json(responseJson)
 
-
         } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
-
         }
-
     },
 
     createInstitucion: async (req: Request, res: Response) => {
@@ -138,41 +127,17 @@ const institucionesController = {
             const nuevoLink = `${link}/${idNuevoUsuario}/${idNuevaInstitucion}`
 
             //enviar email
-            const transporter = nodeMailer.createTransport({
-                host: 'smtp.elasticemail.com',
-                port: 2525,
-                auth: {
-                    user: '4devteam.utn@gmail.com',
-                    pass: 'D100A4CC8DD477EC6F17BF177463F4BBF514'
-                }
-            });
-
-            const mailOptions = {
-                from: '4devteam.utn@gmail.com',
-                to: email,
-                subject: "Verificación cuenta kineapp",
-                html: `<a href=${nuevoLink}>Click aquí para verificar tu cuenta</a>` // html body
-            };
-
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    return console.log(error);
-                }
-                console.log('Message %s sent: %s', info.messageId, info.response);
-                res.status(200).json({ msg: "Email enviado" })
-            });
+            await sendEmail(nuevoLink, email)
 
             res.status(200).json({
                 msg: `Institución con nombre ${nombre} creada correctamente. Se envió un email a la dirección ${email} para verificación.`
             })
-
 
         } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
         }
-
     },
 
     validarInstitucion: async (req: Request, res: Response) => {
@@ -194,10 +159,7 @@ const institucionesController = {
             res.status(500).json({
                 msg: `${error}`
             });
-
         }
-
-
     },
 
     updateInstitucionById: async (req: Request, res: Response) => {
@@ -218,13 +180,11 @@ const institucionesController = {
                 msg: `Institución actualizada con éxito.`
             })
 
-
         } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
         }
-
     },
 
     deleteInstitucionById: async (req: Request, res: Response) => {
@@ -254,11 +214,7 @@ const institucionesController = {
                 msg: `${error}`
             });
         }
-
     }
-
-
-
 }
 
 export default institucionesController;

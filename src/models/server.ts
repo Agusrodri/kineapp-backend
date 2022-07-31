@@ -1,9 +1,7 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-
 import db from "../database/connection";
-
 
 class Server {
 
@@ -14,7 +12,10 @@ class Server {
     }
 
     constructor() {
+        // Inicializar el servidor express
         this.app = express();
+
+        // Definir el puerto a utilizar
         this.port = process.env.PORT || "8002";
 
         // Middlewares
@@ -23,8 +24,10 @@ class Server {
         // Rutas de la aplicación
         this.routes();
 
+        // Conección con la db
         this.dbConnection();
 
+        // Tratamiento de errores
         this.errors();
     }
 
@@ -37,7 +40,6 @@ class Server {
 
         } catch (error: any) {
             throw new Error(error)
-
         }
 
     }
@@ -60,12 +62,11 @@ class Server {
 
     routes() {
 
-
         this.app.use(this.apiPaths.usuarios, require('../router/usersModule/rolesRoute'));
         this.app.use(this.apiPaths.usuarios, require('../router/usersModule/rolesInternosRoute'));
         this.app.use(this.apiPaths.usuarios, require('../router/usersModule/institucionesRoute'));
+        this.app.use(this.apiPaths.usuarios, require('../router/usersModule/profesionalesRoute'));
         this.app.use(this.apiPaths.usuarios, require('../router/filesRoute/filesRoute'));
-
 
         //autorizar frontend para evitar error de CORS
         this.app.use((req: Request, res: Response, next: NextFunction) => {

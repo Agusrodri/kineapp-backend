@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
-import db from "../../database/connection";
+import db from "../../../database/connection";
 
 
-const RolInterno = db.define('RolInterno', {
+const Rol = db.define('Role', {
 
     nombreRol: {
         type: DataTypes.STRING
@@ -14,11 +14,7 @@ const RolInterno = db.define('RolInterno', {
 
     activo: {
         type: DataTypes.BOOLEAN
-    },
-
-    fk_idPersonaJuridica: {
-        type: DataTypes.INTEGER
     }
 })
 
-export default RolInterno;
+export default Rol;

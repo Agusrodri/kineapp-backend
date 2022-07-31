@@ -6,6 +6,7 @@ import institucionesController from "../../controllers/usersModule/instituciones
 const router = Router()
 
 router.get("/instituciones", institucionesController.getInstituciones);
+
 router.get("/instituciones/:idPersonaJuridica", institucionesController.getInstitucionById);
 
 router.post("/instituciones/crear", institucionesController.createInstitucion);

@@ -8,7 +8,6 @@ import validateRequest from "../../middlewares/validateRequest";
 
 const router = Router()
 
-
 router.post("/uploadHabilitaciones", [
 
     validatePDF.validate,

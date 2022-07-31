@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express"
 import { Op, Sequelize, where } from "sequelize"
-import RolInterno from "../../models/entities/rolInterno"
-import RolInternoPermisoInterno from "../../models/entities/rolInternoPermisoInterno"
-import PersonaJuridica from "../../models/entities/personaJuridica"
-import PermisoInterno from "../../models/entities/permisoInterno"
+import RolInterno from "../../models/entities/usersModule/rolInterno"
+import RolInternoPermisoInterno from "../../models/entities/usersModule/rolInternoPermisoInterno"
+import PersonaJuridica from "../../models/entities/usersModule/personaJuridica"
+import PermisoInterno from "../../models/entities/usersModule/permisoInterno"
 
 
 const rolesInternosController = {

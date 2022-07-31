@@ -30,7 +30,6 @@ const storage = multer.diskStorage({
     filename: (req: Request, file, cb) => {
 
         const ext = file.mimetype.split('/')[1]
-
         const queryObject = url.parse(req.url, true).query;
 
         cb(null, "file-" + "id-" + queryObject['id'] + "." + ext);

@@ -1,9 +1,7 @@
 import { Request, Response } from "express"
-import uploadFile from '../../middlewares/upload'
-import nodeMailer from 'nodemailer'
 import fs from 'fs'
 import url from 'url'
-import PersonaJuridica from "../../models/entities/personaJuridica"
+import PersonaJuridica from "../../models/entities/usersModule/personaJuridica"
 
 const fileController = {
 
@@ -15,32 +13,26 @@ const fileController = {
                 return res.status(400).json({ message: "Por favor suba un archivo." });
             }
 
-            //verificar el tipo de habilitación 
-
             const queryObject = url.parse(req.url, true).query;
-
             const id = parseInt(queryObject['id'].toString())
-
             const pathSplit = queryObject['path'].toString().split('/')[2]
-
             const personaJuridica = await PersonaJuridica.findByPk(id)
 
+            //verificar el tipo de habilitación 
             if (queryObject['path'].includes("habMinisterioSalud")) {
 
                 await personaJuridica.update({ habMinisterioSalud: `${globalThis.__baseurl}usuarios/downloadHabilitacion/${pathSplit}/file-id-${id}.pdf` })
 
-
             } else if (queryObject['path'].includes("habMunicipal")) {
 
                 await personaJuridica.update({ habMunicipal: `${globalThis.__baseurl}usuarios/downloadHabilitacion/${pathSplit}/file-id-${id}.pdf` })
-
 
             } else if (queryObject['path'].includes("habSuperintendencia")) {
 
                 await personaJuridica.update({ habSuperintendencia: `${globalThis.__baseurl}usuarios/downloadHabilitacion/${pathSplit}/file-id-${id}.pdf` })
 
             } else {
-                throw new Error("No se encuentra la ruta especificada")
+                throw new Error("No se encuentra la ruta especificada.")
             }
 
             res.status(200).json({
@@ -58,7 +50,6 @@ const fileController = {
 
         try {
             const { path } = req.params
-
             const directoryPath = globalThis.__basedir + `/resources/static/assets/files/usuarios/instituciones/${path}/`;
 
             fs.readdir(directoryPath, function (err, files) {
@@ -88,7 +79,6 @@ const fileController = {
     downloadHabilitaciones: (req: Request, res: Response) => {
 
         const { fileName, path } = req.params
-
         const directoryPath = globalThis.__basedir + `/resources/static/assets/files/usuarios/instituciones/${path}/${fileName}`;
 
         res.download(directoryPath, fileName, (err) => {

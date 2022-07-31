@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express"
 import { Op, Sequelize } from "sequelize"
 
-import Rol from "../../models/entities/rol";
-import RolPermiso from "../../models/entities/rolPermiso";
-import Permiso from "../../models/entities/permiso";
+import Rol from "../../models/entities/usersModule/rol";
+import RolPermiso from "../../models/entities/usersModule/rolPermiso";
+import Permiso from "../../models/entities/usersModule/permiso";
 
 
 const rolesController = {

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
-import RolInterno from "../models/entities/rolInterno";
-import Rol from "../models/entities/rol";
+import RolInterno from "../models/entities/usersModule/rolInterno";
+import Rol from "../models/entities/usersModule/rol";
 
 const dbValidators = {
 
