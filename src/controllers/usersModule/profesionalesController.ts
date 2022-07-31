@@ -36,6 +36,8 @@ const profesionalesController = {
                     }
                 })
 
+                const rolInterno = await RolInterno.findByPk(pjProfesionales[i]['dataValues']['fk_idRolInterno'])
+
                 const profesionalResponse = {
                     id: profesional['dataValues']['id'],
                     nombre: profesional['dataValues']['nombre'],
@@ -45,6 +47,7 @@ const profesionalesController = {
                     fechaNacimiento: profesional['dataValues']['fechaNacimiento'],
                     numeroMatricula: profesional['dataValues']['numeroMatricula'],
                     nivelEducativo: profesional['dataValues']['nivelEducativo'],
+                    rol: rolInterno['dataValues']['nombreRol']
                 }
 
                 profesionalesResponse.push(profesionalResponse)
@@ -329,11 +332,7 @@ const profesionalesController = {
                 msg: `${error}`
             });
         }
-
     }
-
-
-
 }
 
 export default profesionalesController
