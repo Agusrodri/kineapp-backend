@@ -14,6 +14,8 @@ router.put("/profesionales/validar/:idUsuario", profesionalesController.validarP
 
 router.get("/profesionales/test/buscarUsuario/:idPersonaJuridica", profesionalesController.buscarUsuario);
 
-router.post("/profesionales/crearConUsuario/:idUsuario/:idPersonaJuridica", profesionalesController.crearProfesionalConUsuario)
+router.post("/profesionales/crearConUsuario/:idUsuario/:idPersonaJuridica", profesionalesController.crearProfesionalConUsuario);
+
+router.get("/tipoDNI/all", profesionalesController.getTiposDni)
 
 module.exports = router

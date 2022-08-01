@@ -7,6 +7,7 @@ import RolInterno from '../../models/entities/usersModule/rolInterno';
 import Usuario from '../../models/entities/usersModule/usuario';
 import sendEmail from '../../helpers/send-email';
 import Paciente from '../../models/entities/usersModule/paciente';
+import TipoDNI from '../../models/entities/usersModule/tipoDNI';
 
 const profesionalesController = {
 
@@ -37,13 +38,14 @@ const profesionalesController = {
                 })
 
                 const rolInterno = await RolInterno.findByPk(pjProfesionales[i]['dataValues']['fk_idRolInterno'])
+                const tipoDNI = await TipoDNI.findByPk(profesional['dataValues']['fk_idTipoDNI'])
 
                 const profesionalResponse = {
                     id: profesional['dataValues']['id'],
                     nombre: profesional['dataValues']['nombre'],
                     apellido: profesional['dataValues']['apellido'],
                     dni: profesional['dataValues']['dni'],
-                    tipoDNI: profesional['dataValues']['tipoDNI'],
+                    tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                     fechaNacimiento: profesional['dataValues']['fechaNacimiento'],
                     numeroMatricula: profesional['dataValues']['numeroMatricula'],
                     nivelEducativo: profesional['dataValues']['nivelEducativo'],
@@ -103,12 +105,14 @@ const profesionalesController = {
             const emailProfesional = usuarioProfesional['dataValues']['email']
             const telefonoProfesional = usuarioProfesional['dataValues']['telefono']
 
+            const tipoDNI = await TipoDNI.findByPk(profesional['dataValues']['fk_idTipoDNI'])
+
             //response final
             const profesionalResponse = {
                 nombre: profesional['dataValues']['nombre'],
                 apellido: profesional['dataValues']['apellido'],
                 dni: profesional['dataValues']['dni'],
-                tipoDNI: profesional['dataValues']['tipoDNI'],
+                tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                 fechaNacimiento: profesional['dataValues']['fechaNacimiento'],
                 numeroMatricula: profesional['dataValues']['numeroMatricula'],
                 nivelEducativo: profesional['dataValues']['nivelEducativo'],
@@ -135,7 +139,7 @@ const profesionalesController = {
             const { nombre,
                 apellido,
                 dni,
-                tipoDNI,
+                idTipoDNI,
                 fechaNacimiento,
                 numeroMatricula,
                 nivelEducativo,
@@ -155,7 +159,7 @@ const profesionalesController = {
                 nombre: nombre,
                 apellido: apellido,
                 dni: dni,
-                tipoDNI: tipoDNI,
+                fk_idTipoDNI: idTipoDNI,
                 fechaNacimiento: fechaNacimiento,
                 numeroMatricula: numeroMatricula,
                 nivelEducativo: nivelEducativo,
@@ -251,14 +255,14 @@ const profesionalesController = {
                 if (profesionalInstitucion) {
                     throw new Error("El email ingresado ya corresponde a un profesional de la institución indicada.")
                 } else {
-                    const { nombre, apellido, dni, tipoDNI, fechaNacimiento, numeroMatricula, nivelEducativo } = profesionalToFind['dataValues']
+                    const { nombre, apellido, dni, fk_idTipoDNI, fechaNacimiento, numeroMatricula, nivelEducativo } = profesionalToFind['dataValues']
                     res.status(200).json({
                         msg: "El email ingresado pertenece a un profesional existente en el sistema.",
                         idUsuario: idUsuarioEncontrado,
                         nombre,
                         apellido,
                         dni,
-                        tipoDNI,
+                        fk_idTipoDNI,
                         fechaNacimiento,
                         numeroMatricula,
                         nivelEducativo
@@ -276,7 +280,7 @@ const profesionalesController = {
                     throw new Error("El email ingresado no coincide con ningún usuario del sistema.")
                 }
 
-                const { nombre, apellido, dni, tipoDNI, fechaNacimiento } = pacienteToFind['dataValues']
+                const { nombre, apellido, dni, fk_idTipoDNI, fechaNacimiento } = pacienteToFind['dataValues']
 
                 res.status(200).json({
                     msg: "El email ingresado pertenece a un paciente existente en el sistema.",
@@ -284,7 +288,7 @@ const profesionalesController = {
                     nombre,
                     apellido,
                     dni,
-                    tipoDNI,
+                    fk_idTipoDNI,
                     fechaNacimiento
                 })
             }
@@ -301,14 +305,14 @@ const profesionalesController = {
         try {
 
             const { idUsuario, idPersonaJuridica } = req.params
-            const { nombre, apellido, dni, tipoDNI, fechaNacimiento, numeroMatricula, nivelEducativo, idRol } = req.body
+            const { nombre, apellido, dni, idTipoDNI, fechaNacimiento, numeroMatricula, nivelEducativo, idRol } = req.body
 
             //crear profesional y asociarlo al usuario 
             const nuevoProfesional = await Profesional.create({
                 nombre: nombre,
                 apellido: apellido,
                 dni: dni,
-                tipoDNI: tipoDNI,
+                fk_idTipoDNI: idTipoDNI,
                 fechaNacimiento: fechaNacimiento,
                 numeroMatricula: numeroMatricula,
                 nivelEducativo: nivelEducativo,
@@ -332,7 +336,18 @@ const profesionalesController = {
                 msg: `${error}`
             });
         }
+    },
+
+    getTiposDni: async (req: Request, res: Response) => {
+        try {
+            const tipoDnis = await TipoDNI.findAll()
+            res.status(200).json(tipoDnis)
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
     }
 }
 
-export default profesionalesController
+export default profesionalesController;

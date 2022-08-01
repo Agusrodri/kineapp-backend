@@ -16,10 +16,6 @@ const Profesional = db.define('Profesionale', {
         type: DataTypes.STRING
     },
 
-    tipoDNI: {
-        type: DataTypes.STRING
-    },
-
     fechaNacimiento: {
         type: DataTypes.DATE
     },
@@ -37,6 +33,10 @@ const Profesional = db.define('Profesionale', {
     },
 
     fk_idUsuario: {
+        type: DataTypes.INTEGER
+    },
+
+    fk_idTipoDNI: {
         type: DataTypes.INTEGER
     }
 

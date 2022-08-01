@@ -16,10 +16,6 @@ const Paciente = db.define('Paciente', {
         type: DataTypes.STRING
     },
 
-    tipoDNI: {
-        type: DataTypes.STRING
-    },
-
     fechaNacimiento: {
         type: DataTypes.DATE
     },
@@ -29,6 +25,10 @@ const Paciente = db.define('Paciente', {
     },
 
     fk_idUsuario: {
+        type: DataTypes.INTEGER
+    },
+
+    fk_idTipoDNI: {
         type: DataTypes.INTEGER
     }
 
