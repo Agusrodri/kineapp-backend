@@ -347,6 +347,56 @@ const profesionalesController = {
                 msg: `${error}`
             });
         }
+    },
+
+    editarFromPerfil: async (req: Request, res: Response) => { },
+
+    editarFromInstitucion: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idPersonaJuridica, idProfesional, idRol } = req.params
+
+            const profesionalToUpdate = await PersonaJuridicaProfesional.findOne({
+                where: {
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    fk_idProfesional: idProfesional
+                }
+            })
+
+            if (!profesionalToUpdate) {
+                throw new Error("No existe el profesional dentro de la institución.")
+            }
+
+            await profesionalToUpdate.update({ fk_idRolInterno: idRol })
+
+            res.status(200).json({
+                msg: "Profesional editado correctamente."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    deleteProfesionalById: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idProfesional } = req.params
+            const profesionalToDelete = await Profesional.findByPk(idProfesional)
+            await profesionalToDelete.update({ activo: false })
+            res.status(200).json({
+                msg: "Profesional eliminado correctamente."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
     }
 }
 
