@@ -13,7 +13,7 @@ router.post("/profesionales/crearConUsuario/:idUsuario/:idPersonaJuridica", prof
 router.get("/tipoDNI/all", profesionalesController.getTiposDni);
 router.put("/profesionales/editarFromPerfil/:idProfesional", profesionalesController.editarFromPerfil);
 router.put("/profesionales/editarFromInstitucion/:idPersonaJuridica/:idProfesional/:idRol", profesionalesController.editarFromInstitucion);
-router.delete("/profesionales/eliminar/:idProfesional", profesionalesController.deleteProfesionalById);
+router.delete("/profesionales/eliminar/:idPersonaJuridica/:idProfesional", profesionalesController.deleteProfesionalById);
 
 
 module.exports = router

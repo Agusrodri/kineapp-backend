@@ -28,10 +28,6 @@ const Profesional = db.define('Profesionale', {
         type: DataTypes.STRING
     },
 
-    activo: {
-        type: DataTypes.BOOLEAN
-    },
-
     fk_idUsuario: {
         type: DataTypes.INTEGER
     },

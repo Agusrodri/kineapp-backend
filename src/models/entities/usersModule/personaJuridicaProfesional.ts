@@ -14,6 +14,10 @@ const PersonaJuridicaProfesional = db.define('PersonaJuridicaProfesionale', {
 
     fk_idRolInterno: {
         type: DataTypes.INTEGER
+    },
+
+    activo: {
+        type: DataTypes.BOOLEAN
     }
 })
 

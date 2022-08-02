@@ -18,7 +18,8 @@ const profesionalesController = {
             const { idPersonaJuridica } = req.params
             const pjProfesionales = await PersonaJuridicaProfesional.findAll({
                 where: {
-                    fk_idPersonaJuridica: idPersonaJuridica
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    activo: true
                 }
             })
 
@@ -32,8 +33,7 @@ const profesionalesController = {
 
                 const profesional = await Profesional.findOne({
                     where: {
-                        id: pjProfesionales[i]['dataValues']['fk_idProfesional'],
-                        activo: true
+                        id: pjProfesionales[i]['dataValues']['fk_idProfesional']
                     }
                 })
 
@@ -391,8 +391,13 @@ const profesionalesController = {
 
         try {
 
-            const { idProfesional } = req.params
-            const profesionalToDelete = await Profesional.findByPk(idProfesional)
+            const { idPersonaJuridica, idProfesional } = req.params
+            const profesionalToDelete = await PersonaJuridicaProfesional.findOne({
+                where: {
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    fk_idProfesional: idProfesional
+                }
+            })
             await profesionalToDelete.update({ activo: false })
             res.status(200).json({
                 msg: "Profesional eliminado correctamente."
