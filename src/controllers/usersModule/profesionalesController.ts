@@ -357,6 +357,12 @@ const profesionalesController = {
 
             const { idPersonaJuridica, idProfesional, idRol } = req.params
 
+            const profesional = await Profesional.findByPk(idProfesional)
+
+            if (profesional['dataValues']['activo'] == false) {
+                throw new Error("No existe el profesional solicitado.")
+            }
+
             const profesionalToUpdate = await PersonaJuridicaProfesional.findOne({
                 where: {
                     fk_idPersonaJuridica: idPersonaJuridica,
