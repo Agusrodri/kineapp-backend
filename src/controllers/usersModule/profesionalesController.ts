@@ -184,7 +184,8 @@ const profesionalesController = {
             await PersonaJuridicaProfesional.create({
                 fk_idPersonaJuridica: idPersonaJuridica,
                 fk_idProfesional: nuevoProfesional['dataValues']['id'],
-                fk_idRolInterno: idRol
+                fk_idRolInterno: idRol,
+                activo: true
             })
 
             const idUsuario = nuevoUsuarioProfesional['dataValues']['id']
