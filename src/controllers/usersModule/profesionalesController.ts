@@ -395,9 +395,15 @@ const profesionalesController = {
             const profesionalToDelete = await PersonaJuridicaProfesional.findOne({
                 where: {
                     fk_idPersonaJuridica: idPersonaJuridica,
-                    fk_idProfesional: idProfesional
+                    fk_idProfesional: idProfesional,
+                    activo: true
                 }
             })
+
+            if (!profesionalToDelete) {
+                throw new Error("El profesional no pertenece a la institución.")
+            }
+
             await profesionalToDelete.update({ activo: false })
             res.status(200).json({
                 msg: "Profesional eliminado correctamente."
