@@ -148,10 +148,23 @@ const profesionalesController = {
                 telefono,
                 link } = req.body
 
+            //buscar usuario con email existente
+            const findUsuario = Usuario.findOne({
+                where: {
+                    email: email,
+                    activo: true
+                }
+            })
+
+            if (findUsuario) {
+                throw new Error(`El email ${email} ya se encuentra en uso.`)
+            }
+
             //crear usuario del nuevo profesional 
             const nuevoUsuarioProfesional = await Usuario.create({
                 email: email,
-                telefono: telefono
+                telefono: telefono,
+                activo: true
             })
 
             //crear profesional y asociarlo al usuario creado previamente
@@ -306,6 +319,17 @@ const profesionalesController = {
 
             const { idUsuario, idPersonaJuridica } = req.params
             const { nombre, apellido, dni, idTipoDNI, fechaNacimiento, numeroMatricula, nivelEducativo, idRol } = req.body
+
+            const usuarioActivo = Usuario.findOne({
+                where: {
+                    id: idUsuario,
+                    activo: true
+                }
+            })
+
+            if (!usuarioActivo) {
+                throw new Error("No existe el usuario solicitado")
+            }
 
             //crear profesional y asociarlo al usuario 
             const nuevoProfesional = await Profesional.create({
