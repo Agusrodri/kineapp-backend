@@ -14,6 +14,10 @@ const Usuario = db.define('Usuario', {
 
     telefono: {
         type: DataTypes.STRING
+    },
+
+    activo: {
+        type: DataTypes.BOOLEAN
     }
 
 })
