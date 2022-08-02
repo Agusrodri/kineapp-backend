@@ -156,10 +156,10 @@ const profesionalesController = {
                 }
             })
 
-            console.log(findUsuario)
-
             if (findUsuario) {
-                throw new Error(`El email ${email} ya se encuentra en uso.`)
+                return res.status(200).json({
+                    usuarioExistente: true
+                })
             }
 
             //crear usuario del nuevo profesional 
@@ -199,7 +199,8 @@ const profesionalesController = {
             await sendEmail(nuevoLink, email)
 
             res.status(200).json({
-                msg: "Profesional creado correctamente."
+                msg: "Profesional creado correctamente.",
+                usuarioExistente: false
             })
 
         } catch (error) {
@@ -242,7 +243,8 @@ const profesionalesController = {
             //verificar si el email corresponde a un usuario
             const usuarioToFind = await Usuario.findOne({
                 where: {
-                    email: email
+                    email: email,
+                    activo: true
                 }
             })
 
@@ -264,7 +266,8 @@ const profesionalesController = {
                 const profesionalInstitucion = await PersonaJuridicaProfesional.findOne({
                     where: {
                         fk_idPersonaJuridica: idPersonaJuridica,
-                        fk_idProfesional: profesionalToFind['dataValues']['id']
+                        fk_idProfesional: profesionalToFind['dataValues']['id'],
+                        activo: true
                     }
                 })
 
