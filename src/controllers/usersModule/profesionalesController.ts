@@ -149,12 +149,14 @@ const profesionalesController = {
                 link } = req.body
 
             //buscar usuario con email existente
-            const findUsuario = Usuario.findOne({
+            const findUsuario = await Usuario.findOne({
                 where: {
                     email: email,
                     activo: true
                 }
             })
+
+            console.log(findUsuario)
 
             if (findUsuario) {
                 throw new Error(`El email ${email} ya se encuentra en uso.`)
@@ -429,14 +431,7 @@ const profesionalesController = {
                 throw new Error("El profesional no pertenece a la institución.")
             }
 
-            const usuarioToDelete = await Usuario.findOne({
-                where: {
-                    id: profesionalToDelete['dataValues']['fk_idUsuario']
-                }
-            })
-
             await profesionalToDelete.update({ activo: false })
-            await usuarioToDelete.update({ activo: false })
             res.status(200).json({
                 msg: "Profesional eliminado correctamente."
             })
