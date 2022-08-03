@@ -324,7 +324,7 @@ const profesionalesController = {
         try {
 
             const { idUsuario, idPersonaJuridica } = req.params
-            const { nombre, apellido, dni, idTipoDNI, fechaNacimiento, numeroMatricula, nivelEducativo, idRol } = req.body
+            const { idRol } = req.body
 
             const usuarioActivo = Usuario.findOne({
                 where: {
@@ -337,23 +337,21 @@ const profesionalesController = {
                 throw new Error("No existe el usuario solicitado")
             }
 
-            //crear profesional y asociarlo al usuario 
-            const nuevoProfesional = await Profesional.create({
-                nombre: nombre,
-                apellido: apellido,
-                dni: dni,
-                fk_idTipoDNI: idTipoDNI,
-                fechaNacimiento: fechaNacimiento,
-                numeroMatricula: numeroMatricula,
-                nivelEducativo: nivelEducativo,
-                fk_idUsuario: idUsuario,
-                activo: true
+            //buscar profesional asociado al usuario
+            const usuarioProfesional = await Profesional.findOne({
+                where: {
+                    fk_idUsuario: idUsuario
+                }
             })
+
+            if (!usuarioProfesional) {
+                throw new Error("No existe un profesional asociado al usuario indicado.")
+            }
 
             //asociar profesional con la institución y setear el rol interno que posee el profesional
             await PersonaJuridicaProfesional.create({
                 fk_idPersonaJuridica: idPersonaJuridica,
-                fk_idProfesional: nuevoProfesional['dataValues']['id'],
+                fk_idProfesional: usuarioProfesional['dataValues']['id'],
                 fk_idRolInterno: idRol,
                 activo: true
             })
@@ -442,7 +440,6 @@ const profesionalesController = {
 
             const { idUsuario } = req.params
             const { actualPassword, newPassword } = req.body
-
 
             const usuario = await Usuario.findByPk(idUsuario)
 
