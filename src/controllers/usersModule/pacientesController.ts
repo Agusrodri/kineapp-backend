@@ -28,7 +28,8 @@ const pacientesController = {
             const nuevoUsuario = await Usuario.create({
                 email: email,
                 password: newEncriptedPassword,
-                activo: false
+                activo: true,
+                habilitado: false
             })
 
             const idNuevoUsuario = nuevoUsuario['dataValues']['id']

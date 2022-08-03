@@ -18,6 +18,10 @@ const Usuario = db.define('Usuario', {
 
     activo: {
         type: DataTypes.BOOLEAN
+    },
+
+    habilitado: {
+        type: DataTypes.BOOLEAN
     }
 })
 
