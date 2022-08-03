@@ -402,8 +402,8 @@ const profesionalesController = {
 
         try {
 
-            const { idPersonaJuridica, idProfesional, idRol } = req.params
-
+            const { idPersonaJuridica } = req.params
+            const { idProfesional, idRol } = req.body
             const profesional = await Profesional.findByPk(idProfesional)
 
             if (profesional['dataValues']['activo'] == false) {
