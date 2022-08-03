@@ -8,7 +8,7 @@ router.get("/profesionales/:idPersonaJuridica", profesionalesController.getProfe
 router.get("/profesionales/:idPersonaJuridica/:idProfesional", profesionalesController.getProfesionalById);
 router.post("/profesionales/crearSinUsuario/:idPersonaJuridica", profesionalesController.crearProfesionalSinUsuario);
 router.put("/profesionales/validar/:idUsuario", profesionalesController.validarProfesional);
-router.get("/profesionales/test/buscarUsuario/:idPersonaJuridica", profesionalesController.buscarUsuario);
+router.post("/profesionales/test/buscarUsuario/:idPersonaJuridica", profesionalesController.buscarUsuario);
 router.post("/profesionales/crearConUsuario/:idUsuario/:idPersonaJuridica", profesionalesController.crearProfesionalConUsuario);
 router.get("/tipoDNI/all", profesionalesController.getTiposDni);
 router.put("/profesionales/editarFromPerfil/:idProfesional", profesionalesController.editarFromPerfil);
