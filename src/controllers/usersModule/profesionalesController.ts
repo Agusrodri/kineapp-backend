@@ -413,7 +413,8 @@ const profesionalesController = {
             const profesionalToUpdate = await PersonaJuridicaProfesional.findOne({
                 where: {
                     fk_idPersonaJuridica: idPersonaJuridica,
-                    fk_idProfesional: idProfesional
+                    fk_idProfesional: idProfesional,
+                    activo: true
                 }
             })
 
