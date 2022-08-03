@@ -34,14 +34,11 @@ class Server {
     async dbConnection() {
 
         try {
-
             await db.authenticate()
             console.log("Database online!!")
-
         } catch (error: any) {
             throw new Error(error)
         }
-
     }
 
     middlewares() {
@@ -57,7 +54,6 @@ class Server {
                 extended: true,
             })
         );
-
     }
 
     routes() {
@@ -66,6 +62,7 @@ class Server {
         this.app.use(this.apiPaths.usuarios, require('../router/usersModule/rolesInternosRoute'));
         this.app.use(this.apiPaths.usuarios, require('../router/usersModule/institucionesRoute'));
         this.app.use(this.apiPaths.usuarios, require('../router/usersModule/profesionalesRoute'));
+        this.app.use(this.apiPaths.usuarios, require('../router/usersModule/pacientesRoute'));
         this.app.use(this.apiPaths.usuarios, require('../router/filesRoute/filesRoute'));
 
         //autorizar frontend para evitar error de CORS
@@ -77,7 +74,6 @@ class Server {
     }
 
     listen() {
-
         this.app.listen(this.port, () => {
             console.log('Servidor corriendo en puerto', this.port);
         });
@@ -88,8 +84,6 @@ class Server {
             throw new Error("Error");
         });
     }
-
 }
-
 
 export default Server;

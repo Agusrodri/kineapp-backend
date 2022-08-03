@@ -354,7 +354,8 @@ const profesionalesController = {
             await PersonaJuridicaProfesional.create({
                 fk_idPersonaJuridica: idPersonaJuridica,
                 fk_idProfesional: nuevoProfesional['dataValues']['id'],
-                fk_idRolInterno: idRol
+                fk_idRolInterno: idRol,
+                activo: true
             })
 
             res.status(200).json({
@@ -379,7 +380,25 @@ const profesionalesController = {
         }
     },
 
-    editarFromPerfil: async (req: Request, res: Response) => { },
+    editarFromPerfil: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idProfesional } = req.params
+            const { nombre, apellido, telefono } = req.body
+            const profesionalToUpdate = await Profesional.findByPk(idProfesional)
+            await profesionalToUpdate.update({ nombre: nombre, apellido: apellido, telefono: telefono })
+
+            res.status(200).json({
+                msg: "Profesional actualizado correctamente."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
 
     editarFromInstitucion: async (req: Request, res: Response) => {
 
@@ -408,6 +427,47 @@ const profesionalesController = {
 
             res.status(200).json({
                 msg: "Profesional editado correctamente."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    editarPassword: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idUsuario } = req.params
+            const { actualPassword, newPassword } = req.body
+
+
+            const usuario = await Usuario.findByPk(idUsuario)
+
+            if (!usuario) {
+                throw new Error("No existe el usuario solicitado.")
+            }
+
+            const passwordActualUsuario = usuario['dataValues']['password']
+            const comparePasswords = bcrypt.compareSync(actualPassword, passwordActualUsuario)
+
+            if (!comparePasswords) {
+                throw new Error("Contraseña anterior errónea.")
+            }
+
+            if (actualPassword === newPassword) {
+                throw new Error("La nueva contraseña no puede coincidir con la contraseña anterior.")
+            }
+
+            const salt = bcrypt.genSaltSync(12);
+            const newEncriptedPassword = bcrypt.hashSync(newPassword, salt);
+
+            await usuario.update({ password: newEncriptedPassword })
+
+            res.status(200).json({
+                msg: "Contraseña del usuario actualizada con éxito."
             })
 
         } catch (error) {

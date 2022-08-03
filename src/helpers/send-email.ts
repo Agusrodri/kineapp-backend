@@ -5,13 +5,6 @@ export default (nuevoLink: string, email: string) => {
     return new Promise<void>((resolve, reject) => {
         try {
             const transporter = nodeMailer.createTransport({
-                /*    host: 'smtp.gmail.com',
-                   port: 465,
-                   auth: {
-                       user: '4devteam.utn@gmail.com',
-                       pass: 'xoxkkbefzdrwinpy'
-                   } */
-
                 service: 'gmail',
                 auth: {
                     user: '4devteam.utn@gmail.com',

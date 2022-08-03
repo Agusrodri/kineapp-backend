@@ -14,6 +14,6 @@ router.get("/tipoDNI/all", profesionalesController.getTiposDni);
 router.put("/profesionales/editarFromPerfil/:idProfesional", profesionalesController.editarFromPerfil);
 router.put("/profesionales/editarFromInstitucion/:idPersonaJuridica/:idProfesional/:idRol", profesionalesController.editarFromInstitucion);
 router.delete("/profesionales/eliminar/:idPersonaJuridica/:idProfesional", profesionalesController.deleteProfesionalById);
-
+router.put("/profesionales/editar/password/:idUsuario", profesionalesController.editarPassword);
 
 module.exports = router
