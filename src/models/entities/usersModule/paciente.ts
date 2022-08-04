@@ -30,6 +30,14 @@ const Paciente = db.define('Paciente', {
 
     fk_idTipoDNI: {
         type: DataTypes.INTEGER
+    },
+
+    fk_idObraSocial: {
+        type: DataTypes.INTEGER
+    },
+
+    fk_idPlan: {
+        type: DataTypes.INTEGER
     }
 
 })

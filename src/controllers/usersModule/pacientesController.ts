@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import Usuario from '../../models/entities/usersModule/usuario';
 import sendEmail from '../../helpers/send-email';
+import Paciente from '../../models/entities/usersModule/paciente';
 
 const pacientesController = {
 
@@ -46,7 +47,58 @@ const pacientesController = {
                 msg: `${error}`
             });
         }
+    },
 
+    createPaciente: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idUsuario } = req.params
+
+            const usuarioHabilitar = await Usuario.findOne({
+                where: {
+                    id: idUsuario,
+                    activo: true
+                }
+            })
+
+            if (!usuarioHabilitar) {
+                throw new Error("No existe el usuario indicado.")
+            }
+
+            const { nombre,
+                apellido,
+                dni,
+                idTipoDNI,
+                fechaNacimiento,
+                telefono,
+                idObraSocial,
+                idPlan } = req.body
+
+            await Paciente.create({
+                nombre: nombre,
+                apellido: apellido,
+                dni: dni,
+                fk_idTipoDNI: idTipoDNI,
+                fechaNacimiento: fechaNacimiento,
+                telefono: telefono,
+                fk_idUsuario: idUsuario,
+                fk_idObraSocial: idObraSocial,
+                fk_idPlan: idPlan,
+                activo: true
+            })
+
+            await usuarioHabilitar.update({ habilitado: true })
+
+            res.status(200).json({
+                msg: "Paciente creado correctamente."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
     }
 
 }

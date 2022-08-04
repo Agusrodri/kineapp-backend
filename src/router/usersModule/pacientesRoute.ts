@@ -3,7 +3,8 @@ import pacientesController from "../../controllers/usersModule/pacientesControll
 
 const router = Router()
 
-router.post("/pacientes/crear", pacientesController.createUsuario);
+router.post("/pacientes/crearUsuario", pacientesController.createUsuario);
+router.post("/pacientes/crearPaciente/:idUsuario", pacientesController.createPaciente);
 
 
 module.exports = router
