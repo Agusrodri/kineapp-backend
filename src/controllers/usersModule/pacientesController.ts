@@ -81,14 +81,13 @@ const pacientesController = {
                 dni: dni,
                 fk_idTipoDNI: idTipoDNI,
                 fechaNacimiento: fechaNacimiento,
-                telefono: telefono,
                 fk_idUsuario: idUsuario,
                 fk_idObraSocial: idObraSocial,
                 fk_idPlan: idPlan,
                 activo: true
             })
 
-            await usuarioHabilitar.update({ habilitado: true })
+            await usuarioHabilitar.update({ habilitado: true, telefono: telefono })
 
             res.status(200).json({
                 msg: "Paciente creado correctamente."
