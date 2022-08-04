@@ -244,7 +244,8 @@ const profesionalesController = {
             const usuarioToFind = await Usuario.findOne({
                 where: {
                     email: email,
-                    activo: true
+                    activo: true,
+                    habilitado: true
                 }
             })
 
