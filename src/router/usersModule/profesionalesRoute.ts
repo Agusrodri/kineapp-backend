@@ -12,7 +12,7 @@ router.post("/profesionales/test/buscarUsuario/:idPersonaJuridica", profesionale
 router.post("/profesionales/crearConUsuario/:idUsuario/:idPersonaJuridica", profesionalesController.crearProfesionalConUsuario);
 router.get("/tipoDNI/all", profesionalesController.getTiposDni);
 router.put("/profesionales/editarFromPerfil/:idProfesional", profesionalesController.editarFromPerfil);
-router.put("/profesionales/editarFromInstitucion/:idPersonaJuridica/:idProfesional/:idRol", profesionalesController.editarFromInstitucion);
+router.put("/profesionales/editarFromInstitucion/:idPersonaJuridica", profesionalesController.editarFromInstitucion);
 router.delete("/profesionales/eliminar/:idPersonaJuridica/:idProfesional", profesionalesController.deleteProfesionalById);
 router.put("/profesionales/editar/password/:idUsuario", profesionalesController.editarPassword);
 
