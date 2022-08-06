@@ -24,8 +24,6 @@ const loginControllers = {
                 throw new Error("Se encontraron dos usuarios con el mismo email. Por favor revise la base de datos.")
             }
 
-            console.log(usuario)
-
             //verificar contraseña
             const passwordToVerify = usuario[0]['dataValues']['password']
             const validPassword = bcrypt.compareSync(password, passwordToVerify)
@@ -50,9 +48,8 @@ const loginControllers = {
             })
 
         } catch (error) {
-            console.log(error)
             res.status(500).json({
-                msg: 'Error al iniciar sesión'
+                msg: `${error}`
             });
         }
     },
