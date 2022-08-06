@@ -22,6 +22,10 @@ const Usuario = db.define('Usuario', {
 
     habilitado: {
         type: DataTypes.BOOLEAN
+    },
+
+    token: {
+        type: DataTypes.STRING
     }
 })
 

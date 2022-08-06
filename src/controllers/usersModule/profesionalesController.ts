@@ -179,7 +179,6 @@ const profesionalesController = {
                 numeroMatricula: numeroMatricula,
                 nivelEducativo: nivelEducativo,
                 fk_idUsuario: nuevoUsuarioProfesional['dataValues']['id'],
-                activo: true
             })
 
             //asociar profesional con la institución y setear el rol interno que posee el profesional
@@ -325,9 +324,11 @@ const profesionalesController = {
         try {
 
             const { idUsuario, idPersonaJuridica } = req.params
-            const { idRol } = req.body
+            const { idRol, bandera, nombre, apellido, dni, idTipoDNI, fechaNacimiento, numeroMatricula, nivelEducativo } = req.body
 
-            const usuarioActivo = Usuario.findOne({
+            //propiedades a pedir si el usuario encontrado es paciente
+            //nombre, apellido, dni, fk_idTipoDNI, fechaNacimiento, numeroMatricula, nivelEducativo
+            const usuarioActivo = await Usuario.findOne({
                 where: {
                     id: idUsuario,
                     activo: true
@@ -345,21 +346,55 @@ const profesionalesController = {
                 }
             })
 
-            if (!usuarioProfesional) {
-                throw new Error("No existe un profesional asociado al usuario indicado.")
+            //si la bandera es true indica que tenemos que crear un profesional nuevo
+            if (bandera === false) {
+
+                if (!usuarioProfesional) {
+                    throw new Error("No existe un profesional asociado al usuario indicado.")
+                }
+
+                //asociar profesional con la institución y setear el rol interno que posee el profesional
+                await PersonaJuridicaProfesional.create({
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    fk_idProfesional: usuarioProfesional['dataValues']['id'],
+                    fk_idRolInterno: idRol,
+                    activo: true
+                })
+
+                res.status(200).json({
+                    msg: "Profesional creado correctamente a partir de profesional."
+                })
+
+
+            } else {
+
+                if (usuarioProfesional) {
+                    throw new Error("Ya existe un profesional asociado al usuario indicado.")
+                }
+
+                const newProfesional = await Profesional.create({
+                    nombre: nombre,
+                    apellido: apellido,
+                    dni: dni,
+                    fk_idTipoDNI: idTipoDNI,
+                    fechaNacimiento: fechaNacimiento,
+                    numeroMatricula: numeroMatricula,
+                    nivelEducativo: nivelEducativo,
+                    fk_idUsuario: usuarioActivo['dataValues']['id'],
+                })
+
+                await PersonaJuridicaProfesional.create({
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    fk_idProfesional: newProfesional['dataValues']['id'],
+                    fk_idRolInterno: idRol,
+                    activo: true
+                })
+
+                res.status(200).json({
+                    msg: "Profesional creado correctamente a partir de paciente."
+                })
+
             }
-
-            //asociar profesional con la institución y setear el rol interno que posee el profesional
-            await PersonaJuridicaProfesional.create({
-                fk_idPersonaJuridica: idPersonaJuridica,
-                fk_idProfesional: usuarioProfesional['dataValues']['id'],
-                fk_idRolInterno: idRol,
-                activo: true
-            })
-
-            res.status(200).json({
-                msg: "Profesional creado correctamente."
-            })
 
         } catch (error) {
             res.status(500).json({
