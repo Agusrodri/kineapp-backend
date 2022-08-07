@@ -4,6 +4,8 @@ import { Op, Sequelize } from "sequelize"
 import Rol from "../../models/entities/usersModule/rol";
 import RolPermiso from "../../models/entities/usersModule/rolPermiso";
 import Permiso from "../../models/entities/usersModule/permiso";
+import findRoles from "../../helpers/findRoles";
+import findRolesInternos from "../../helpers/findRolesInternos";
 
 
 const rolesController = {
@@ -251,6 +253,22 @@ const rolesController = {
         }
 
     },
+
+    getRolesUsuario: async (req: Request, res: Response, next: NextFunction) => {
+
+        try {
+
+            const { idUsuario } = req.params
+            const roles = await findRoles(Number(idUsuario))
+            const rolesInternos = await findRolesInternos(Number(idUsuario))
+            res.status(200).json({ roles, rolesInternos })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    }
 
 }
 

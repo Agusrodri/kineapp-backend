@@ -11,6 +11,8 @@ router.get("/roles", rolesController.getRoles);
 
 router.get("/roles/:id", rolesController.getRolById);
 
+router.get("/rolesUsuario/:idUsuario", rolesController.getRolesUsuario)
+
 router.put("/roles/editar/:id", [
     refactors.refactorNombreRol,
     dbValidators.isCurrentRol,
