@@ -5,9 +5,7 @@ import RolInternoPermisoInterno from "../models/entities/usersModule/rolInternoP
 import PermisoInterno from "../models/entities/usersModule/permisoInterno"
 import PersonaJuridica from "../models/entities/usersModule/personaJuridica"
 
-
 export default async (idUsuario: number) => {
-
     const profesionalToFind = await Profesional.findOne({
         where: {
             fk_idUsuario: idUsuario
@@ -21,18 +19,6 @@ export default async (idUsuario: number) => {
             fk_idProfesional: profesionalToFind['dataValues']['id']
         }
     })
-
-    const response = [{
-        idRolInterno: "",
-        nombreRol: "",
-        idInstitucion: "",
-        institucion: "",
-        permisos: [{
-            nombrePermiso: "",
-            habilitadoPermiso: ""
-        }]
-
-    }]
 
     const rolesInternosResponse = []
 
