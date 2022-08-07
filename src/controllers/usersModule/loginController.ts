@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import Usuario from '../../models/entities/usersModule/usuario';
 import generarToken from '../../helpers/generateJWT';
+import findRoles from '../../helpers/findRoles';
+import findRolesInternos from '../../helpers/findRolesInternos';
 
 const loginControllers = {
 
@@ -42,9 +44,19 @@ const loginControllers = {
 
             await usuario[0].update({ token: token })
 
+            //buscar todos los roles de ese usuario
+            //devolver los permisos de cada rol
+            //buscar los roles internos que pueda tener en cada persona juridica a la que pertenece
+            //devolver los permisos internos dentro de cada persona juridica
+
+            const roles = await findRoles(usuario[0]['dataValues']['id'])
+            const rolesInternos = await findRolesInternos(usuario[0]['dataValues']['id'])
+
             res.status(200).json({
                 msg: `Sesión del usuario ${email} iniciada`,
-                token
+                token,
+                roles,
+                rolesInternos
             })
 
         } catch (error) {

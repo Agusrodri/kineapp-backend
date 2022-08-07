@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import Usuario from '../../models/entities/usersModule/usuario';
 import sendEmail from '../../helpers/send-email';
 import Paciente from '../../models/entities/usersModule/paciente';
+import UsuarioRol from '../../models/entities/usersModule/usuarioRol';
 
 const pacientesController = {
 
@@ -34,6 +35,7 @@ const pacientesController = {
             })
 
             const idNuevoUsuario = nuevoUsuario['dataValues']['id']
+
             const nuevoLink = `${link}/${idNuevoUsuario}`
 
             await sendEmail(nuevoLink, email)
@@ -88,6 +90,11 @@ const pacientesController = {
             })
 
             await usuarioHabilitar.update({ habilitado: true, telefono: telefono })
+
+            await UsuarioRol.create({
+                fk_idUsuario: idUsuario,
+                fk_idRol: 74 //id del rol Persona Fisica Paciente
+            })
 
             res.status(200).json({
                 msg: "Paciente creado correctamente."
