@@ -105,6 +105,79 @@ const pacientesController = {
                 msg: `${error}`
             });
         }
+    },
+
+    editarPaciente: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idUsuario } = req.params
+            const { nombre, apellido, fechaNacimiento, telefono, idObraSocial, idPlan } = req.body
+
+            const usuarioToUpdate = await Usuario.findByPk(idUsuario)
+
+            if (!usuarioToUpdate) {
+                throw new Error("No existe el usuario indicado.")
+            }
+
+            const pacienteToUpdate = await Paciente.findOne({
+                where: {
+                    fk_idUsuario: idUsuario
+                }
+            })
+
+            if (!pacienteToUpdate) {
+                throw new Error("No existe un paciente asociado al usuario indicado.")
+            }
+
+            await pacienteToUpdate.update({
+                nombre: nombre,
+                apellido: apellido,
+                fechaNacimiento: fechaNacimiento,
+                fk_idObrasocial: idObraSocial,
+                fk_idPlan: idPlan
+            })
+
+            await usuarioToUpdate.update({ telefono: telefono })
+
+            res.status(200).json({
+                msg: "Paciente actualizado con éxito."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    eliminarPaciente: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idUsuario } = req.params
+
+            const pacienteToDelete = await Paciente.findOne({
+                where: {
+                    fk_idUsuario: idUsuario
+                }
+            })
+
+            if (!pacienteToDelete) {
+                throw new Error("No existe un paciente asociado al usuario indicado.")
+            }
+
+            await pacienteToDelete.update({ activo: false })
+
+            res.status(200).json({
+                msg: "Paciente eliminado correctamente."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
     }
 
 }

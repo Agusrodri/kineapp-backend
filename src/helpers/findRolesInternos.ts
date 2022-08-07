@@ -60,7 +60,7 @@ export default async (idUsuario: number) => {
         }
 
         const rolesInternosJson = {
-            idRolInterno: id,
+            idRol: id,
             nombreRol: nombreRol,
             idInstitucion: idInstitucion,
             institucion: nombre,
