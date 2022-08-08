@@ -8,7 +8,7 @@ const ObraSocial = db.define('ObraSociale', {
         type: DataTypes.STRING
     },
 
-    codigo: {
+    cuit: {
         type: DataTypes.STRING
     },
 
@@ -18,6 +18,18 @@ const ObraSocial = db.define('ObraSociale', {
 
     activo: {
         type: DataTypes.BOOLEAN
+    },
+
+    domicilio: {
+        type: DataTypes.STRING
+    },
+
+    telefono: {
+        type: DataTypes.STRING
+    },
+
+    email: {
+        type: DataTypes.STRING
     }
 
 })
