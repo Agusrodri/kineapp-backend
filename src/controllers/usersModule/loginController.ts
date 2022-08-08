@@ -5,6 +5,14 @@ import generarToken from '../../helpers/generateJWT';
 import findRoles from '../../helpers/findRoles';
 import findRolesInternos from '../../helpers/findRolesInternos';
 import RolPermiso from '../../models/entities/usersModule/rolPermiso';
+import Permiso from '../../models/entities/usersModule/permiso';
+import Rol from '../../models/entities/usersModule/rol';
+import Profesional from '../../models/entities/usersModule/profesional';
+import PersonaJuridicaProfesional from '../../models/entities/usersModule/personaJuridicaProfesional';
+import RolInterno from '../../models/entities/usersModule/rolInterno';
+import RolInternoPermisoInterno from '../../models/entities/usersModule/rolInternoPermisoInterno';
+import PermisoInterno from '../../models/entities/usersModule/permisoInterno';
+import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
 
 const loginControllers = {
 
@@ -22,6 +30,10 @@ const loginControllers = {
                     habilitado: true
                 }
             })
+
+            if (usuario.length == 0) {
+                throw new Error("No se encontró un usuario con el email indicado.")
+            }
 
             if (usuario.length > 1) {
                 throw new Error("Se encontraron dos usuarios con el mismo email. Por favor revise la base de datos.")
@@ -96,27 +108,60 @@ const loginControllers = {
 
         try {
 
-            const { token, rolActivo, rolInternoActivo, personaJuridica } = req.body
+            const { idUsuario, idRol, idRolInterno, idInstitucion } = req.body
 
             const usuarioActivo = await Usuario.findOne({
                 where: {
-                    token: token
+                    id: idUsuario,
+                    activo: true,
+                    habilitado: true
                 }
             })
 
             if (!usuarioActivo) {
-                throw new Error("No existe un usuario con token activo que coincida con el token indicado.")
+                throw new Error("No existe el usuario indicado.")
             }
 
             await usuarioActivo.update({
-                rolActivo: rolActivo,
-                rolInternoActivo: rolInternoActivo,
-                personaJuridica: personaJuridica
+                rolActivo: null,
+                rolInternoActivo: null,
+                personaJuridica: null
             })
 
-            const response = []
+            await usuarioActivo.update({
+                rolActivo: idRol,
+                rolInternoActivo: idRolInterno,
+                personaJuridica: idInstitucion
+            })
+
+            res.status(200).json(usuarioActivo)
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                msg: 'Error al cerrar sesión'
+            });
+        }
+    },
+
+    getInfoUsuarios: async (req: Request, res: Response, next: NextFunction) => {
+
+        try {
+
+            const { token } = req.params
+            const usuarioToFind = await Usuario.findOne({
+                where: {
+                    token: token,
+                    activo: true,
+                    habilitado: true
+                }
+            })
+
+            const { rolActivo, rolInternoActivo, personaJuridica } = usuarioToFind['dataValues']
 
             if (rolActivo) {
+
+                const rolToFind = await Rol.findByPk(rolActivo)
 
                 const rolPermisos = await RolPermiso.findAll({
                     where: {
@@ -125,14 +170,102 @@ const loginControllers = {
                     }
                 })
 
+                const permisos = []
+
                 for (let i = 0; i < rolPermisos.length; i++) {
+
+                    const permiso = await Permiso.findByPk(rolPermisos[i]['dataValues']['fk_idPermiso'])
+
+                    const permisoToAdd = {
+                        nombrePermiso: permiso['dataValues']['nombrePermiso'],
+                        icon: permiso['dataValues']['icon'],
+                        nombreMenu: permiso['dataValues']['nombreMenu'],
+                        rutaFront: permiso['dataValues']['rutaFront'],
+                        requiereId: permiso['dataValues']['requiereId']
+                    }
+
+                    permisos.push(permisoToAdd)
 
                 }
 
+                const rol = {
+                    idUsuario: usuarioToFind['dataValues']['id'],
+                    idRol: rolToFind['dataValues']['id'],
+                    nombreRol: rolToFind['dataValues']['nombreRol'],
+                    permisos: permisos
+                }
 
+                res.status(200).json(rol)
+
+            } else if (rolInternoActivo && personaJuridica) {
+
+                const institucion = await PersonaJuridica.findOne({
+                    where: {
+                        id: personaJuridica,
+                        activo: true
+                    }
+                })
+
+                const profesional = await Profesional.findOne({
+                    where: {
+                        fk_idUsuario: usuarioToFind['dataValues']['id']
+                    }
+                })
+
+                const pjProfesional = await PersonaJuridicaProfesional.findOne({
+                    where: {
+                        fk_idPersonaJuridica: personaJuridica,
+                        fk_idRolInterno: rolInternoActivo,
+                        fk_idProfesional: profesional['dataValues']['id']
+                    }
+                })
+
+                if (!pjProfesional) {
+                    throw new Error("El profesional no pertenece a la institucion indicada.")
+                }
+
+                const rolInternoToFind = await RolInterno.findByPk(rolInternoActivo)
+
+                const rolInternoPermisoInterno = await RolInternoPermisoInterno.findAll({
+                    where: {
+                        fk_idRolInterno: rolInternoActivo,
+                        habilitadoPermiso: true
+                    }
+                })
+
+                const permisos = []
+
+                for (let k = 0; k < rolInternoPermisoInterno.length; k++) {
+
+                    const permisoInterno = await PermisoInterno.findByPk(rolInternoPermisoInterno[k]['dataValues']['fk_idPermisoInterno'])
+
+                    const permisoInternoToAdd = {
+                        nombrePermiso: permisoInterno['dataValues']['nombrePermiso'],
+                        icon: permisoInterno['dataValues']['icon'],
+                        nombreMenu: permisoInterno['dataValues']['nombreMenu'],
+                        rutaFront: permisoInterno['dataValues']['rutaFront'],
+                        requiereId: permisoInterno['dataValues']['requiereId']
+                    }
+
+                    permisos.push(permisoInternoToAdd)
+                }
+
+                const rolInterno = {
+                    idUsuario: usuarioToFind['dataValues']['id'],
+                    nombreUsuario: profesional['dataValues']['nombre'],
+                    idRolInterno: rolInternoActivo,
+                    nombreRol: rolInternoToFind['dataValues']['nombrePermiso'],
+                    idInstitucion: personaJuridica,
+                    institucion: institucion['dataValues']['nombre'],
+                    permisos: permisos
+
+                }
+
+                res.status(200).json(rolInterno)
+
+            } else {
+                throw new Error("Complete campos faltantes")
             }
-
-            res.status(200).json(usuarioActivo)
 
         } catch (error) {
             console.log(error)

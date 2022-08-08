@@ -9,4 +9,6 @@ const router = Router()
 router.post("/login", loginControllers.login);
 router.post("/logout", [validarJWT], loginControllers.logout);
 
+router.put("/setActivo", loginControllers.setActivo);
+
 module.exports = router
