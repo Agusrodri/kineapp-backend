@@ -4,7 +4,7 @@ import Usuario from '../../models/entities/usersModule/usuario';
 import generarToken from '../../helpers/generateJWT';
 import findRoles from '../../helpers/findRoles';
 import findRolesInternos from '../../helpers/findRolesInternos';
-import RolPermiso from 'models/entities/usersModule/rolPermiso';
+import RolPermiso from '../../models/entities/usersModule/rolPermiso';
 
 const loginControllers = {
 
