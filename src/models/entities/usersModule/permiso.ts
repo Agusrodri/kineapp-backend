@@ -18,6 +18,10 @@ const Permiso = db.define('Permiso', {
 
     rutaFront: {
         type: DataTypes.STRING
+    },
+
+    requiereId: {
+        type: DataTypes.BOOLEAN
     }
 
 })

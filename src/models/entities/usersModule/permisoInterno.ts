@@ -8,7 +8,9 @@ const PermisoInterno = db.define('PermisoInterno', {
         type: DataTypes.STRING
     },
 
-
+    requiereId: {
+        type: DataTypes.BOOLEAN
+    }
 })
 
 export default PermisoInterno;

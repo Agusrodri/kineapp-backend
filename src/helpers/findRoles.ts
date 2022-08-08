@@ -49,6 +49,7 @@ export default async (idUsuario: number) => {
         }
 
         const rolUsuario = {
+            idUsuario: idUsuario,
             idRol: idRol,
             nombreRol: rolName,
             permisos: permisos

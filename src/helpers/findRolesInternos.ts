@@ -60,7 +60,9 @@ export default async (idUsuario: number) => {
         }
 
         const rolesInternosJson = {
-            idRol: id,
+            idUsuario: idUsuario,
+            nombreUsuario: profesionalToFind['dataValues']['nombre'],
+            idRolInterno: id,
             nombreRol: nombreRol,
             idInstitucion: idInstitucion,
             institucion: nombre,

@@ -26,6 +26,18 @@ const Usuario = db.define('Usuario', {
 
     token: {
         type: DataTypes.STRING
+    },
+
+    rolActivo: {
+        type: DataTypes.INTEGER
+    },
+
+    rolInternoActivo: {
+        type: DataTypes.INTEGER
+    },
+
+    personaJuridica: {
+        type: DataTypes.INTEGER
     }
 })
 

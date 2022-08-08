@@ -4,6 +4,7 @@ import Usuario from '../../models/entities/usersModule/usuario';
 import generarToken from '../../helpers/generateJWT';
 import findRoles from '../../helpers/findRoles';
 import findRolesInternos from '../../helpers/findRolesInternos';
+import RolPermiso from 'models/entities/usersModule/rolPermiso';
 
 const loginControllers = {
 
@@ -82,6 +83,56 @@ const loginControllers = {
             res.status(200).json({
                 msg: `Token del usuario ${usuarioToDeleteToken['dataValues']['email']} desvinculado.`
             })
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                msg: 'Error al cerrar sesión'
+            });
+        }
+    },
+
+    setActivo: async (req: Request, res: Response, next: NextFunction) => {
+
+        try {
+
+            const { token, rolActivo, rolInternoActivo, personaJuridica } = req.body
+
+            const usuarioActivo = await Usuario.findOne({
+                where: {
+                    token: token
+                }
+            })
+
+            if (!usuarioActivo) {
+                throw new Error("No existe un usuario con token activo que coincida con el token indicado.")
+            }
+
+            await usuarioActivo.update({
+                rolActivo: rolActivo,
+                rolInternoActivo: rolInternoActivo,
+                personaJuridica: personaJuridica
+            })
+
+            const response = []
+
+            if (rolActivo) {
+
+                const rolPermisos = await RolPermiso.findAll({
+                    where: {
+                        fk_idRol: rolActivo,
+                        habilitadoPermiso: true
+                    }
+                })
+
+                for (let i = 0; i < rolPermisos.length; i++) {
+
+                }
+
+
+            }
+
+            res.status(200).json(usuarioActivo)
 
         } catch (error) {
             console.log(error)
