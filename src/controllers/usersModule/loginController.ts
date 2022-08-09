@@ -233,7 +233,7 @@ const loginControllers = {
                     }
                 })
 
-                const permisos = []
+                const permisosInternos = []
 
                 for (let k = 0; k < rolInternoPermisoInterno.length; k++) {
 
@@ -247,7 +247,7 @@ const loginControllers = {
                         requiereId: permisoInterno['dataValues']['requiereId']
                     }
 
-                    permisos.push(permisoInternoToAdd)
+                    permisosInternos.push(permisoInternoToAdd)
                 }
 
                 const rolInterno = {
@@ -257,7 +257,7 @@ const loginControllers = {
                     nombreRol: rolInternoToFind['dataValues']['nombrePermiso'],
                     idInstitucion: personaJuridica,
                     institucion: institucion['dataValues']['nombre'],
-                    permisos: permisos
+                    permisos: permisosInternos
 
                 }
 
