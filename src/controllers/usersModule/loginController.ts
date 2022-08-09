@@ -67,6 +67,7 @@ const loginControllers = {
 
             res.status(200).json({
                 msg: `Sesión del usuario ${email} iniciada`,
+                idUsuario: usuario[0]['dataValues']['id'],
                 token,
                 roles,
                 rolesInternos
@@ -137,9 +138,8 @@ const loginControllers = {
             res.status(200).json(usuarioActivo)
 
         } catch (error) {
-            console.log(error)
             res.status(500).json({
-                msg: 'Error al cerrar sesión'
+                msg: `${error}`
             });
         }
     },
