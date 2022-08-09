@@ -7,10 +7,11 @@ const router = Router()
 
 
 router.post("/login", loginControllers.login);
-router.post("/logout", [validarJWT], loginControllers.logout);
+router.put("/logout", [validarJWT], loginControllers.logout);
 
 router.put("/setActivo", loginControllers.setActivo);
 //devolver el rol activo del usuario en la sesión
 router.get("/getInfoUsuario/:token", [validarJWT], loginControllers.getInfoUsuarios);
+router.get("/validarJWT/:token",loginControllers.validateJWT);
 
 module.exports = router
