@@ -7,7 +7,7 @@ const router = Router()
 
 
 router.post("/login", loginControllers.login);
-router.put("/logout", [validarJWT], loginControllers.logout);
+router.get("/logout", [validarJWT], loginControllers.logout);
 
 router.put("/setActivo", loginControllers.setActivo);
 //devolver el rol activo del usuario en la sesión
