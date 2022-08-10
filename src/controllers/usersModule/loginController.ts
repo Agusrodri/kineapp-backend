@@ -195,7 +195,9 @@ const loginControllers = {
                         icon: permiso['dataValues']['icon'],
                         nombreMenu: permiso['dataValues']['nombreMenu'],
                         rutaFront: permiso['dataValues']['rutaFront'],
-                        requiereId: permiso['dataValues']['requiereId']
+                        requiereIdInst: permiso['dataValues']['requiereIdInst'],
+                        requiereIdPac: permiso['dataValues']['requiereIdPac'],
+                        isMenu: permiso['dataValues']['isMenu']
                     }
 
                     permisos.push(permisoToAdd)
@@ -258,7 +260,9 @@ const loginControllers = {
                         icon: permisoInterno['dataValues']['icon'],
                         nombreMenu: permisoInterno['dataValues']['nombreMenu'],
                         rutaFront: permisoInterno['dataValues']['rutaFront'],
-                        requiereId: permisoInterno['dataValues']['requiereId']
+                        requiereIdInst: permisoInterno['dataValues']['requiereIdInst'],
+                        requiereIdPac: permisoInterno['dataValues']['requiereIdPac'],
+                        isMenu: permisoInterno['dataValues']['isMenu']
                     }
 
                     permisosInternos.push(permisoInternoToAdd)
