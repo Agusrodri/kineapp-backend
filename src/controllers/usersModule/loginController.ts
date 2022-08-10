@@ -67,6 +67,16 @@ const loginControllers = {
             const roles = await findRoles(usuario[0]['dataValues']['id'])
             const rolesInternos = await findRolesInternos(usuario[0]['dataValues']['id'])
 
+            //si tiene un solo rol dejarlo que inicie sesión con ese rol activo
+            if (roles.length == 1) {
+                const rolActivoToAsignar = roles[0]['idRol']
+                await usuario[0].update({ rolActivo: rolActivoToAsignar })
+            } else if (rolesInternos.length == 1) {
+                const rolInternoActivoToAsignar = rolesInternos[0]['idRolInterno']
+                const personaJuridicaToAsignar = rolesInternos[0]['idInstitucion']
+                await usuario[0].update({ rolInternoActivo: rolInternoActivoToAsignar, personaJuridica: personaJuridicaToAsignar })
+            }
+
             res.status(200).json({
                 msg: `Sesión del usuario ${email} iniciada`,
                 idUsuario: usuario[0]['dataValues']['id'],
@@ -93,7 +103,7 @@ const loginControllers = {
                 }
             })
 
-            await usuarioToDeleteToken.update({ token: null })
+            await usuarioToDeleteToken.update({ token: null, rolActivo: null, rolInternoActivo: null, personaJuridica: null })
 
             res.status(200).json({
                 msg: `Token del usuario ${usuarioToDeleteToken['dataValues']['email']} desvinculado.`
@@ -279,36 +289,36 @@ const loginControllers = {
 
     validateJWT: async (req: Request, res: Response, next: NextFunction) => {
 
-        const {token} = req.params
+        const { token } = req.params
 
-        try{
+        try {
 
             jwt.verify(token, process.env.SECRETORPRIVATEKEY)
 
             res.status(200).json({
                 response: true
-            })            
-            
-        }catch(error){
+            })
 
-            try{
+        } catch (error) {
+
+            try {
                 const userToLogOut = await Usuario.findOne({
-                    where:{
+                    where: {
                         token: token
                     }
                 })
 
-                if(!userToLogOut){
+                if (!userToLogOut) {
                     throw new Error("No existe un usuario asociado al token indicado.")
                 }
 
-                await userToLogOut.update({token: null})
+                await userToLogOut.update({ token: null })
 
                 res.status(200).json({
                     response: false
                 })
 
-            }catch(error){
+            } catch (error) {
                 res.status(500).json({
                     msg: `${error}`
                 });
