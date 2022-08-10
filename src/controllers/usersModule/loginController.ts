@@ -68,7 +68,7 @@ const loginControllers = {
             const rolesInternos = await findRolesInternos(usuario[0]['dataValues']['id'])
 
             //si tiene un solo rol dejarlo que inicie sesión con ese rol activo
-            if (roles.length + rolesInternos.length == 1) {
+            if (roles.length + (rolesInternos ? rolesInternos.length : 0) == 1) {
                 if (roles.length == 1) {
                     const rolActivoToAsignar = roles[0]['idRol']
                     await usuario[0].update({ rolActivo: rolActivoToAsignar })
