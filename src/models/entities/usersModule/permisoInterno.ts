@@ -20,10 +20,17 @@ const PermisoInterno = db.define('PermisoInterno', {
         type: DataTypes.STRING
     },
 
-    requiereId: {
+    requiereIdInst: {
         type: DataTypes.BOOLEAN
     },
 
+    requiereIdPac: {
+        type: DataTypes.BOOLEAN
+    },
+
+    isMenu: {
+        type: DataTypes.BOOLEAN
+    }
 
 })
 

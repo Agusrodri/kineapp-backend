@@ -214,6 +214,36 @@ const institucionesController = {
                 msg: `${error}`
             });
         }
+    },
+
+    habilitarInstitucion: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idPersonaJuridica } = req.params
+
+            const personaJuridicaToHabilitar = await PersonaJuridica.findOne({
+                where: {
+                    id: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            if (!personaJuridicaToHabilitar) {
+                throw new Error("No se encontró la institución solicitada.")
+            }
+
+            personaJuridicaToHabilitar.update({ habilitado: true })
+
+            res.status(200).json({
+                msg: "Institución habilitada con éxito."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
     }
 }
 

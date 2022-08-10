@@ -11,6 +11,7 @@ router.post("/instituciones/crear", institucionesController.createInstitucion);
 router.put("/instituciones/validar/:idUsuario", institucionesController.validarInstitucion);
 router.put("/instituciones/editar/:idUsuario", institucionesController.updateInstitucionById);
 router.delete("/instituciones/eliminar/:idPersonaJuridica", institucionesController.deleteInstitucionById);
+router.get("/instituciones/habilitar/:idPersonaJuridica", institucionesController.habilitarInstitucion);
 
 
 module.exports = router
