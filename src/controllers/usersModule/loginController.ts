@@ -68,13 +68,15 @@ const loginControllers = {
             const rolesInternos = await findRolesInternos(usuario[0]['dataValues']['id'])
 
             //si tiene un solo rol dejarlo que inicie sesión con ese rol activo
-            if (roles.length == 1) {
-                const rolActivoToAsignar = roles[0]['idRol']
-                await usuario[0].update({ rolActivo: rolActivoToAsignar })
-            } else if (rolesInternos.length == 1) {
-                const rolInternoActivoToAsignar = rolesInternos[0]['idRolInterno']
-                const personaJuridicaToAsignar = rolesInternos[0]['idInstitucion']
-                await usuario[0].update({ rolInternoActivo: rolInternoActivoToAsignar, personaJuridica: personaJuridicaToAsignar })
+            if (roles.length + rolesInternos.length == 1) {
+                if (roles.length == 1) {
+                    const rolActivoToAsignar = roles[0]['idRol']
+                    await usuario[0].update({ rolActivo: rolActivoToAsignar })
+                } else if (rolesInternos.length == 1) {
+                    const rolInternoActivoToAsignar = rolesInternos[0]['idRolInterno']
+                    const personaJuridicaToAsignar = rolesInternos[0]['idInstitucion']
+                    await usuario[0].update({ rolInternoActivo: rolInternoActivoToAsignar, personaJuridica: personaJuridicaToAsignar })
+                }
             }
 
             res.status(200).json({
