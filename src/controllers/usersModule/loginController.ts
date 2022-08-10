@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
+require("dotenv").config();
 import Usuario from '../../models/entities/usersModule/usuario';
 import generarToken from '../../helpers/generateJWT';
 import findRoles from '../../helpers/findRoles';
@@ -254,7 +256,7 @@ const loginControllers = {
                     idUsuario: usuarioToFind['dataValues']['id'],
                     nombreUsuario: profesional['dataValues']['nombre'],
                     idRolInterno: rolInternoActivo,
-                    nombreRol: rolInternoToFind['dataValues']['nombrePermiso'],
+                    nombreRol: rolInternoToFind['dataValues']['nombreRol'],
                     idInstitucion: personaJuridica,
                     institucion: institucion['dataValues']['nombre'],
                     permisos: permisosInternos
@@ -270,8 +272,47 @@ const loginControllers = {
         } catch (error) {
             console.log(error)
             res.status(500).json({
-                msg: 'Error al cerrar sesión'
+                msg: `${error}`
             });
+        }
+    },
+
+    validateJWT: async (req: Request, res: Response, next: NextFunction) => {
+
+        const {token} = req.params
+
+        try{
+
+            jwt.verify(token, process.env.SECRETORPRIVATEKEY)
+
+            res.status(200).json({
+                response: true
+            })            
+            
+        }catch(error){
+
+            try{
+                const userToLogOut = await Usuario.findOne({
+                    where:{
+                        token: token
+                    }
+                })
+
+                if(!userToLogOut){
+                    throw new Error("No existe un usuario asociado al token indicado.")
+                }
+
+                await userToLogOut.update({token: null})
+
+                res.status(200).json({
+                    response: false
+                })
+
+            }catch(error){
+                res.status(500).json({
+                    msg: `${error}`
+                });
+            }
         }
     }
 }

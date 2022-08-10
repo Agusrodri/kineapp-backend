@@ -8,7 +8,7 @@ const generarToken = {
             const payload = { finalToken };
 
             jwt.sign(payload, process.env.SECRETORPRIVATEKEY, {
-                expiresIn: '1800s'
+                expiresIn: '3600s'
             }, (err, token) => {
 
                 if (err) {
