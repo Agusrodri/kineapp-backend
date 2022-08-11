@@ -8,10 +8,6 @@ const Plan = db.define('Plane', {
         type: DataTypes.STRING
     },
 
-    codigo: {
-        type: DataTypes.STRING
-    },
-
     fk_idObraSocial: {
         type: DataTypes.STRING
     },
