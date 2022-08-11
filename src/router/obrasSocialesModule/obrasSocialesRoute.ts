@@ -12,6 +12,7 @@ router.put("/obrasSociales/editarObraSocial/:idObraSocial", obrasSocialesControl
 router.post("/obrasSociales/agregarPlan/:idObraSocial", obrasSocialesController.agregarPlan);
 router.post("/obrasSociales/agregarTratamientos/:idPlan", obrasSocialesController.agregarTratamientos);
 router.get("/obrasSociales/getPlan/:idPlan", obrasSocialesController.getPlanById);
-router.put("/obrasSociales/editarPlan/:idPlan")
+router.put("/obrasSociales/editarPlan/:idPlan", obrasSocialesController.editarPlan);
+router.delete("/obrasSociales/eliminarPlan/:idPlan", obrasSocialesController.eliminarPlan);
 
 module.exports = router

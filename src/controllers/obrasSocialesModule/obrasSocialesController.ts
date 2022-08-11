@@ -326,7 +326,8 @@ const obrasSocialesController = {
                 })
 
                 if (planTratamientoGeneralToFind) {
-                    throw new Error("El tratamiento ya se encuentra asociado al plan indicado.")
+                    const tratamientoGeneral = await TratamientoGeneral.findByPk(tratamientos[i]['idTratamientoGeneral'])
+                    throw new Error(`El tratamiento ${tratamientoGeneral['dataValues']['nombre']} ya se encuentra asociado al plan indicado, intente nuevamente.`)
                 }
 
                 await PlanTratamientoGeneral.create({
@@ -335,11 +336,96 @@ const obrasSocialesController = {
                     fk_idPlan: idPlan,
                     fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral']
                 })
+            }
+            res.status(200).json({
+                msg: "Los tratamientos se agregaron al plan correctamente."
+            })
 
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    editarPlan: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idPlan } = req.params
+            const { nombre, tratamientos } = req.body
+
+            const planNombre = await Plan.findOne({
+                where: {
+                    nombre: nombre,
+                    activo: true
+                }
+            })
+
+            if (planNombre) {
+                throw new Error("El nombre de plan solicitado ya se encuentra en uso. Ingrese uno nuevo.")
+            }
+
+            const planToEdit = await Plan.findOne({
+                where: {
+                    id: idPlan,
+                    activo: true
+                }
+            })
+
+            if (!planToEdit) {
+                throw new Error("No existe el plan solicitado.")
+            }
+
+            await planToEdit.update({ nombre: nombre })
+            await PlanTratamientoGeneral.destroy({
+                where: {
+                    fk_idPlan: idPlan
+                }
+            })
+
+            for (let i = 0; i < tratamientos.length; i++) {
+
+                await PlanTratamientoGeneral.create({
+                    porcentajeCobertura: tratamientos[i]['porcentajeCobertura'],
+                    comentarios: tratamientos[i]['comentarios'],
+                    fk_idPlan: idPlan,
+                    fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral']
+                })
             }
 
             res.status(200).json({
-                msg: "Los tratamientos se agregaron al plan correctamente."
+                msg: "Plan actualizado correctamente."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    eliminarPlan: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idPlan } = req.params
+
+            const planToDelete = await Plan.findOne({
+                where: {
+                    id: idPlan,
+                    activo: true
+                }
+            })
+
+            if (!planToDelete) {
+                throw new Error("No existe el plan solicitado.")
+            }
+
+            await planToDelete.update({ activo: false })
+
+            res.status(200).json({
+                msg: "Plan eliminado con éxito."
             })
 
         } catch (error) {
