@@ -313,25 +313,30 @@ const obrasSocialesController = {
 
         try {
 
-            const { idPlan, idTratamientoGeneral } = req.params
-            const { porcentajeCobertura, comentarios } = req.body
-            const planTratamientoGeneralToFind = await PlanTratamientoGeneral.findOne({
-                where: {
-                    fk_idPlan: idPlan,
-                    fk_idTratamientoGeneral: idTratamientoGeneral
+            const { idPlan } = req.params
+            const { tratamientos } = req.body
+
+            for (let i = 0; i < tratamientos.length; i++) {
+
+                const planTratamientoGeneralToFind = await PlanTratamientoGeneral.findOne({
+                    where: {
+                        fk_idPlan: idPlan,
+                        fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral']
+                    }
+                })
+
+                if (planTratamientoGeneralToFind) {
+                    throw new Error("El tratamiento ya se encuentra asociado al plan indicado.")
                 }
-            })
 
-            if (planTratamientoGeneralToFind) {
-                throw new Error("El tratamiento ya se encuentra asociado al plan indicado.")
+                await PlanTratamientoGeneral.create({
+                    porcentajeCobertura: tratamientos[i]['porcentajeCobertura'],
+                    comentarios: tratamientos[i]['comentarios'],
+                    fk_idPlan: idPlan,
+                    fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral']
+                })
+
             }
-
-            await PlanTratamientoGeneral.create({
-                porcentajeCobertura: porcentajeCobertura,
-                comentarios: comentarios,
-                fk_idPlan: idPlan,
-                fk_idTratamientoGeneral: idTratamientoGeneral
-            })
 
             res.status(200).json({
                 msg: "El tratamiento se agregó al plan correctamente."
