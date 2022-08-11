@@ -339,7 +339,7 @@ const obrasSocialesController = {
             }
 
             res.status(200).json({
-                msg: "El tratamiento se agregó al plan correctamente."
+                msg: "Los tratamientos se agregaron al plan correctamente."
             })
 
         } catch (error) {
