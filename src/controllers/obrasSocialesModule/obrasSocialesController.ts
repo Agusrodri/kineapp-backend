@@ -59,7 +59,8 @@ const obrasSocialesController = {
                         { cuit: cuit },
                         { razonSocial: razonSocial },
                         { email: email }
-                    ]
+                    ],
+                    activo: true
                 }
             })
 
@@ -185,7 +186,12 @@ const obrasSocialesController = {
         try {
 
             const { idObraSocial } = req.params
-            const obraSocialToDelete = await ObraSocial.findByPk(idObraSocial)
+            const obraSocialToDelete = await ObraSocial.findOne({
+                where: {
+                    id: idObraSocial,
+                    activo: true
+                }
+            })
 
             if (!obraSocialToDelete) {
                 throw new Error("No existe la obra social solicitada.")
