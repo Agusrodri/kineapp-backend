@@ -40,7 +40,7 @@ const conveniosController = {
         try{
 
             const {idPersonaJuridica, idConvenio} = req.params
-            const convenioToFind = await Convenio.findOne({
+            const convenio = await Convenio.findOne({
                 where:{
                     id: idConvenio,
                     fk_idPersonaJuridica: idPersonaJuridica,
@@ -48,11 +48,38 @@ const conveniosController = {
                 }
             })
 
-            if(!convenioToFind){
+            if(!convenio){
                 throw new Error("No existe el convenio solicitado.")
             }
 
-            res.status(200).json(convenioToFind)
+            const conveniosTratamientoGenerales = await ConvenioTratamientoGeneral.findAll({
+                where:{
+                    fk_idConvenio: idConvenio,
+                    activo: true
+                }
+            })
+
+            const tratamientos = []
+
+            for(let i=0; i<conveniosTratamientoGenerales.length; i++){
+
+                const tratamientoGeneral = await TratamientoGeneral.findOne({
+                    where:{
+                        id: conveniosTratamientoGenerales[i]['dataValues']['fk_idTratamientoGeneral'],
+                        activo: true
+                    }
+                })
+
+                const tratamientoToAdd = {
+                    idTratamientoGeneral: tratamientoGeneral['dataValues']['id'],
+                    nombre: tratamientoGeneral['dataValues']['nombre'],
+                    monto: conveniosTratamientoGenerales[i]['dataValues']['monto']
+                }
+
+                tratamientos.push(tratamientoToAdd)
+            }
+
+            res.status(200).json({convenio, tratamientos})
 
         }catch(error){
             res.status(500).json({
