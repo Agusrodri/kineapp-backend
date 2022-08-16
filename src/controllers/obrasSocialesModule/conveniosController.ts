@@ -221,7 +221,39 @@ const conveniosController = {
                 msg: `${error}`
             });
         }
+    },
+
+    bajaConvenio: async (req: Request, res: Response) => {
+
+        try{
+
+            const {idConvenio, idPersonaJuridica} = req.params
+
+            const convenioToDelete = await Convenio.findOne({
+                where:{
+                    id: idConvenio,
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            if(!convenioToDelete){
+                throw new Error("No existe el convenio indicado.")
+            }
+
+            await convenioToDelete.update({activo: false})
+
+            res.status(200).json({
+                msg: "Convenio eliminado correctamente."
+            })
+
+        }catch(error){
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
     }
+
 
 }
 
