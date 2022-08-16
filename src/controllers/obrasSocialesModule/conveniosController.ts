@@ -113,7 +113,6 @@ const conveniosController = {
 
             const convenioToFind = await Convenio.findOne({
                 where: {
-                    nombre: obraSocial['dataValues']['nombre'],
                     fk_idObraSocial: idObraSocial,
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
