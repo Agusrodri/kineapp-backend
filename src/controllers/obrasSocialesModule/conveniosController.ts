@@ -119,7 +119,7 @@ const conveniosController = {
                 }
             })
 
-            if (!convenioToFind) {
+            if (convenioToFind) {
                 throw new Error("Ya existe un convenio con esta obra social y la institución.")
             }
 
