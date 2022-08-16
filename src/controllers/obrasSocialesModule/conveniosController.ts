@@ -111,6 +111,19 @@ const conveniosController = {
                 throw new Error("No existe la obra social indicada.")
             }
 
+            const convenioToFind = await Convenio.findOne({
+                where: {
+                    nombre: obraSocial['dataValues']['nombre'],
+                    fk_idObraSocial: idObraSocial,
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            if (!convenioToFind) {
+                throw new Error("Ya existe un convenio con esta obra social y la institución.")
+            }
+
             const convenioToCreate = await Convenio.create({
                 nombre: obraSocial['dataValues']['nombre'],
                 descripcion: descripcion,
