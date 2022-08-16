@@ -298,14 +298,15 @@ const obrasSocialesController = {
                 throw new Error("El nombre del plan que desea agregar ya existe en esta obra social, intenta nuevamente.")
             }
 
-            await Plan.create({
+            const nuevoPlan = await Plan.create({
                 nombre: nombre,
                 fk_idObraSocial: idObraSocial,
                 activo: true
             })
 
             res.status(200).json({
-                msg: "Plan creado correctamente."
+                msg: "Plan creado correctamente.",
+                nuevoPlan
             })
 
         } catch (error) {

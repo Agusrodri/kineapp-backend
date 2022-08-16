@@ -251,6 +251,45 @@ const institucionesController = {
                 msg: `${error}`
             });
         }
+    },
+
+    editarInstitucionFromPerfil: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idPersonaJuridica } = req.params
+            const { nombre, razonSocial, domicilio, telefono } = req.body
+
+            const personaJuridicaToEdit = await PersonaJuridica.findOne({
+                where: {
+                    id: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            if (!personaJuridicaToEdit) {
+                throw new Error("No existe la institución indicada.")
+            }
+
+            await personaJuridicaToEdit.update({ nombre: nombre, razonSocial: razonSocial, domicilio: domicilio })
+
+            const usuario = await Usuario.findOne({
+                where: {
+                    id: personaJuridicaToEdit['dataValues']['fk_idUsuarios']
+                }
+            })
+
+            await usuario.update({ telefono: telefono })
+
+            res.status(200).json({
+                msg: "Institución actualizada con éxito."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
     }
 }
 

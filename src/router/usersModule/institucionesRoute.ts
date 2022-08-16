@@ -12,6 +12,7 @@ router.put("/instituciones/validar/:idUsuario", institucionesController.validarI
 router.put("/instituciones/editar/:idUsuario", institucionesController.updateInstitucionById);
 router.delete("/instituciones/eliminar/:idPersonaJuridica", institucionesController.deleteInstitucionById);
 router.get("/instituciones/habilitar/:idPersonaJuridica", institucionesController.habilitarInstitucion);
+router.put("/instituciones/editarFromPerfil/:idPersonaJuridica", institucionesController.editarInstitucionFromPerfil);
 
 
 module.exports = router
