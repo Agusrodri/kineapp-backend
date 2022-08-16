@@ -5,7 +5,7 @@ import ConvenioTratamientoGeneral from '../../models/entities/obrasSocialesModul
 import Plan from '../../models/entities/obrasSocialesModule/plan';
 import PlanTratamientoGeneral from '../../models/entities/obrasSocialesModule/planTratamientoGeneral';
 import TratamientoGeneral from '../../models/entities/obrasSocialesModule/tratamientoGeneral';
-
+import PjTratamientoGeneral from '../../models/entities/obrasSocialesModule/pjTratamientoGeneral'
 const conveniosController = {
 
     getConvenios: async (req: Request, res: Response) => {
@@ -35,11 +35,38 @@ const conveniosController = {
 
     },
 
+    getConvenioById: async (req: Request, res: Response) => {
+
+        try{
+
+            const {idPersonaJuridica, idConvenio} = req.params
+            const convenioToFind = await Convenio.findOne({
+                where:{
+                    id: idConvenio,
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            if(!convenioToFind){
+                throw new Error("No existe el convenio solicitado.")
+            }
+
+            res.status(200).json(convenioToFind)
+
+        }catch(error){
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+
+    },
+
     getTratamientosConvenio: async (req: Request, res: Response) => {
 
         try {
 
-            const { idObraSocial } = req.params
+            const { idObraSocial, idPersonaJuridica } = req.params
 
             const planesObraSocial = await Plan.findAll({
                 where: {
@@ -48,7 +75,7 @@ const conveniosController = {
                 }
             })
 
-            const tratamientos = []
+            const tratamientos: any = []
 
             for (let i = 0; i < planesObraSocial.length; i++) {
 
@@ -67,13 +94,28 @@ const conveniosController = {
                         }
                     })
 
-                    const tratamiento = {
-                        idTratamientoGeneral: tratamientoGral['dataValues']['id'],
-                        nombre: tratamientoGral['dataValues']['nombre']
+                    const pjTratamientoGeneral = await PjTratamientoGeneral.findOne({
+                        where:{
+                            fk_idTratamientoGeneral: tratamientoGral!['dataValues']['id'] || 0,
+                            fk_idPersonaJuridica: idPersonaJuridica,
+                            activo: true
+                        }
+                    })
+
+                    if(!pjTratamientoGeneral){
+                        continue
                     }
 
-                    tratamientos.push(tratamiento)
+                    const tratamiento = {
+                        idTratamientoGeneral: tratamientoGral!['dataValues']['id'],
+                        nombre: tratamientoGral!['dataValues']['nombre']
+                    }
 
+                    if(tratamientos.find(tratamientoIndex=> tratamientoIndex.idTratamientoGeneral === tratamiento.idTratamientoGeneral)){
+                        continue
+                    } 
+
+                    tratamientos.push(tratamiento)
                 }
             }
 
