@@ -120,7 +120,7 @@ const conveniosController = {
             })
 
             if (convenioToFind) {
-                throw new Error("Ya existe un convenio con esta obra social y la institución.")
+                throw new Error("Ya existe un convenio entre esta obra social y la institución.")
             }
 
             const convenioToCreate = await Convenio.create({
