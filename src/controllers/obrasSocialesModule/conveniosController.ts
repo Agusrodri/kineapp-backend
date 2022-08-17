@@ -223,6 +223,66 @@ const conveniosController = {
         }
     },
 
+    editarConvenio: async (req: Request, res: Response) => {
+
+        try{
+
+            const {idPersonaJuridica} = req.params
+            const {idObraSocial, descripcion, tratamientos } = req.body
+
+            const obraSocial = await ObraSocial.findOne({
+                where:{
+                    id: idObraSocial,
+                    activo: true
+                }
+            })
+
+            if (!obraSocial) {
+                throw new Error("No existe la obra social indicada.")
+            }
+
+            const convenioToFind = await Convenio.findOne({
+                where:{
+                    fk_idObraSocial: idObraSocial,
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            await convenioToFind.update({descripcion: descripcion})
+
+            if(!convenioToFind){
+                throw new Error("No existe el convenio indicado.")
+            }
+
+            await ConvenioTratamientoGeneral.destroy({
+                where:{
+                    fk_idConvenio: convenioToFind['dataValues']['id']
+                }
+            })
+
+            for (let i = 0; i < tratamientos.length; i++) {
+
+                await ConvenioTratamientoGeneral.create({
+                    monto: tratamientos[i]['monto'],
+                    fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral'],
+                    fk_idConvenio: convenioToFind['dataValues']['id'],
+                    activo: true
+                })
+            }
+
+            res.status(200).json({
+                msg: "Convenio actualizado con éxito."
+            })
+
+        }catch(error){
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+
+    },
+
     bajaConvenio: async (req: Request, res: Response) => {
 
         try{

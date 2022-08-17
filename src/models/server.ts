@@ -67,6 +67,7 @@ class Server {
         this.app.use(this.apiPaths.usuarios, require('../router/obrasSocialesModule/obrasSocialesRoute'));
         this.app.use(this.apiPaths.usuarios, require('../router/obrasSocialesModule/tratamientosGeneralesRoute'));
         this.app.use(this.apiPaths.usuarios, require('../router/obrasSocialesModule/conveniosRoute'));
+        this.app.use(this.apiPaths.usuarios, require('../router/obrasSocialesModule/tratamientosParticularesRoute'));
         this.app.use(this.apiPaths.usuarios, require('../router/filesRoute/filesRoute'));
 
         //autorizar frontend para evitar error de CORS

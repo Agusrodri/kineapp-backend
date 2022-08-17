@@ -9,5 +9,6 @@ router.delete("/convenios/eliminar/:idPersonaJuridica/:idConvenio", conveniosCon
 router.post("/convenios/agregar/:idPersonaJuridica", conveniosController.agregarConvenio);
 //obtener todos los tratamientos que cubre esa obra social
 router.get("/tratamientosObraSocialConvenio/:idObraSocial/:idPersonaJuridica", conveniosController.getTratamientosConvenio);
+router.put("/convenios/editar/:idPersonaJuridica", conveniosController.editarConvenio);
 
 module.exports = router
