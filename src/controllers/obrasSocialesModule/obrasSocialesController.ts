@@ -361,9 +361,12 @@ const obrasSocialesController = {
 
             const { idPlan } = req.params
             const { nombre, tratamientos } = req.body
-
+            
             const planNombre = await Plan.findOne({
                 where: {
+                    id: {
+                        [Op.notIn]: [idPlan]
+                    },
                     nombre: nombre,
                     activo: true
                 }
