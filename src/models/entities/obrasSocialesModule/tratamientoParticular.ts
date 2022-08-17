@@ -16,6 +16,10 @@ const TratamientoParticular = db.define('TratamientoParticulare', {
         type: DataTypes.STRING
     },
 
+    fk_idPersonaJuridica: {
+        type: DataTypes.INTEGER
+    },
+
     activo: {
         type: DataTypes.BOOLEAN
     }

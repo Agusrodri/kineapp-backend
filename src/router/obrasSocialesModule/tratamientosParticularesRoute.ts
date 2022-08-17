@@ -4,5 +4,10 @@ import tratamientosParticularesController from "../../controllers/obrasSocialesM
 const router = Router()
 
 router.get("/tratamientosParticulares/:idPersonaJuridica", tratamientosParticularesController.getTratamientosParticulares);
+router.get("/tratamientosParticulares/getOne/:idPersonaJuridica/:idTratamientoParticular", tratamientosParticularesController.getTratamientoParticularById);
+router.post("/tratamientosParticulares/agregar/:idPersonaJuridica", tratamientosParticularesController.agregarTratamientoParticular);
+router.put("/tratamientosParticulares/editar/:idPersonaJuridica", tratamientosParticularesController.editarTratamientoParticular);
+router.delete("/tratamientoParticular/eliminar/:idPersonaJuridica/:idTratamientoParticular", tratamientosParticularesController.eliminarTratamientoParticular);
+
 
 module.exports = router
