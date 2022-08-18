@@ -382,7 +382,7 @@ const loginControllers = {
 
             } else {
 
-                const personaJuridica = await PersonaJuridica.findOne({
+                const institucion = await PersonaJuridica.findOne({
                     where: {
                         fk_idUsuarios: usuarioToFind['dataValues']['id'],
                         activo: true
@@ -391,7 +391,7 @@ const loginControllers = {
 
                 res.status(200).json({
                     usuarioToFind,
-                    personaJuridica
+                    institucion
                 })
             }
 
