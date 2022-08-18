@@ -78,6 +78,7 @@ const institucionesController = {
 
             //response final
             const responseJson = {
+                idUsuario: fk_idUsuarios,
                 nombre: nombre,
                 cuit: cuit,
                 razonSocial: razonSocial,
