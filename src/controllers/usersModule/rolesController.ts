@@ -162,7 +162,7 @@ const rolesController = {
 
             if (!rol) {
                 return res.status(404).json({
-                    msg: `Rol con id ${id} no encontrado`
+                    msg: `Rol no encontrado`
                 })
             }
 
@@ -184,7 +184,7 @@ const rolesController = {
             }
 
             res.status(200).json({
-                msg: `Rol con id ${id} actualizado`
+                msg: `Rol actualizado correctamente.`
 
             })
 
