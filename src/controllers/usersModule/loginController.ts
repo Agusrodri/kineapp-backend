@@ -330,11 +330,29 @@ const loginControllers = {
                     }
                 })
 
-                res.status(200).json({
-                    usuarioToFind,
-                    rol,
-                    paciente
+                const institucion = await PersonaJuridica.findOne({
+                    where: {
+                        fk_idUsuarios: usuarioToFind['dataValues']['id'],
+                        activo: true
+                    }
                 })
+
+                if (paciente) {
+                    res.status(200).json({
+                        usuarioToFind,
+                        rol,
+                        paciente
+                    })
+                } else if (institucion) {
+                    res.status(200).json({
+                        usuarioToFind,
+                        institucion
+                    })
+                } else {
+                    res.status(404).json({
+                        msg: "Paciente or Institución not found"
+                    })
+                }
 
             } else if (rolInternoActivo && personaJuridica) {
 
@@ -381,18 +399,7 @@ const loginControllers = {
                 })
 
             } else {
-
-                const institucion = await PersonaJuridica.findOne({
-                    where: {
-                        fk_idUsuarios: usuarioToFind['dataValues']['id'],
-                        activo: true
-                    }
-                })
-
-                res.status(200).json({
-                    usuarioToFind,
-                    institucion
-                })
+                throw new Error("Complete campos faltantes en usuario.")
             }
 
         } catch (error) {
