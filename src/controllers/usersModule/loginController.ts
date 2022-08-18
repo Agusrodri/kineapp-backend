@@ -293,6 +293,89 @@ const loginControllers = {
         }
     },
 
+    getInfoPerfil: async (req: Request, res: Response, next: NextFunction) => {
+
+        try {
+
+            const { idUsuario, token } = req.body
+
+            const usuarioToFind = await Usuario.findOne({
+                where: {
+                    id: idUsuario,
+                    token: token,
+                    activo: true
+                }
+            })
+
+            if (!usuarioToFind) {
+                throw new Error("No existe correspondencia entre el token enviado y el usuario solicitado.")
+            }
+
+            const { rolActivo, rolInternoActivo, personaJuridica } = usuarioToFind['dataValues']
+
+            if (rolActivo) {
+
+                const rolToFind = await Rol.findByPk(rolActivo)
+                const rol = {
+                    idUsuario: usuarioToFind['dataValues']['id'],
+                    idRol: rolToFind['dataValues']['id'],
+                    nombreRol: rolToFind['dataValues']['nombreRol'],
+                }
+
+                res.status(200).json(rol)
+
+            } else if (rolInternoActivo && personaJuridica) {
+
+                const institucion = await PersonaJuridica.findOne({
+                    where: {
+                        id: personaJuridica,
+                        activo: true
+                    }
+                })
+
+                const profesional = await Profesional.findOne({
+                    where: {
+                        fk_idUsuario: usuarioToFind['dataValues']['id']
+                    }
+                })
+
+                const pjProfesional = await PersonaJuridicaProfesional.findOne({
+                    where: {
+                        fk_idPersonaJuridica: personaJuridica,
+                        fk_idRolInterno: rolInternoActivo,
+                        fk_idProfesional: profesional['dataValues']['id']
+                    }
+                })
+
+                if (!pjProfesional) {
+                    throw new Error("El profesional no pertenece a la institucion indicada.")
+                }
+
+                const rolInternoToFind = await RolInterno.findByPk(rolInternoActivo)
+
+                const rolInterno = {
+                    idUsuario: usuarioToFind['dataValues']['id'],
+                    nombreUsuario: profesional['dataValues']['nombre'],
+                    idRolInterno: rolInternoActivo,
+                    nombreRol: rolInternoToFind['dataValues']['nombreRol'],
+                    idInstitucion: personaJuridica,
+                    institucion: institucion['dataValues']['nombre'],
+                }
+
+                res.status(200).json(rolInterno)
+
+            } else {
+                throw new Error("Complete campos faltantes en usuario.")
+            }
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+
+    },
+
     validateJWT: async (req: Request, res: Response, next: NextFunction) => {
 
         const { token } = req.params

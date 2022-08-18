@@ -12,6 +12,7 @@ router.get("/logout", [validarJWT], loginControllers.logout);
 router.put("/setActivo", loginControllers.setActivo);
 //devolver el rol activo del usuario en la sesión
 router.get("/getInfoUsuario/:token", [validarJWT], loginControllers.getInfoUsuarios);
-router.get("/validarJWT/:token",loginControllers.validateJWT);
+router.put("/getInfoPerfil", loginControllers.getInfoPerfil);
+router.get("/validarJWT/:token", loginControllers.validateJWT);
 
 module.exports = router
