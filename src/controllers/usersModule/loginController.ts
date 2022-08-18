@@ -15,6 +15,7 @@ import RolInterno from '../../models/entities/usersModule/rolInterno';
 import RolInternoPermisoInterno from '../../models/entities/usersModule/rolInternoPermisoInterno';
 import PermisoInterno from '../../models/entities/usersModule/permisoInterno';
 import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
+import Paciente from '../../models/entities/usersModule/paciente';
 
 const loginControllers = {
 
@@ -322,7 +323,18 @@ const loginControllers = {
                     nombreRol: rolToFind['dataValues']['nombreRol'],
                 }
 
-                res.status(200).json(rol)
+                const paciente = await Paciente.findOne({
+                    where: {
+                        fk_idUsuario: usuarioToFind['dataValues']['id'],
+                        activo: true
+                    }
+                })
+
+                res.status(200).json({
+                    usuarioToFind,
+                    rol,
+                    paciente
+                })
 
             } else if (rolInternoActivo && personaJuridica) {
 
@@ -362,10 +374,25 @@ const loginControllers = {
                     institucion: institucion['dataValues']['nombre'],
                 }
 
-                res.status(200).json(rolInterno)
+                res.status(200).json({
+                    usuarioToFind,
+                    rolInterno,
+                    profesional
+                })
 
             } else {
-                throw new Error("Complete campos faltantes en usuario.")
+
+                const personaJuridica = await PersonaJuridica.findOne({
+                    where: {
+                        fk_idUsuarios: usuarioToFind['dataValues']['id'],
+                        activo: true
+                    }
+                })
+
+                res.status(200).json({
+                    usuarioToFind,
+                    personaJuridica
+                })
             }
 
         } catch (error) {
