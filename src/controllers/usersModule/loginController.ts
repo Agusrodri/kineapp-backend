@@ -297,8 +297,8 @@ const loginControllers = {
 
         try {
 
-            const { idUsuario, token } = req.body
-
+            const token = req.header("token")
+            const { idUsuario } = req.body
             const usuarioToFind = await Usuario.findOne({
                 where: {
                     id: idUsuario,
