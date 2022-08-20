@@ -16,6 +16,9 @@ import RolInternoPermisoInterno from '../../models/entities/usersModule/rolInter
 import PermisoInterno from '../../models/entities/usersModule/permisoInterno';
 import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
 import Paciente from '../../models/entities/usersModule/paciente';
+import TipoDNI from '../../models/entities/usersModule/tipoDNI';
+import Plan from '../../models/entities/obrasSocialesModule/plan';
+import ObraSocial from '../../models/entities/obrasSocialesModule/obraSocial';
 
 const loginControllers = {
 
@@ -338,15 +341,37 @@ const loginControllers = {
                 })
 
                 if (paciente) {
+
+                    const obraSocial = await ObraSocial
+
+                    const planToFind = await Plan.findOne({
+                        where: {
+                            id: paciente['dataValues']['fk_idPlan'],
+                            activo: true
+                        }
+                    })
+
+                    const tipoDNIToFind = await TipoDNI.findOne({
+                        where: {
+                            id: paciente['dataValues']['fk_idTipoDNI']
+                        }
+                    })
+
+                    const tipoDNI = tipoDNIToFind['dataValues']['tipoDNI']
+
                     res.status(200).json({
                         usuarioToFind,
                         rol,
-                        paciente
+                        paciente,
+                        tipoDNI,
+                        nombrePlan: planToFind['dataValues']['nombre'],
+                        nombreObraSocial: obraSocial['dataVlues']['nombre']
                     })
                 } else if (institucion) {
                     res.status(200).json({
                         usuarioToFind,
-                        institucion
+                        institucion,
+                        nombreRol: rolToFind['dataValues']['nombreRol']
                     })
                 } else {
                     res.status(404).json({
