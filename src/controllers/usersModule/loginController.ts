@@ -406,6 +406,14 @@ const loginControllers = {
                     }
                 })
 
+                const tipoDNIToFind = await TipoDNI.findOne({
+                    where: {
+                        id: profesional['dataValues']['fk_idTipoDNI']
+                    }
+                })
+
+                const tipoDNI = tipoDNIToFind['dataValues']['tipoDNI']
+
                 const pjProfesional = await PersonaJuridicaProfesional.findOne({
                     where: {
                         fk_idPersonaJuridica: personaJuridica,
@@ -432,7 +440,8 @@ const loginControllers = {
                 res.status(200).json({
                     usuarioToFind,
                     rolInterno,
-                    profesional
+                    profesional,
+                    tipoDNI
                 })
 
             } else {
