@@ -66,7 +66,7 @@ const obrasSocialesController = {
 
             if (!obraSocial) {
 
-                await ObraSocial.create({
+                const obraSocial = await ObraSocial.create({
                     nombre: nombre,
                     razonSocial: razonSocial,
                     cuit: cuit,
@@ -87,7 +87,8 @@ const obrasSocialesController = {
             }
 
             res.status(200).json({
-                msg: "Obra social creada con éxito."
+                msg: "Obra social creada con éxito.",
+                obraSocial
             })
 
         } catch (error) {
@@ -361,7 +362,7 @@ const obrasSocialesController = {
 
             const { idPlan } = req.params
             const { nombre, tratamientos } = req.body
-            
+
             const planNombre = await Plan.findOne({
                 where: {
                     id: {
