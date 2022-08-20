@@ -19,6 +19,7 @@ import Paciente from '../../models/entities/usersModule/paciente';
 import TipoDNI from '../../models/entities/usersModule/tipoDNI';
 import Plan from '../../models/entities/obrasSocialesModule/plan';
 import ObraSocial from '../../models/entities/obrasSocialesModule/obraSocial';
+import sendEmailRefactor from '../../helpers/sendEmailRefactor';
 
 const loginControllers = {
 
@@ -492,6 +493,80 @@ const loginControllers = {
                     msg: `${error}`
                 });
             }
+        }
+    },
+
+    sendEmailToRestorePassword: async (req: Request, res: Response, next: NextFunction) => {
+
+        try {
+
+            const { nuevoLink, email, subject, htmlText } = req.body
+
+            const usuario = await Usuario.findOne({
+                where: {
+                    email: email,
+                    activo: true
+                }
+            })
+
+            if (!usuario) {
+                throw new Error("El email ingresado no existe en el sistema.")
+            }
+
+            const idUsuario = usuario['dataValues']['id']
+            const linkWithId = `${nuevoLink}/${idUsuario}`
+
+            await sendEmailRefactor(linkWithId, email, subject, htmlText)
+
+            res.status(200).json({
+                msg: "Email para restablecer contraseña enviado correctamente."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    restorePassword: async (req: Request, res: Response, next: NextFunction) => {
+
+        try {
+
+            const { idUsuario } = req.params
+            const { newPassword } = req.body
+
+            const usuario = await Usuario.findOne({
+                where: {
+                    id: idUsuario,
+                    activo: true
+                }
+            })
+
+            if (!usuario) {
+                throw new Error("No existe el usuario solicitado.")
+            }
+
+            const passwordActualUsuario = usuario['dataValues']['password']
+            const comparePasswords = bcrypt.compareSync(newPassword, passwordActualUsuario)
+
+            if (comparePasswords) {
+                throw new Error("La contraseña es igual a la anterior.")
+            }
+
+            const salt = bcrypt.genSaltSync(12);
+            const newEncriptedPassword = bcrypt.hashSync(newPassword, salt);
+
+            await usuario.update({ password: newEncriptedPassword })
+
+            res.status(200).json({
+                msg: `Contraseña del usuario ${usuario['dataValues']['email']} actualizada correctamente.`
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
         }
     }
 }

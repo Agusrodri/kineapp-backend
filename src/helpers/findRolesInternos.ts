@@ -28,7 +28,16 @@ export default async (idUsuario: number) => {
         const institucion = await PersonaJuridica.findByPk(fk_idPersonaJuridica)
         const { nombre } = institucion['dataValues']
         const idInstitucion = institucion['dataValues']['id']
-        const rolInterno = await RolInterno.findByPk(fk_idRolInterno)
+        const rolInterno = await RolInterno.findOne({
+            where: {
+                id: fk_idRolInterno,
+                activo: true
+            }
+        })
+
+        if (!rolInterno) {
+            continue
+        }
         const { nombreRol, id } = rolInterno['dataValues']
 
         const rolInternoPermisoInterno = await RolInternoPermisoInterno.findAll({

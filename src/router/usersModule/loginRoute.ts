@@ -14,5 +14,7 @@ router.put("/setActivo", loginControllers.setActivo);
 router.get("/getInfoUsuario/:token", [validarJWT], loginControllers.getInfoUsuarios);
 router.get("/getInfoPerfil/:idUsuario", [validarJWT], loginControllers.getInfoPerfil);
 router.get("/validarJWT/:token", loginControllers.validateJWT);
+router.post("/emailToRestorePassword", loginControllers.sendEmailToRestorePassword);
+router.put("/restorePassword/:idUsuario", loginControllers.restorePassword);
 
 module.exports = router

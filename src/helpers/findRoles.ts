@@ -19,7 +19,16 @@ export default async (idUsuario: number) => {
 
     for (let i = 0; i < rolesUsuarioToFind.length; i++) {
 
-        const rolToFind = await Rol.findByPk(rolesUsuarioToFind[i]['dataValues']['fk_idRol'])
+        const rolToFind = await Rol.findOne({
+            where: {
+                id: rolesUsuarioToFind[i]['dataValues']['fk_idRol'],
+                activo: true
+            }
+        })
+
+        if (!rolToFind) {
+            continue
+        }
         const rolName = rolToFind['dataValues']['nombreRol']
         const idRol = rolToFind['dataValues']['id']
         const rolpermisosToFind = await RolPermiso.findAll({
