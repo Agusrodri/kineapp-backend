@@ -349,7 +349,12 @@ const loginControllers = {
 
                 if (paciente) {
 
-                    const obraSocial = await ObraSocial
+                    const obraSocial = await ObraSocial.findOne({
+                        where: {
+                            id: paciente['dataValues']['fk_idObraSocial'],
+                            activo: true
+                        }
+                    })
 
                     const planToFind = await Plan.findOne({
                         where: {
@@ -372,7 +377,7 @@ const loginControllers = {
                         paciente,
                         tipoDNI,
                         nombrePlan: planToFind['dataValues']['nombre'],
-                        nombreObraSocial: obraSocial['dataVlues']['nombre']
+                        nombreObraSocial: obraSocial['dataValues']['nombre']
                     })
                 } else if (institucion) {
                     res.status(200).json({
