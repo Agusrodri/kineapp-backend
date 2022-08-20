@@ -76,6 +76,11 @@ const obrasSocialesController = {
                     activo: true
                 })
 
+                res.status(200).json({
+                    msg: "Obra social creada con éxito.",
+                    obraSocial
+                })
+
             } else if (obraSocial['dataValues']['nombre'] === nombre) {
                 throw new Error("El nombre que desea agregar ya está en uso, compruebe si la obra social ya está cargada o ingrese un nombre diferente.")
             } else if (obraSocial['dataValues']['cuit'] === cuit) {
@@ -85,11 +90,6 @@ const obrasSocialesController = {
             } else if (obraSocial['dataValues']['email'] === email) {
                 throw new Error("El email que desea agregar ya está en uso, compruebe si la obra social ya está cargada o ingrese un email diferente.")
             }
-
-            res.status(200).json({
-                msg: "Obra social creada con éxito.",
-                obraSocial
-            })
 
         } catch (error) {
             res.status(500).json({
