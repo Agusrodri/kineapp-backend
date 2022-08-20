@@ -326,6 +326,13 @@ const loginControllers = {
                     nombreRol: rolToFind['dataValues']['nombreRol'],
                 }
 
+                if (rolActivo == 1) {
+                    return res.status(200).json({
+                        usuarioToFind,
+                        rol
+                    })
+                }
+
                 const paciente = await Paciente.findOne({
                     where: {
                         fk_idUsuario: usuarioToFind['dataValues']['id'],
