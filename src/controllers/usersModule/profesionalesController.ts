@@ -44,7 +44,7 @@ const profesionalesController = {
                     }
                 })
 
-                const nombreRolInterno = rolInterno ? rolInterno['dataValues']['nombreRol'] : "Sin rol asignado."
+                const nombreRolInterno = rolInterno ? rolInterno['dataValues']['nombreRol'] : "Sin rol asignado"
 
                 const tipoDNI = await TipoDNI.findByPk(profesional['dataValues']['fk_idTipoDNI'])
 
@@ -104,8 +104,13 @@ const profesionalesController = {
 
             //buscar rol interno
             const idRolInterno = pjProfesional['dataValues']['fk_idRolInterno']
-            const rolInternoProfesional = await RolInterno.findByPk(idRolInterno)
-            const nombreRolInterno = rolInternoProfesional['dataValues']['nombreRol']
+            const rolInternoProfesional = await RolInterno.findOne({
+                where: {
+                    id: idRolInterno,
+                    activo: true
+                }
+            })
+            const nombreRolInterno = rolInternoProfesional ? rolInternoProfesional['dataValues']['nombreRol'] : "Sin rol asignado"
 
             //buscar usuario para obtener email
             const idUsuario = profesional['dataValues']['fk_idUsuario']
