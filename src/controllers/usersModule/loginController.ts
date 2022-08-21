@@ -167,7 +167,7 @@ const loginControllers = {
 
         try {
 
-            const { token } = req.params
+            const token = req.header("token")
             const usuarioToFind = await Usuario.findOne({
                 where: {
                     token: token,
