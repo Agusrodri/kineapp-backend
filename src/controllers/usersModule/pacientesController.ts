@@ -157,9 +157,19 @@ const pacientesController = {
 
             const { idUsuario } = req.params
 
+            const usuario = await Usuario.findOne({
+                where: {
+                    id: idUsuario,
+                    activo: true
+                }
+            })
+
+
+
             const pacienteToDelete = await Paciente.findOne({
                 where: {
-                    fk_idUsuario: idUsuario
+                    fk_idUsuario: idUsuario,
+                    activo: true
                 }
             })
 

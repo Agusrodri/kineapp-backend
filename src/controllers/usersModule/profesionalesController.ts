@@ -37,7 +37,13 @@ const profesionalesController = {
                     }
                 })
 
-                const rolInterno = await RolInterno.findByPk(pjProfesionales[i]['dataValues']['fk_idRolInterno'])
+                const rolInterno = await RolInterno.findOne({
+                    where: {
+                        id: pjProfesionales[i]['dataValues']['fk_idRolInterno'],
+                        activo: true
+                    }
+                })
+
                 const tipoDNI = await TipoDNI.findByPk(profesional['dataValues']['fk_idTipoDNI'])
 
                 const profesionalResponse = {
@@ -49,7 +55,7 @@ const profesionalesController = {
                     fechaNacimiento: profesional['dataValues']['fechaNacimiento'],
                     numeroMatricula: profesional['dataValues']['numeroMatricula'],
                     nivelEducativo: profesional['dataValues']['nivelEducativo'],
-                    rol: rolInterno['dataValues']['nombreRol']
+                    rol: rolInterno ? rolInterno['dataValues']['nombreRol'] : "Sin Rol Interno asignado."
                 }
 
                 profesionalesResponse.push(profesionalResponse)
@@ -336,7 +342,7 @@ const profesionalesController = {
             })
 
             if (!usuarioActivo) {
-                throw new Error("No existe el usuario solicitado")
+                throw new Error("No existe el usuario solicitado.")
             }
 
             //buscar profesional asociado al usuario
