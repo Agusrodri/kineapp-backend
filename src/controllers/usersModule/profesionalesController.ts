@@ -297,7 +297,8 @@ const profesionalesController = {
                         fk_idTipoDNI,
                         fechaNacimiento,
                         numeroMatricula,
-                        nivelEducativo
+                        nivelEducativo,
+                        bandera: false
                     })
                 }
             } else {
@@ -321,7 +322,8 @@ const profesionalesController = {
                     apellido,
                     dni,
                     fk_idTipoDNI,
-                    fechaNacimiento
+                    fechaNacimiento,
+                    bandera: true
                 })
             }
 
