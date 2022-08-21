@@ -44,6 +44,8 @@ const profesionalesController = {
                     }
                 })
 
+                const nombreRolInterno = rolInterno ? rolInterno['dataValues']['nombreRol'] : "Sin rol asignado."
+
                 const tipoDNI = await TipoDNI.findByPk(profesional['dataValues']['fk_idTipoDNI'])
 
                 const profesionalResponse = {
@@ -55,7 +57,7 @@ const profesionalesController = {
                     fechaNacimiento: profesional['dataValues']['fechaNacimiento'],
                     numeroMatricula: profesional['dataValues']['numeroMatricula'],
                     nivelEducativo: profesional['dataValues']['nivelEducativo'],
-                    rol: rolInterno['dataValues']['nombreRol']
+                    rol: nombreRolInterno
                 }
 
                 profesionalesResponse.push(profesionalResponse)
