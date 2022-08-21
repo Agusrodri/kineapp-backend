@@ -176,7 +176,7 @@ const loginControllers = {
                 }
             })
 
-            const { rolActivo, rolInternoActivo, personaJuridica } = usuarioToFind['dataValues']
+            const { id, rolActivo, rolInternoActivo, personaJuridica } = usuarioToFind['dataValues']
 
             if (rolActivo) {
 
@@ -188,6 +188,23 @@ const loginControllers = {
                         habilitadoPermiso: true
                     }
                 })
+
+                const paciente = await Paciente.findOne({
+                    where: {
+                        fk_idUsuario: id,
+                        activo: true
+                    }
+                })
+
+                const institucion = await PersonaJuridica.findOne({
+                    where: {
+                        fk_idUsuarios: id,
+                        activo: true
+                    }
+                })
+
+                const idPaciente = paciente ? paciente['dataValues']['id'] : null
+                const idInstitucion = institucion ? institucion['dataValues']['id'] : null
 
                 const permisos = []
 
@@ -211,6 +228,8 @@ const loginControllers = {
 
                 const rol = {
                     idUsuario: usuarioToFind['dataValues']['id'],
+                    idPaciente,
+                    idInstitucion,
                     idRol: rolToFind['dataValues']['id'],
                     nombreRol: rolToFind['dataValues']['nombreRol'],
                     permisos: permisos
