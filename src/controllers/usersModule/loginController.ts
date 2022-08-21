@@ -513,6 +513,13 @@ const loginControllers = {
                 throw new Error("El email ingresado no existe en el sistema.")
             }
 
+            const tokenString = email.substring(0, 2)
+            const tokenDateNow = new Date()
+            const finalToken = tokenString + tokenDateNow.toString()
+            const resetPasstoken = await generarToken.generarJWT(finalToken)
+
+            await usuario.update({ tokenPassReset: resetPasstoken })
+
             const idUsuario = usuario['dataValues']['id']
             const linkWithId = `${nuevoLink}/${idUsuario}`
 
@@ -545,6 +552,24 @@ const loginControllers = {
 
             if (!usuario) {
                 throw new Error("No existe el usuario solicitado.")
+            }
+
+            if (usuario['dataValues']['tokenPassReset']) {
+
+                try {
+
+                    jwt.verify(usuario['dataValues']['tokenPassReset'], process.env.SECRETORPRIVATEKEY)
+
+                } catch (error) {
+                    return res.status(401).json({
+                        msg: "Token no válido - Usuario no autorizado para modificar la contraseña."
+                    })
+                }
+
+            } else {
+                return res.status(401).json({
+                    msg: "Usuario no autorizado para modificar la contraseña."
+                })
             }
 
             const passwordActualUsuario = usuario['dataValues']['password']

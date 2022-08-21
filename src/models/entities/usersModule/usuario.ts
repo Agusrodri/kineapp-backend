@@ -38,6 +38,10 @@ const Usuario = db.define('Usuario', {
 
     personaJuridica: {
         type: DataTypes.INTEGER
+    },
+
+    tokenPassReset: {
+        type: DataTypes.STRING
     }
 })
 

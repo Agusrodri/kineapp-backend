@@ -4,6 +4,7 @@ import Usuario from '../../models/entities/usersModule/usuario';
 import sendEmail from '../../helpers/send-email';
 import Paciente from '../../models/entities/usersModule/paciente';
 import UsuarioRol from '../../models/entities/usersModule/usuarioRol';
+import Profesional from '../../models/entities/usersModule/profesional';
 
 const pacientesController = {
 
@@ -164,7 +165,19 @@ const pacientesController = {
                 }
             })
 
+            if (!usuario) {
+                throw new Error("No existe el usuario solicitado.")
+            }
 
+            const profesional = await Profesional.findOne({
+                where: {
+                    fk_idUsuario: idUsuario
+                }
+            })
+
+            if (!profesional) {
+                await usuario.update({ activo: false, habilitado: false })
+            }
 
             const pacienteToDelete = await Paciente.findOne({
                 where: {
