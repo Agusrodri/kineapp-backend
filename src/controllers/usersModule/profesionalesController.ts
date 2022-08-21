@@ -55,7 +55,7 @@ const profesionalesController = {
                     fechaNacimiento: profesional['dataValues']['fechaNacimiento'],
                     numeroMatricula: profesional['dataValues']['numeroMatricula'],
                     nivelEducativo: profesional['dataValues']['nivelEducativo'],
-                    rol: rolInterno ? rolInterno['dataValues']['nombreRol'] : "Sin Rol Interno asignado."
+                    rol: rolInterno['dataValues']['nombreRol']
                 }
 
                 profesionalesResponse.push(profesionalResponse)
