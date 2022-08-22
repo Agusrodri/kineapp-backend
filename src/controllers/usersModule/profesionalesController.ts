@@ -232,7 +232,7 @@ const profesionalesController = {
             const salt = bcrypt.genSaltSync(12);
             const encriptedPassword = bcrypt.hashSync(password, salt);
 
-            await usuarioToUpdate.update({ password: encriptedPassword })
+            await usuarioToUpdate.update({ password: encriptedPassword, habilitado: true })
 
             res.status(200).json({
                 msg: `Contraseña del usuario agregada con éxito.`
