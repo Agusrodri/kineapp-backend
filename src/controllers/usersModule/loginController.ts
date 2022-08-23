@@ -76,9 +76,32 @@ const loginControllers = {
             if (roles.length + (rolesInternos ? rolesInternos.length : 0) == 1) {
                 if (roles.length == 1) {
                     const rolActivoToAsignar = roles[0]['idRol']
+                    const rolToFind = await Rol.findOne({
+                        where: {
+                            id: rolActivoToAsignar,
+                            activo: true
+                        }
+                    })
+
+                    if (!rolToFind) {
+                        throw new Error("El usuario no posee ningún rol.")
+                    }
+
                     await usuario[0].update({ rolActivo: rolActivoToAsignar })
+
                 } else if (rolesInternos.length == 1) {
                     const rolInternoActivoToAsignar = rolesInternos[0]['idRolInterno']
+                    const rolInternoToFind = await RolInterno.findOne({
+                        where: {
+                            id: rolInternoActivoToAsignar,
+                            activo: true
+                        }
+                    })
+
+                    if (!rolInternoToFind) {
+                        throw new Error("El usuario no posee ningún rol.")
+                    }
+
                     const personaJuridicaToAsignar = rolesInternos[0]['idInstitucion']
                     await usuario[0].update({ rolInternoActivo: rolInternoActivoToAsignar, personaJuridica: personaJuridicaToAsignar })
                 }
