@@ -61,7 +61,7 @@ const loginControllers = {
             //buscar los roles internos que pueda tener en cada persona juridica a la que pertenece
             //devolver los permisos internos dentro de cada persona juridica
 
-            const roles = await findRoles(usuario[0]['dataValues']['id'])
+            let roles = await findRoles(usuario[0]['dataValues']['id'])
             const rolesInternos = await findRolesInternos(usuario[0]['dataValues']['id'])
 
             if (roles.length == 0 && rolesInternos.length == 0) {
@@ -85,6 +85,24 @@ const loginControllers = {
                     const rolInternoActivoToAsignar = rolesInternos[0]['idRolInterno']
                     const personaJuridicaToAsignar = rolesInternos[0]['idInstitucion']
                     await usuario[0].update({ rolInternoActivo: rolInternoActivoToAsignar, personaJuridica: personaJuridicaToAsignar })
+                }
+            }
+
+            for (let i = 0; i < roles.length; i++) {
+
+                if (roles[i]['idRol'] == 1) {
+                    continue
+                } else {
+                    const paciente = await Paciente.findOne({
+                        where: {
+                            fk_idUsuario: usuario[0]['dataValues']['id'],
+                            activo: true
+                        }
+                    })
+
+                    if (!paciente) {
+                        roles.splice(i, 1)
+                    }
                 }
             }
 
