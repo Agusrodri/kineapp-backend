@@ -56,14 +56,6 @@ const loginControllers = {
                 })
             }
 
-            //generar el jwt
-            const tokenString = email.substring(0, 2)
-            const tokenDateNow = new Date()
-            const finalToken = tokenString + tokenDateNow.toString()
-            const token = await generarToken.generarJWT(finalToken)
-
-            await usuario[0].update({ token: token })
-
             //buscar todos los roles de ese usuario
             //devolver los permisos de cada rol
             //buscar los roles internos que pueda tener en cada persona juridica a la que pertenece
@@ -72,36 +64,25 @@ const loginControllers = {
             const roles = await findRoles(usuario[0]['dataValues']['id'])
             const rolesInternos = await findRolesInternos(usuario[0]['dataValues']['id'])
 
+            if (roles.length == 0 && rolesInternos.length == 0) {
+                throw new Error("El usuario no posee ningún rol.")
+            }
+
+            //generar el jwt
+            const tokenString = email.substring(0, 2)
+            const tokenDateNow = new Date()
+            const finalToken = tokenString + tokenDateNow.toString()
+            const token = await generarToken.generarJWT(finalToken)
+
+            await usuario[0].update({ token: token })
+
             //si tiene un solo rol dejarlo que inicie sesión con ese rol activo
             if (roles.length + (rolesInternos ? rolesInternos.length : 0) == 1) {
                 if (roles.length == 1) {
                     const rolActivoToAsignar = roles[0]['idRol']
-                    const rolToFind = await Rol.findOne({
-                        where: {
-                            id: rolActivoToAsignar,
-                            activo: true
-                        }
-                    })
-
-                    if (!rolToFind) {
-                        throw new Error("El usuario no posee ningún rol.")
-                    }
-
                     await usuario[0].update({ rolActivo: rolActivoToAsignar })
-
                 } else if (rolesInternos.length == 1) {
                     const rolInternoActivoToAsignar = rolesInternos[0]['idRolInterno']
-                    const rolInternoToFind = await RolInterno.findOne({
-                        where: {
-                            id: rolInternoActivoToAsignar,
-                            activo: true
-                        }
-                    })
-
-                    if (!rolInternoToFind) {
-                        throw new Error("El usuario no posee ningún rol.")
-                    }
-
                     const personaJuridicaToAsignar = rolesInternos[0]['idInstitucion']
                     await usuario[0].update({ rolInternoActivo: rolInternoActivoToAsignar, personaJuridica: personaJuridicaToAsignar })
                 }
