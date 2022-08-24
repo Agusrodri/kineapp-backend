@@ -50,29 +50,25 @@ const rolesController = {
                 activo: true
             })
 
-            const findIdNuevoRol = await Rol.findOne({
-                attributes: ["id"],
-                where: {
-                    nombreRol: nombreRol,
-                    descripcionRol: descripcionRol,
-                    activo: true
-                }
-            })
-
-            const idNuevoRol = findIdNuevoRol['dataValues']['id']
+            const idNuevoRol = nuevoRol['dataValues']['id']
+            const permisosRol = []
 
             for (let i = 0; i < permisos.length; i++) {
 
-                await RolPermiso.create({
+                const rolpermiso = await RolPermiso.create({
                     fk_idPermiso: permisos[i]['idPermiso'],
                     fk_idRol: idNuevoRol,
                     habilitadoPermiso: permisos[i]['habilitadoPermiso']
                 })
 
+                permisosRol.push(rolpermiso)
+
             }
 
             res.status(200).json({
-                msg: `Rol con nombre -${nombreRol}- y id -${idNuevoRol}- creado`
+                msg: `Rol con nombre -${nombreRol}- y id -${idNuevoRol}- creado`,
+                nuevoRol,
+                permisosRol
             })
 
 
