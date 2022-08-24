@@ -106,6 +106,17 @@ const institucionesController = {
 
             const { nombre, cuit, razonSocial, email, domicilio, telefono, idRol, link } = req.body
 
+            const usuarioToFind = await Usuario.findOne({
+                where: {
+                    email: email,
+                    activo: true
+                }
+            })
+
+            if (usuarioToFind) {
+                throw new Error("El email ingresado se encuentra en uso. Por favor, ingrese uno nuevo.")
+            }
+
             //crear usuario
             const nuevoUsuario = await Usuario.create({
                 password: null,
@@ -131,14 +142,14 @@ const institucionesController = {
             })
 
             const idNuevaInstitucion = nuevaInstitucion['dataValues']['id']
-
             const nuevoLink = `${link}/${idNuevoUsuario}/${idNuevaInstitucion}`
 
             //enviar email
             await sendEmail(nuevoLink, email)
 
             res.status(200).json({
-                msg: `Institución con nombre ${nombre} creada correctamente. Se envió un correo electrónico a la dirección ${email} para verificación.`
+                msg: `Institución con nombre ${nombre} creada correctamente. Se envió un correo electrónico a la dirección ${email} para verificación.`,
+                nuevaInstitucion
             })
 
         } catch (error) {

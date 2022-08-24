@@ -51,7 +51,6 @@ const rolesController = {
             })
 
             const idNuevoRol = nuevoRol['dataValues']['id']
-            const permisosRol = []
 
             for (let i = 0; i < permisos.length; i++) {
 
@@ -60,17 +59,12 @@ const rolesController = {
                     fk_idRol: idNuevoRol,
                     habilitadoPermiso: permisos[i]['habilitadoPermiso']
                 })
-
-                permisosRol.push(permisoRol)
-
             }
 
             res.status(200).json({
                 msg: `Rol con nombre -${nombreRol}- y id -${idNuevoRol}- creado`,
-                nuevoRol,
-                permisosRol
+                nuevoRol
             })
-
 
         } catch (error) {
             console.log(error)
@@ -151,9 +145,7 @@ const rolesController = {
         try {
 
             const { id } = req.params
-
             const { body } = req
-
             const rol = await Rol.findByPk(id)
 
             if (!rol) {
@@ -176,11 +168,11 @@ const rolesController = {
                 })
 
                 await rolPermisoUpdate.update(body.permisos[x])
-
             }
 
             res.status(200).json({
-                msg: `Rol actualizado correctamente.`
+                msg: `Rol actualizado correctamente.`,
+                rol
 
             })
 

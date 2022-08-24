@@ -41,27 +41,16 @@ const rolesInternosController = {
         try {
 
             const { idPersonaJuridica } = req.params
-
             const { nombreRol, descripcionRol, permisos } = req.body
 
-            await RolInterno.create({
+            const rolInterno = await RolInterno.create({
                 nombreRol: nombreRol,
                 descripcionRol: descripcionRol,
                 fk_idPersonaJuridica: idPersonaJuridica,
                 activo: true
             })
 
-            const findIdNuevoRol = await RolInterno.findOne({
-                attributes: ["id"],
-                where: {
-                    nombreRol: nombreRol,
-                    descripcionRol: descripcionRol,
-                    fk_idPersonaJuridica: idPersonaJuridica,
-                    activo: true
-                }
-            })
-
-            const idNuevoRol = findIdNuevoRol['dataValues']['id']
+            const idNuevoRol = rolInterno['dataValues']['id']
 
             for (let i = 0; i < permisos.length; i++) {
 
@@ -70,11 +59,11 @@ const rolesInternosController = {
                     fk_idRolInterno: idNuevoRol,
                     habilitadoPermiso: permisos[i]['habilitadoPermiso']
                 })
-
             }
 
             res.status(200).json({
-                msg: `Rol ${nombreRol} creado con id ${idNuevoRol}`
+                msg: `Rol ${nombreRol} creado con id ${idNuevoRol}`,
+                rolInterno
             })
 
 
@@ -161,7 +150,6 @@ const rolesInternosController = {
         try {
 
             const { idPersonaJuridica, idRolInterno } = req.params
-
             const { body } = req
 
             const rolInterno = await RolInterno.findOne({
@@ -193,8 +181,8 @@ const rolesInternosController = {
             }
 
             res.status(200).json({
-                msg: `Rol actualizado`
-
+                msg: `Rol actualizado correctamente.`,
+                rolInterno
             })
 
 
@@ -203,7 +191,6 @@ const rolesInternosController = {
             res.status(500).json({
                 msg: `${error}`
             });
-
         }
 
     },
