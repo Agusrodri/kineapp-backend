@@ -55,13 +55,13 @@ const rolesController = {
 
             for (let i = 0; i < permisos.length; i++) {
 
-                const rolpermiso = await RolPermiso.create({
+                const permisoRol = await RolPermiso.create({
                     fk_idPermiso: permisos[i]['idPermiso'],
                     fk_idRol: idNuevoRol,
                     habilitadoPermiso: permisos[i]['habilitadoPermiso']
                 })
 
-                permisosRol.push(rolpermiso)
+                permisosRol.push(permisoRol)
 
             }
 
