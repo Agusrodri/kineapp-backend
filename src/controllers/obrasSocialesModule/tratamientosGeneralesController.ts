@@ -116,7 +116,8 @@ const tratamientosGeneralesController = {
             await tratamientoGeneralToUpdate.update({ nombre: nombre, descripcion: descripcion })
 
             res.status(200).json({
-                msg: "Tratamiento actualizado con éxito."
+                msg: "Tratamiento actualizado con éxito.",
+                tratamientoGneral: tratamientoGeneralToUpdate
             })
 
         } catch (error) {
