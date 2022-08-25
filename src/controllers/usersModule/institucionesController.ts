@@ -195,8 +195,16 @@ const institucionesController = {
 
             await usuarioRolToUpdate.update({ fk_idRol: id })
 
+            const institucion = await PersonaJuridica.findOne({
+                where: {
+                    fk_idUsuarios: idUsuario
+                }
+            })
+
             res.status(200).json({
-                msg: `Institución actualizada con éxito.`
+                msg: `Institución actualizada con éxito.`,
+                institucion,
+                usuariosRol: usuarioRolToUpdate
             })
 
         } catch (error) {

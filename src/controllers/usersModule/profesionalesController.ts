@@ -212,7 +212,10 @@ const profesionalesController = {
 
             res.status(200).json({
                 msg: "Profesional creado correctamente.",
-                usuarioExistente: false
+                usuarioExistente: false,
+                idPersonaJuridica,
+                nuevoUsuarioProfesional,
+                nuevoProfesional
             })
 
         } catch (error) {
@@ -369,7 +372,7 @@ const profesionalesController = {
                 }
 
                 //asociar profesional con la institución y setear el rol interno que posee el profesional
-                await PersonaJuridicaProfesional.create({
+                const newPjProfesional = await PersonaJuridicaProfesional.create({
                     fk_idPersonaJuridica: idPersonaJuridica,
                     fk_idProfesional: usuarioProfesional['dataValues']['id'],
                     fk_idRolInterno: idRol,
@@ -377,7 +380,9 @@ const profesionalesController = {
                 })
 
                 res.status(200).json({
-                    msg: "Profesional creado correctamente a partir de profesional."
+                    msg: "Profesional creado correctamente a partir de profesional.",
+                    usuarioProfesional,
+                    newPjProfesional
                 })
 
 
@@ -398,7 +403,7 @@ const profesionalesController = {
                     fk_idUsuario: usuarioActivo['dataValues']['id'],
                 })
 
-                await PersonaJuridicaProfesional.create({
+                const newPjProfesional = await PersonaJuridicaProfesional.create({
                     fk_idPersonaJuridica: idPersonaJuridica,
                     fk_idProfesional: newProfesional['dataValues']['id'],
                     fk_idRolInterno: idRol,
@@ -406,7 +411,9 @@ const profesionalesController = {
                 })
 
                 res.status(200).json({
-                    msg: "Profesional creado correctamente a partir de paciente."
+                    msg: "Profesional creado correctamente a partir de paciente.",
+                    newProfesional,
+                    newPjProfesional
                 })
 
             }
@@ -476,7 +483,9 @@ const profesionalesController = {
             await profesionalToUpdate.update({ fk_idRolInterno: idRol })
 
             res.status(200).json({
-                msg: "Profesional editado correctamente."
+                msg: "Profesional editado correctamente.",
+                profesional,
+                newPjProfesional: profesionalToUpdate
             })
 
         } catch (error) {

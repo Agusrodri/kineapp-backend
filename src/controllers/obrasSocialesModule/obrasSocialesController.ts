@@ -66,7 +66,7 @@ const obrasSocialesController = {
 
             if (!obraSocial) {
 
-                const obraSocial = await ObraSocial.create({
+                const obraSocialToCreate = await ObraSocial.create({
                     nombre: nombre,
                     razonSocial: razonSocial,
                     cuit: cuit,
@@ -78,7 +78,7 @@ const obrasSocialesController = {
 
                 res.status(200).json({
                     msg: "Obra social creada con éxito.",
-                    obraSocial
+                    obraSocial: obraSocialToCreate
                 })
 
             } else if (obraSocial['dataValues']['nombre'] === nombre) {
