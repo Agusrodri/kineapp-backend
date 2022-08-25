@@ -66,14 +66,15 @@ const tratamientosGeneralesController = {
                 throw new Error("El nombre que desea agregar ya está en uso, compruebe si el tratamiento ya está cargado o ingrese un nombre diferente.")
             }
 
-            await TratamientoGeneral.create({
+            const tratamientoGeneral = await TratamientoGeneral.create({
                 nombre: nombre,
                 descripcion: descripcion,
                 activo: true
             })
 
             res.status(200).json({
-                msg: "Tratamiento creado correctamente."
+                msg: "Tratamiento creado correctamente.",
+                tratamientoGeneral
             })
 
         } catch (error) {

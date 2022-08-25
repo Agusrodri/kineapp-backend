@@ -37,23 +37,23 @@ const conveniosController = {
 
     getConvenioById: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idPersonaJuridica, idConvenio} = req.params
+            const { idPersonaJuridica, idConvenio } = req.params
             const convenio = await Convenio.findOne({
-                where:{
+                where: {
                     id: idConvenio,
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
                 }
             })
 
-            if(!convenio){
+            if (!convenio) {
                 throw new Error("No existe el convenio solicitado.")
             }
 
             const conveniosTratamientoGenerales = await ConvenioTratamientoGeneral.findAll({
-                where:{
+                where: {
                     fk_idConvenio: idConvenio,
                     activo: true
                 }
@@ -61,10 +61,10 @@ const conveniosController = {
 
             const tratamientos = []
 
-            for(let i=0; i<conveniosTratamientoGenerales.length; i++){
+            for (let i = 0; i < conveniosTratamientoGenerales.length; i++) {
 
                 const tratamientoGeneral = await TratamientoGeneral.findOne({
-                    where:{
+                    where: {
                         id: conveniosTratamientoGenerales[i]['dataValues']['fk_idTratamientoGeneral'],
                         activo: true
                     }
@@ -79,9 +79,9 @@ const conveniosController = {
                 tratamientos.push(tratamientoToAdd)
             }
 
-            res.status(200).json({convenio, tratamientos})
+            res.status(200).json({ convenio, tratamientos })
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
@@ -122,14 +122,14 @@ const conveniosController = {
                     })
 
                     const pjTratamientoGeneral = await PjTratamientoGeneral.findOne({
-                        where:{
+                        where: {
                             fk_idTratamientoGeneral: tratamientoGral!['dataValues']['id'] || 0,
                             fk_idPersonaJuridica: idPersonaJuridica,
                             activo: true
                         }
                     })
 
-                    if(!pjTratamientoGeneral){
+                    if (!pjTratamientoGeneral) {
                         continue
                     }
 
@@ -138,9 +138,9 @@ const conveniosController = {
                         nombre: tratamientoGral!['dataValues']['nombre']
                     }
 
-                    if(tratamientos.find(tratamientoIndex=> tratamientoIndex.idTratamientoGeneral === tratamiento.idTratamientoGeneral)){
+                    if (tratamientos.find(tratamientoIndex => tratamientoIndex.idTratamientoGeneral === tratamiento.idTratamientoGeneral)) {
                         continue
-                    } 
+                    }
 
                     tratamientos.push(tratamiento)
                 }
@@ -212,7 +212,8 @@ const conveniosController = {
             }
 
             res.status(200).json({
-                msg: "Convenio creado con éxito."
+                msg: "Convenio creado con éxito.",
+                convenio: convenioToCreate
             })
 
 
@@ -225,13 +226,13 @@ const conveniosController = {
 
     editarConvenio: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idPersonaJuridica} = req.params
-            const {idObraSocial, descripcion, tratamientos } = req.body
+            const { idPersonaJuridica } = req.params
+            const { idObraSocial, descripcion, tratamientos } = req.body
 
             const obraSocial = await ObraSocial.findOne({
-                where:{
+                where: {
                     id: idObraSocial,
                     activo: true
                 }
@@ -242,21 +243,21 @@ const conveniosController = {
             }
 
             const convenioToFind = await Convenio.findOne({
-                where:{
+                where: {
                     fk_idObraSocial: idObraSocial,
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
                 }
             })
 
-            await convenioToFind.update({descripcion: descripcion})
+            await convenioToFind.update({ descripcion: descripcion })
 
-            if(!convenioToFind){
+            if (!convenioToFind) {
                 throw new Error("No existe el convenio indicado.")
             }
 
             await ConvenioTratamientoGeneral.destroy({
-                where:{
+                where: {
                     fk_idConvenio: convenioToFind['dataValues']['id']
                 }
             })
@@ -272,10 +273,11 @@ const conveniosController = {
             }
 
             res.status(200).json({
-                msg: "Convenio actualizado con éxito."
+                msg: "Convenio actualizado con éxito.",
+                convenio: convenioToFind
             })
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
@@ -285,29 +287,29 @@ const conveniosController = {
 
     bajaConvenio: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idConvenio, idPersonaJuridica} = req.params
+            const { idConvenio, idPersonaJuridica } = req.params
 
             const convenioToDelete = await Convenio.findOne({
-                where:{
+                where: {
                     id: idConvenio,
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
                 }
             })
 
-            if(!convenioToDelete){
+            if (!convenioToDelete) {
                 throw new Error("No existe el convenio indicado.")
             }
 
-            await convenioToDelete.update({activo: false})
+            await convenioToDelete.update({ activo: false })
 
             res.status(200).json({
                 msg: "Convenio eliminado correctamente."
             })
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });

@@ -5,23 +5,23 @@ const tratamientosParticularesController = {
 
     getTratamientosParticulares: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idPersonaJuridica} = req.params
+            const { idPersonaJuridica } = req.params
             const tratamientosParticulares = await TratamientoParticular.findAll({
-                where:{
+                where: {
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
                 }
             })
 
-            if(tratamientosParticulares.length == 0){
+            if (tratamientosParticulares.length == 0) {
                 throw new Error("No existen tratamientos particulares cargados.")
             }
 
             res.status(200).json(tratamientosParticulares)
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
@@ -30,25 +30,25 @@ const tratamientosParticularesController = {
 
     getTratamientoParticularById: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idTratamientoParticular, idPersonaJuridica} = req.params
+            const { idTratamientoParticular, idPersonaJuridica } = req.params
 
             const tratamientoParticular = await TratamientoParticular.findOne({
-                where:{
+                where: {
                     id: idTratamientoParticular,
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
                 }
             })
 
-            if(!tratamientoParticular){
+            if (!tratamientoParticular) {
                 throw new Error("No existe el tratamiento particular solicitado.")
             }
 
             res.status(200).json(tratamientoParticular)
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
@@ -58,13 +58,13 @@ const tratamientosParticularesController = {
 
     agregarTratamientoParticular: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idPersonaJuridica} = req.params
-            const {nombre, monto, descripcion} = req.body
+            const { idPersonaJuridica } = req.params
+            const { nombre, monto, descripcion } = req.body
 
             const tratamientoParticular = await TratamientoParticular.findOne({
-                where:{
+                where: {
                     nombre: nombre,
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
@@ -73,12 +73,12 @@ const tratamientosParticularesController = {
 
             console.log(tratamientoParticular)
 
-            if(tratamientoParticular){
+            if (tratamientoParticular) {
                 throw new Error("Ya existe un tratamiento particular con ese nombre dentro de la institución.")
             }
 
-            await TratamientoParticular.create({
-                nombre: nombre, 
+            const nuevotratamientoParticular = await TratamientoParticular.create({
+                nombre: nombre,
                 monto: monto,
                 descripcion: descripcion,
                 fk_idPersonaJuridica: idPersonaJuridica,
@@ -86,10 +86,11 @@ const tratamientosParticularesController = {
             })
 
             res.status(200).json({
-                msg: "Tratamiento particular agregado con éxito."
+                msg: "Tratamiento particular agregado con éxito.",
+                nuevotratamientoParticular
             })
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
@@ -98,30 +99,30 @@ const tratamientosParticularesController = {
 
     editarTratamientoParticular: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idPersonaJuridica} = req.params
-            const {idTratamientoParticular, monto, descripcion} = req.body
-            
+            const { idPersonaJuridica } = req.params
+            const { idTratamientoParticular, monto, descripcion } = req.body
+
             const tratamientoToEdit = await TratamientoParticular.findOne({
-                where:{
+                where: {
                     id: idTratamientoParticular,
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
                 }
             })
 
-            if(!tratamientoToEdit){
+            if (!tratamientoToEdit) {
                 throw new Error("No existe el tratamiento particular solicitado.")
             }
 
-            await tratamientoToEdit.update({monto: monto, descripcion: descripcion})
+            await tratamientoToEdit.update({ monto: monto, descripcion: descripcion })
 
             res.status(200).json({
                 msg: "Tratamiento particular actualizado correctamente."
             })
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
@@ -130,29 +131,29 @@ const tratamientosParticularesController = {
 
     eliminarTratamientoParticular: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idPersonaJuridica, idTratamientoParticular} = req.params
+            const { idPersonaJuridica, idTratamientoParticular } = req.params
 
             const tratamientoParticularToDelete = await TratamientoParticular.findOne({
-                where:{
+                where: {
                     id: idTratamientoParticular,
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
                 }
             })
 
-            if(!tratamientoParticularToDelete){
+            if (!tratamientoParticularToDelete) {
                 throw new Error("No existe el tratamiento particular indicado.")
             }
 
-            await tratamientoParticularToDelete.update({activo: false})
+            await tratamientoParticularToDelete.update({ activo: false })
 
             res.status(200).json({
                 msg: "Tratamiento partiular eliminado correctamente."
             })
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
