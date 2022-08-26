@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import { Op } from 'sequelize';
 import TratamientoGeneral from "../../models/entities/obrasSocialesModule/tratamientoGeneral";
 
 
@@ -104,6 +105,9 @@ const tratamientosGeneralesController = {
 
             const tratamientoToFind = await TratamientoGeneral.findOne({
                 where: {
+                    id: {
+                        [Op.notIn]: [idTratamientoGeneral]
+                    },
                     nombre: nombre,
                     activo: true
                 }
