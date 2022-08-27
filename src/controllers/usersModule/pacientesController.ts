@@ -76,7 +76,8 @@ const pacientesController = {
                 fechaNacimiento,
                 telefono,
                 idObraSocial,
-                idPlan } = req.body
+                idPlan,
+                numeroAfiliado } = req.body
 
             await Paciente.create({
                 nombre: nombre,
@@ -87,6 +88,7 @@ const pacientesController = {
                 fk_idUsuario: idUsuario,
                 fk_idObraSocial: idObraSocial,
                 fk_idPlan: idPlan,
+                numeroAfiliado: numeroAfiliado,
                 activo: true
             })
 

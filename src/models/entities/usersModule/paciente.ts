@@ -38,7 +38,11 @@ const Paciente = db.define('Paciente', {
 
     fk_idPlan: {
         type: DataTypes.INTEGER
-    }
+    },
+
+    numeroAfiliado: {
+        type: DataTypes.STRING
+    },
 
 })
 

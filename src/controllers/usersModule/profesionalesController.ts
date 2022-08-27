@@ -122,10 +122,12 @@ const profesionalesController = {
 
             //response final
             const profesionalResponse = {
+                idUsuario: idUsuario,
                 nombre: profesional['dataValues']['nombre'],
                 apellido: profesional['dataValues']['apellido'],
                 dni: profesional['dataValues']['dni'],
                 tipoDNI: tipoDNI['dataValues']['tipoDNI'],
+                idTipoDNI: profesional['dataValues']['fk_idTipoDNI'],
                 fechaNacimiento: profesional['dataValues']['fechaNacimiento'],
                 numeroMatricula: profesional['dataValues']['numeroMatricula'],
                 nivelEducativo: profesional['dataValues']['nivelEducativo'],
