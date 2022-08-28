@@ -3,7 +3,12 @@ import pacientesInstitucionesController from "../../controllers/tratamientosModu
 
 const router = Router()
 
-router.get("/pacientesInstitucion/:idPersonaJuridica", pacientesInstitucionesController.getPacientesInstitucion)
+router.get("/pacientesInstitucion/:idPersonaJuridica", pacientesInstitucionesController.getPacientesInstitucion);
+router.get("/pacientesInstitucion/getPacienteById/:idPersonaJuridica/:idPaciente", pacientesInstitucionesController.getPacienteById);
+router.post("/pacientesInstitucion/agregarPaciente/:idPersonaJuridica", pacientesInstitucionesController.agregarPaciente);
+router.put("/pacientesInstitucion/editarPaciente/:idPersonaJuridica/:idPaciente", pacientesInstitucionesController.editarPaciente);
+router.delete("/pacientesInstitucion/eliminarPaciente/:idPersonaJuridica/:idPaciente", pacientesInstitucionesController.eliminarPaciente);
+
 
 //module.exports = router
 

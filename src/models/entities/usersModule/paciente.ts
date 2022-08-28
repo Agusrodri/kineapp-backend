@@ -44,6 +44,14 @@ const Paciente = db.define('Paciente', {
         type: DataTypes.STRING
     },
 
+    emailPersonal: {
+        type: DataTypes.STRING
+    },
+
+    telefonoPersonal: {
+        type: DataTypes.STRING
+    }
+
 })
 
 export default Paciente;
