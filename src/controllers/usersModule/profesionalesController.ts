@@ -394,6 +394,16 @@ const profesionalesController = {
                     throw new Error("Ya existe un profesional asociado al usuario indicado.")
                 }
 
+                const profesionalMatricula = await Profesional.findOne({
+                    where: {
+                        numeroMatricula: numeroMatricula
+                    }
+                })
+
+                if (profesionalMatricula) {
+                    throw new Error("El número de matrícula ingresado ya se encuentra en uso.")
+                }
+
                 const newProfesional = await Profesional.create({
                     nombre: nombre,
                     apellido: apellido,
