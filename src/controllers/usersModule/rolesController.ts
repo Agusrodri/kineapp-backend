@@ -82,8 +82,7 @@ const rolesController = {
 
             const { id } = req.params
 
-            const rol = await Rol.findAll({
-                attributes: ['nombreRol', 'descripcionRol'],
+            const rol = await Rol.findOne({
                 where: {
                     id: id
                 }
