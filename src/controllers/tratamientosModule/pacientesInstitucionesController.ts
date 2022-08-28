@@ -66,40 +66,63 @@ const pacientesInstitucionesController = {
                 throw new Error("No existe el paciente solicitado.")
             }
 
-            //obtener usuario asociado al paciente
-            const usuarioPaciente = await Usuario.findOne({
-                where: {
-                    id: paciente['dataValues']['fk_idUsuario'],
-                    activo: true
-                }
-            })
-
-            //obtener datos restantes - email, telefono, tipoDNI, obraSocial y plan
-            const { email, telefono } = usuarioPaciente['dataValues']
+            //obtener datos restantes - tipoDNI, obraSocial y plan
             const tipoDNI = await TipoDNI.findByPk(paciente['dataValues']['fk_idTipoDNI'])
             const obraSocial = await ObraSocial.findByPk(paciente['dataValues']['fk_idObraSocial'])
             const plan = await Plan.findByPk(paciente['dataValues']['fk_idPlan'])
 
-            //response final
-            const pacienteResponse = {
-                idUsuario: paciente['dataValues']['fk_idUsuario'],
-                nombre: paciente['dataValues']['nombre'],
-                apellido: paciente['dataValues']['apellido'],
-                dni: paciente['dataValues']['dni'],
-                tipoDNI: tipoDNI['dataValues']['tipoDNI'],
-                idTipoDNI: paciente['dataValues']['fk_idTipoDNI'],
-                fechaNacimiento: paciente['dataValues']['fechaNacimiento'],
-                obraSocial: obraSocial['dataValues']['nombre'],
-                idObraSocial: obraSocial['dataValues']['id'],
-                plan: plan['dataValues']['nombre'],
-                idPlan: plan['dataValues']['id'],
-                numeroAfiliado: paciente['dataValues']['numeroAfiliado'],
-                email,
-                telefono
+            //verificar si el paciente tiene usuario asociado - si no lo tiene, es debido a que la institución lo creó
+            if (paciente['dataValues']['fk_idUsuario']) {
+                //obtener usuario asociado al paciente
+                const usuarioPaciente = await Usuario.findOne({
+                    where: {
+                        id: paciente['dataValues']['fk_idUsuario'],
+                        activo: true
+                    }
+                })
+
+                //si el paciente tiene un usuario asociado, traer su email y teléfono
+                const { email, telefono } = usuarioPaciente['dataValues']
+
+                //response final
+                const pacienteResponse = {
+                    idUsuario: paciente['dataValues']['fk_idUsuario'],
+                    nombre: paciente['dataValues']['nombre'],
+                    apellido: paciente['dataValues']['apellido'],
+                    dni: paciente['dataValues']['dni'],
+                    tipoDNI: tipoDNI['dataValues']['tipoDNI'],
+                    idTipoDNI: paciente['dataValues']['fk_idTipoDNI'],
+                    fechaNacimiento: paciente['dataValues']['fechaNacimiento'],
+                    obraSocial: obraSocial['dataValues']['nombre'],
+                    idObraSocial: obraSocial['dataValues']['id'],
+                    plan: plan['dataValues']['nombre'],
+                    idPlan: plan['dataValues']['id'],
+                    numeroAfiliado: paciente['dataValues']['numeroAfiliado'],
+                    email,
+                    telefono
+                }
+                res.status(200).json(pacienteResponse)
+            } else {
+                //response final
+                const pacienteResponse = {
+                    msg: "Paciente sin usuario asociado - Paciente creado por la institución",
+                    idUsuario: paciente['dataValues']['fk_idUsuario'],
+                    nombre: paciente['dataValues']['nombre'],
+                    apellido: paciente['dataValues']['apellido'],
+                    dni: paciente['dataValues']['dni'],
+                    tipoDNI: tipoDNI['dataValues']['tipoDNI'],
+                    idTipoDNI: paciente['dataValues']['fk_idTipoDNI'],
+                    fechaNacimiento: paciente['dataValues']['fechaNacimiento'],
+                    obraSocial: obraSocial['dataValues']['nombre'],
+                    idObraSocial: obraSocial['dataValues']['id'],
+                    plan: plan['dataValues']['nombre'],
+                    idPlan: plan['dataValues']['id'],
+                    numeroAfiliado: paciente['dataValues']['numeroAfiliado'],
+                    email: paciente['dataValues']['emailPersonal'],
+                    telefono: paciente['dataValues']['telefonoPersonal']
+                }
+                res.status(200).json(pacienteResponse)
             }
-
-            res.status(200).json(pacienteResponse)
-
         } catch (error) {
             res.status(500).json({
                 msg: `${error}`
