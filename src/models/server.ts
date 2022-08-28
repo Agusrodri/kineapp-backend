@@ -25,7 +25,7 @@ class Server {
         // Rutas de la aplicación
         this.routes();
 
-        // Conección con la db
+        // Conexión con la db
         this.dbConnection();
 
         // Tratamiento de errores
