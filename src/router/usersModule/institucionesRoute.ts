@@ -15,4 +15,6 @@ router.get("/instituciones/habilitar/:idPersonaJuridica", institucionesControlle
 router.put("/instituciones/editarFromPerfil/:idPersonaJuridica", institucionesController.editarInstitucionFromPerfil);
 
 
-module.exports = router
+//module.exports = router
+
+export default router;

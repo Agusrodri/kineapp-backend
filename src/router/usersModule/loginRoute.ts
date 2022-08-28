@@ -17,4 +17,6 @@ router.get("/validarJWT/:token", loginControllers.validateJWT);
 router.post("/emailToRestorePassword", loginControllers.sendEmailToRestorePassword);
 router.put("/restorePassword/:idUsuario", loginControllers.restorePassword);
 
-module.exports = router
+//module.exports = router
+
+export default router;

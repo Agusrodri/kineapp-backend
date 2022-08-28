@@ -16,4 +16,6 @@ router.put("/profesionales/editarFromInstitucion/:idPersonaJuridica", profesiona
 router.delete("/profesionales/eliminar/:idPersonaJuridica/:idProfesional", profesionalesController.deleteProfesionalById);
 router.put("/profesionales/editar/password/:idUsuario", profesionalesController.editarPassword);
 
-module.exports = router
+//module.exports = router
+
+export default router;

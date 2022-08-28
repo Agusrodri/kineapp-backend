@@ -31,4 +31,6 @@ router.post("/roles/crear", [
     validateRequest
 ], rolesController.createRol);
 
-module.exports = router
+//module.exports = router
+
+export default router;

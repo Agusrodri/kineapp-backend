@@ -29,4 +29,6 @@ router.put("/rolesinternos/editar/:idPersonaJuridica/:idRolInterno", [
     validateRequest
 ], rolesInternosController.updateRolInternoById);
 
-module.exports = router
+//module.exports = router
+
+export default router;

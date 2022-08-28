@@ -15,4 +15,6 @@ router.get("/obrasSociales/getPlan/:idPlan", obrasSocialesController.getPlanById
 router.put("/obrasSociales/editarPlan/:idPlan", obrasSocialesController.editarPlan);
 router.delete("/obrasSociales/eliminarPlan/:idPlan", obrasSocialesController.eliminarPlan);
 
-module.exports = router
+//module.exports = router
+
+export default router;

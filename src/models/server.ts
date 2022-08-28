@@ -1,6 +1,7 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import routes from "../router/indexRoute";
 import db from "../database/connection";
 
 class Server {
@@ -58,17 +59,21 @@ class Server {
 
     routes() {
 
-        this.app.use(this.apiPaths.usuarios, require('../router/usersModule/rolesRoute'));
-        this.app.use(this.apiPaths.usuarios, require('../router/usersModule/rolesInternosRoute'));
-        this.app.use(this.apiPaths.usuarios, require('../router/usersModule/institucionesRoute'));
-        this.app.use(this.apiPaths.usuarios, require('../router/usersModule/profesionalesRoute'));
-        this.app.use(this.apiPaths.usuarios, require('../router/usersModule/pacientesRoute'));
-        this.app.use(this.apiPaths.usuarios, require('../router/usersModule/loginRoute'));
-        this.app.use(this.apiPaths.usuarios, require('../router/obrasSocialesModule/obrasSocialesRoute'));
-        this.app.use(this.apiPaths.usuarios, require('../router/obrasSocialesModule/tratamientosGeneralesRoute'));
-        this.app.use(this.apiPaths.usuarios, require('../router/obrasSocialesModule/conveniosRoute'));
-        this.app.use(this.apiPaths.usuarios, require('../router/obrasSocialesModule/tratamientosParticularesRoute'));
-        this.app.use(this.apiPaths.usuarios, require('../router/filesRoute/filesRoute'));
+        /*   this.app.use(this.apiPaths.usuarios, require('../router/usersModule/rolesRoute'));
+          this.app.use(this.apiPaths.usuarios, require('../router/usersModule/rolesInternosRoute'));
+          this.app.use(this.apiPaths.usuarios, require('../router/usersModule/institucionesRoute'));
+          this.app.use(this.apiPaths.usuarios, require('../router/usersModule/profesionalesRoute'));
+          this.app.use(this.apiPaths.usuarios, require('../router/usersModule/pacientesRoute'));
+          this.app.use(this.apiPaths.usuarios, require('../router/usersModule/loginRoute'));
+          this.app.use(this.apiPaths.usuarios, require('../router/obrasSocialesModule/obrasSocialesRoute'));
+          this.app.use(this.apiPaths.usuarios, require('../router/obrasSocialesModule/tratamientosGeneralesRoute'));
+          this.app.use(this.apiPaths.usuarios, require('../router/obrasSocialesModule/conveniosRoute'));
+          this.app.use(this.apiPaths.usuarios, require('../router/obrasSocialesModule/tratamientosParticularesRoute'));
+          this.app.use(this.apiPaths.usuarios, require('../router/filesRoute/filesRoute')); */
+
+        for (const route of routes) {
+            this.app.use(this.apiPaths.usuarios, route)
+        }
 
         //autorizar frontend para evitar error de CORS
         this.app.use((req: Request, res: Response, next: NextFunction) => {

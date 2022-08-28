@@ -9,5 +9,6 @@ router.post("/tratamientosParticulares/agregar/:idPersonaJuridica", tratamientos
 router.put("/tratamientosParticulares/editar/:idPersonaJuridica", tratamientosParticularesController.editarTratamientoParticular);
 router.delete("/tratamientosParticulares/eliminar/:idPersonaJuridica/:idTratamientoParticular", tratamientosParticularesController.eliminarTratamientoParticular);
 
+//module.exports = router
 
-module.exports = router
+export default router;

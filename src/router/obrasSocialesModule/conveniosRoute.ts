@@ -11,4 +11,6 @@ router.post("/convenios/agregar/:idPersonaJuridica", conveniosController.agregar
 router.get("/tratamientosObraSocialConvenio/:idObraSocial/:idPersonaJuridica", conveniosController.getTratamientosConvenio);
 router.put("/convenios/editar/:idPersonaJuridica", conveniosController.editarConvenio);
 
-module.exports = router
+//module.exports = router
+
+export default router;

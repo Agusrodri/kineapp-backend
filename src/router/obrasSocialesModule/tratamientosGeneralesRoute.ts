@@ -9,4 +9,6 @@ router.post("/tratamientosGenerales/agregarTratamiento", tratamientosGeneralesCo
 router.put("/tratamientosGenerales/editarTratamiento/:idTratamientoGeneral", tratamientosGeneralesController.editarTratamientoGeneral);
 router.delete("/tratamientosGenerales/eliminarTratamiento/:idTratamientoGeneral", tratamientosGeneralesController.eliminarTratamientoGeneral);
 
-module.exports = router
+//module.exports = router
+
+export default router;
