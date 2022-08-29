@@ -54,7 +54,7 @@ const institucionesController = {
             }
 
             //obtener los datos de la institucion que necesitamos enviar al front
-            const { nombre, razonSocial, domicilio, fk_idUsuarios, cuit, habMinisterioSalud, habMunicipal, habSuperintendencia } = institucion['dataValues']
+            const { id, nombre, razonSocial, domicilio, fk_idUsuarios, cuit, habMinisterioSalud, habMunicipal, habSuperintendencia } = institucion['dataValues']
 
             //buscar al usuario asociado a esa persona jurídica
             const usuarioInstitucion = await Usuario.findByPk(fk_idUsuarios)
@@ -78,6 +78,7 @@ const institucionesController = {
 
             //response final
             const responseJson = {
+                idPersonaJuridica: id,
                 idUsuario: fk_idUsuarios,
                 nombre: nombre,
                 cuit: cuit,

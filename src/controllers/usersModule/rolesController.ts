@@ -88,6 +88,10 @@ const rolesController = {
                 }
             })
 
+            if (!rol) {
+                throw new Error("No existe el rol solicitado.")
+            }
+
             const rolPermiso = await RolPermiso.findAll({
                 attributes: ['habilitadoPermiso', 'fk_idPermiso'],
                 where: {
