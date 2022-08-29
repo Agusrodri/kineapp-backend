@@ -78,7 +78,7 @@ const institucionesController = {
 
             //response final
             const responseJson = {
-                idPersonaJuridica: id,
+                id,
                 idUsuario: fk_idUsuarios,
                 nombre: nombre,
                 cuit: cuit,
