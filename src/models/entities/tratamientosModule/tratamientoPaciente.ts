@@ -1,7 +1,6 @@
 import { DataTypes } from "sequelize";
 import db from "../../../database/connection";
 
-
 const TratamientoPaciente = db.define('TratamientoPaciente', {
 
     fechaInicio: {
@@ -35,7 +34,6 @@ const TratamientoPaciente = db.define('TratamientoPaciente', {
     finalizado: {
         type: DataTypes.BOOLEAN
     },
-
 })
 
 export default TratamientoPaciente;
