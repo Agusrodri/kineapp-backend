@@ -8,7 +8,7 @@ const TratamientoPaciente = db.define('TratamientoPaciente', {
         type: DataTypes.DATE
     },
 
-    fechaFin: {
+    fechaFinEstimada: {
         type: DataTypes.DATE
     },
 
@@ -22,7 +22,19 @@ const TratamientoPaciente = db.define('TratamientoPaciente', {
 
     activo: {
         type: DataTypes.BOOLEAN
-    }
+    },
+
+    fechaFinReal: {
+        type: DataTypes.DATE
+    },
+
+    nombrePaciente: {
+        type: DataTypes.STRING
+    },
+
+    finalizado: {
+        type: DataTypes.BOOLEAN
+    },
 
 })
 

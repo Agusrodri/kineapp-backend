@@ -11,7 +11,8 @@ import rolesRoute from "./usersModule/rolesRoute"
 import filesRoute from "./filesRoute/filesRoute"
 import utilityRoute from "./utilityRoutes/utilityRoute"
 import pacientesInstitucionesRoute from "./tratamientosModule/pacientesInstitucionesRoute"
+import tratamientoPacienteRoute from "./tratamientosModule/tratamientoPacienteRoute"
 
 export default [conveniosRoute, obrasSocialesRoute, tratamientosGeneralesRoute, tratamientosParticularesRoute,
     institucionesRoute, loginRoute, pacientesRoute, profesionalesRoute, rolesInternosRoute,
-    rolesRoute, filesRoute, utilityRoute, pacientesInstitucionesRoute]
+    rolesRoute, filesRoute, utilityRoute, pacientesInstitucionesRoute, tratamientoPacienteRoute]
