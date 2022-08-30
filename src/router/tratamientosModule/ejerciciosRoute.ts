@@ -4,7 +4,6 @@ import ejerciciosController from "../../controllers/tratamientosModule/ejercicio
 const router = Router()
 
 
-
 //module.exports = router
 
 export default router;

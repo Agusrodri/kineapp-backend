@@ -38,8 +38,48 @@ const obrasSocialesController = {
                 }
             })
 
-            res.status(200).json(planes)
+            const response = []
 
+            for(let i=0; i<planes.length; i++){
+
+                const planTratamientoGeneral = await PlanTratamientoGeneral.findAll({
+                    where: {
+                        fk_idPlan: planes[i]['dataValues']['id']
+                    }
+                })
+    
+                const coberturas = []
+    
+                for (let i = 0; i < planTratamientoGeneral.length; i++) {
+    
+                    const tratamiento = await TratamientoGeneral.findOne({
+                        where: {
+                            id: planTratamientoGeneral[i]['dataValues']['fk_idTratamientoGeneral'],
+                            activo: true
+                        }
+                    })
+    
+                    const cobertura = {
+                        idTratamiento: tratamiento['dataValues']['id'],
+                        tratamiento: tratamiento['dataValues']['nombre'],
+                        porcentajeCobertura: planTratamientoGeneral[i]['dataValues']['porcentajeCobertura'],
+                        comentarios: planTratamientoGeneral[i]['dataValues']['comentarios']
+                    }
+    
+                    coberturas.push(cobertura)
+                }
+
+                response.push({
+                    id: planes[i]['dataValues']['id'],
+                    nombre: planes[i]['dataValues']['nombre'],
+                    fk_idObraSocial: planes[i]['dataValues']['fk_idObraSocial'],
+                    activo: planes[i]['dataValues']['activo'],
+                    createdAt: planes[i]['dataValues']['createdAt'],
+                    updatedAt: planes[i]['dataValues']['updatedAt'],
+                    coberturas
+                })
+            }
+            res.status(200).json(response)
         } catch (error) {
             res.status(500).json({
                 msg: `${error}`
