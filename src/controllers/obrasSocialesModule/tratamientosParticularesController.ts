@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import PjTratamientoGeneral from "../../models/entities/obrasSocialesModule/pjTratamientoGeneral";
 import TratamientoParticular from "../../models/entities/obrasSocialesModule/tratamientoParticular";
 
 const tratamientosParticularesController = {
@@ -61,7 +62,7 @@ const tratamientosParticularesController = {
         try {
 
             const { idPersonaJuridica } = req.params
-            const { nombre, monto, descripcion } = req.body
+            const { nombre, monto, descripcion, idTratamientoGeneral } = req.body
 
             const tratamientoParticular = await TratamientoParticular.findOne({
                 where: {
@@ -71,10 +72,18 @@ const tratamientosParticularesController = {
                 }
             })
 
-            console.log(tratamientoParticular)
-
             if (tratamientoParticular) {
                 throw new Error("Ya existe un tratamiento particular con ese nombre dentro de la institución.")
+            }
+
+            if (idTratamientoGeneral) {
+
+                const pjTratamientoGeneral = await PjTratamientoGeneral.create({
+                    fk_idTratamientoGeneral: idTratamientoGeneral,
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    activo: true
+                })
+
             }
 
             const nuevotratamientoParticular = await TratamientoParticular.create({
@@ -82,6 +91,7 @@ const tratamientosParticularesController = {
                 monto: monto,
                 descripcion: descripcion,
                 fk_idPersonaJuridica: idPersonaJuridica,
+                fk_idTratamientoGeneral: (idTratamientoGeneral ? idTratamientoGeneral : null),
                 activo: true
             })
 

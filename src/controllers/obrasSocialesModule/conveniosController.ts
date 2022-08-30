@@ -13,7 +13,6 @@ const conveniosController = {
         try {
 
             const { idPersonaJuridica } = req.params
-
             const convenios = await Convenio.findAll({
                 where: {
                     fk_idPersonaJuridica: idPersonaJuridica,
@@ -32,7 +31,6 @@ const conveniosController = {
                 msg: `${error}`
             });
         }
-
     },
 
     getConvenioById: async (req: Request, res: Response) => {
