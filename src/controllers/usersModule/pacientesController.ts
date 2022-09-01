@@ -159,6 +159,7 @@ const pacientesController = {
         try {
 
             const { idUsuario } = req.params
+            const { password } = req.body
 
             const usuario = await Usuario.findOne({
                 where: {
@@ -169,6 +170,15 @@ const pacientesController = {
 
             if (!usuario) {
                 throw new Error("No existe el usuario solicitado.")
+            }
+
+            const passwordToVerify = usuario['dataValues']['password']
+            const validPassword = bcrypt.compareSync(password, passwordToVerify)
+
+            if (!validPassword) {
+                return res.status(400).json({
+                    msg: "Contraseña inválida."
+                })
             }
 
             const profesional = await Profesional.findOne({

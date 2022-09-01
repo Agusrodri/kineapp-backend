@@ -21,9 +21,53 @@ const rolesInternosController = {
                 }
             })
 
-            res.status(200).json(
-                rolesinternos
-            )
+            if (rolesinternos.length == 0) {
+                throw new Error("No existen roles internos cargados para esta institución.")
+            }
+
+            const rolResponseJson = []
+
+            for (let i = 0; i < rolesinternos.length; i++) {
+
+                const rolPermiso = await RolInternoPermisoInterno.findAll({
+                    where: {
+                        fk_idRolInterno: rolesinternos[i]['dataValues']['id']
+                    }
+                })
+
+                const permisosJson = []
+
+                for (let j = 0; j < rolPermiso.length; j++) {
+
+                    const permisoInterno = await PermisoInterno.findOne({
+                        where: {
+                            id: rolPermiso[j]['dataValues']['fk_idPermisoInterno']
+                        }
+                    })
+
+                    let permiso = {
+                        idPermiso: permisoInterno['dataValues']['id'],
+                        nombrePermiso: permisoInterno['dataValues']['nombrePermiso'],
+                        habilitadoPermiso: permisoInterno['dataValues']['habilitadoPermiso']
+                    }
+
+                    permisosJson.push(permiso)
+                }
+
+                const rolResponse = {
+                    id: rolesinternos[i]['dataValues']['id'],
+                    nombreRol: rolesinternos[i]['dataValues']['nombreRol'],
+                    descripcionRol: rolesinternos[i]['dataValues']['descripcionRol'],
+                    activo: rolesinternos[i]['dataValues']['activo'],
+                    fk_idPersonaJuridica: rolesinternos[i]['dataValues']['fk_idPersonaJuridica'],
+                    permisos: permisosJson
+                }
+
+                rolResponseJson.push(rolResponse)
+
+            }
+
+            res.status(200).json(rolResponseJson)
 
 
         } catch (error) {
@@ -82,8 +126,7 @@ const rolesInternosController = {
         try {
 
             const { idPersonaJuridica, idRolInterno } = req.params
-
-            const rol = await RolInterno.findAll({
+            const rol = await RolInterno.findOne({
                 where: {
                     id: idRolInterno,
                     fk_idPersonaJuridica: idPersonaJuridica,
@@ -96,24 +139,8 @@ const rolesInternosController = {
             }
 
             const rolPermiso = await RolInternoPermisoInterno.findAll({
-                attributes: ['habilitadoPermiso', 'fk_idPermisoInterno'],
                 where: {
                     fk_idRolInterno: idRolInterno
-                }
-            })
-
-            const idPermisos = []
-
-            for (let i = 0; i < rolPermiso.length; i++) {
-                idPermisos[i] = rolPermiso[i]['dataValues']['fk_idPermisoInterno']
-            }
-
-            const permisos = await PermisoInterno.findAll({
-                attributes: ['id', 'nombrePermiso'],
-                where: {
-                    id: {
-                        [Op.or]: idPermisos
-                    }
                 }
             })
 
@@ -121,19 +148,31 @@ const rolesInternosController = {
 
             for (let j = 0; j < rolPermiso.length; j++) {
 
-                let permisoJson = {
-                    idPermiso: permisos[j]['dataValues']['id'],
-                    nombrePermiso: permisos[j]['dataValues']['nombrePermiso'],
-                    habilitadoPermiso: rolPermiso[j]['dataValues']['habilitadoPermiso']
+                const permisoInterno = await PermisoInterno.findOne({
+                    where: {
+                        id: rolPermiso[j]['dataValues']['fk_idPermisoInterno']
+                    }
+                })
+
+                let permiso = {
+                    idPermiso: permisoInterno['dataValues']['id'],
+                    nombrePermiso: permisoInterno['dataValues']['nombrePermiso'],
+                    habilitadoPermiso: permisoInterno['dataValues']['habilitadoPermiso']
                 }
 
-                permisosJson.push(permisoJson)
+                permisosJson.push(permiso)
             }
 
-            res.status(200).json({
-                rol,
-                permisosJson
-            })
+            const rolResponse = {
+                id: rol['dataValues']['id'],
+                nombreRol: rol['dataValues']['nombreRol'],
+                descripcionRol: rol['dataValues']['descripcionRol'],
+                activo: rol['dataValues']['activo'],
+                fk_idPersonaJuridica: rol['dataValues']['fk_idPersonaJuridica'],
+                permisos: permisosJson
+            }
+
+            res.status(200).json(rolResponse)
 
 
         } catch (error) {

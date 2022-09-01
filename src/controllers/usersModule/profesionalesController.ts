@@ -204,6 +204,26 @@ const profesionalesController = {
                 activo: true
             })
 
+            const rolInternoProfesional = await RolInterno.findOne({
+                where: {
+                    id: idRol,
+                    activo: true
+                }
+            })
+
+            const nuevoProfesionalResponse = {
+                id: nuevoProfesional['dataValues']['id'],
+                nombre: nuevoProfesional['dataValues']['nombre'],
+                apellido: nuevoProfesional['dataValues']['apellido'],
+                dni: nuevoProfesional['dataValues']['dni'],
+                fk_idTipoDNI: nuevoProfesional['dataValues']['fk_idTipoDNI'],
+                fechaNacimiento: nuevoProfesional['dataValues']['fechaNacimiento'],
+                numeroMatricula: nuevoProfesional['dataValues']['numeroMatricula'],
+                nivelEducativo: nuevoProfesional['dataValues']['nivelEducativo'],
+                fk_idUsuario: nuevoUsuarioProfesional['dataValues']['id'],
+                nombreRol: rolInternoProfesional['dataValues']['nombreRol']
+            }
+
             const idUsuario = nuevoUsuarioProfesional['dataValues']['id']
             const idProfesional = nuevoProfesional['dataValues']['id']
 
@@ -217,7 +237,7 @@ const profesionalesController = {
                 usuarioExistente: false,
                 idPersonaJuridica,
                 nuevoUsuarioProfesional,
-                nuevoProfesional
+                nuevoProfesional: nuevoProfesionalResponse
             })
 
         } catch (error) {
