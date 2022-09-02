@@ -221,7 +221,7 @@ const profesionalesController = {
                 numeroMatricula: nuevoProfesional['dataValues']['numeroMatricula'],
                 nivelEducativo: nuevoProfesional['dataValues']['nivelEducativo'],
                 fk_idUsuario: nuevoUsuarioProfesional['dataValues']['id'],
-                nombreRol: rolInternoProfesional['dataValues']['nombreRol']
+                rol: rolInternoProfesional['dataValues']['nombreRol']
             }
 
             const idUsuario = nuevoUsuarioProfesional['dataValues']['id']
