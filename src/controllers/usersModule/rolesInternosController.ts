@@ -48,7 +48,7 @@ const rolesInternosController = {
                     let permiso = {
                         idPermiso: permisoInterno['dataValues']['id'],
                         nombrePermiso: permisoInterno['dataValues']['nombrePermiso'],
-                        habilitadoPermiso: permisoInterno['dataValues']['habilitadoPermiso']
+                        habilitadoPermiso: rolPermiso[j]['dataValues']['habilitadoPermiso']
                     }
 
                     permisosJson.push(permiso)
@@ -96,18 +96,43 @@ const rolesInternosController = {
 
             const idNuevoRol = rolInterno['dataValues']['id']
 
+            const permisosJson = []
+
             for (let i = 0; i < permisos.length; i++) {
 
-                await RolInternoPermisoInterno.create({
+                const rolPermiso = await RolInternoPermisoInterno.create({
                     fk_idPermisoInterno: permisos[i]['idPermiso'],
                     fk_idRolInterno: idNuevoRol,
                     habilitadoPermiso: permisos[i]['habilitadoPermiso']
                 })
+
+                const permisoInterno = await PermisoInterno.findOne({
+                    where: {
+                        id: rolPermiso['dataValues']['fk_idPermisoInterno']
+                    }
+                })
+
+                let permiso = {
+                    idPermiso: permisoInterno['dataValues']['id'],
+                    nombrePermiso: permisoInterno['dataValues']['nombrePermiso'],
+                    habilitadoPermiso: rolPermiso['dataValues']['habilitadoPermiso']
+                }
+
+                permisosJson.push(permiso)
+            }
+
+            const rolResponse = {
+                id: rolInterno['dataValues']['id'],
+                nombreRol: rolInterno['dataValues']['nombreRol'],
+                descripcionRol: rolInterno['dataValues']['descripcionRol'],
+                activo: rolInterno['dataValues']['activo'],
+                fk_idPersonaJuridica: rolInterno['dataValues']['fk_idPersonaJuridica'],
+                permisos: permisosJson
             }
 
             res.status(200).json({
                 msg: `Rol ${nombreRol} creado con id ${idNuevoRol}`,
-                rolInterno
+                rolInterno: rolResponse
             })
 
 
@@ -157,7 +182,7 @@ const rolesInternosController = {
                 let permiso = {
                     idPermiso: permisoInterno['dataValues']['id'],
                     nombrePermiso: permisoInterno['dataValues']['nombrePermiso'],
-                    habilitadoPermiso: permisoInterno['dataValues']['habilitadoPermiso']
+                    habilitadoPermiso: rolPermiso[j]['dataValues']['habilitadoPermiso']
                 }
 
                 permisosJson.push(permiso)
@@ -206,6 +231,8 @@ const rolesInternosController = {
 
             await rolInterno.update(body)
 
+            const permisosJson = []
+
             for (let x = 0; x < body.permisos.length; x++) {
 
                 const rolPermisoUpdate = await RolInternoPermisoInterno.findOne({
@@ -217,11 +244,34 @@ const rolesInternosController = {
 
                 await rolPermisoUpdate.update({ habilitadoPermiso: body.permisos[x]['habilitadoPermiso'] })
 
+                const permisoInterno = await PermisoInterno.findOne({
+                    where: {
+                        id: rolPermisoUpdate['dataValues']['fk_idPermisoInterno']
+                    }
+                })
+
+                let permiso = {
+                    idPermiso: permisoInterno['dataValues']['id'],
+                    nombrePermiso: permisoInterno['dataValues']['nombrePermiso'],
+                    habilitadoPermiso: rolPermisoUpdate['dataValues']['habilitadoPermiso']
+                }
+
+                permisosJson.push(permiso)
+
+            }
+
+            const rolResponse = {
+                id: rolInterno['dataValues']['id'],
+                nombreRol: rolInterno['dataValues']['nombreRol'],
+                descripcionRol: rolInterno['dataValues']['descripcionRol'],
+                activo: rolInterno['dataValues']['activo'],
+                fk_idPersonaJuridica: rolInterno['dataValues']['fk_idPersonaJuridica'],
+                permisos: permisosJson
             }
 
             res.status(200).json({
                 msg: `Rol actualizado correctamente.`,
-                rolInterno
+                rolInterno: rolResponse
             })
 
 
