@@ -26,7 +26,48 @@ const rolesController = {
                 })
             }
 
-            res.status(200).json(roles)
+            const rolesResponse = []
+
+            for (let i = 0; i < roles.length; i++) {
+
+                const rolPermiso = await RolPermiso.findAll({
+                    where: {
+                        fk_idRol: roles[i]['dataValues']['id']
+                    }
+                })
+
+                const permisosJson = []
+
+                for (let j = 0; j < rolPermiso.length; j++) {
+
+                    const permiso = await Permiso.findOne({
+                        where: {
+                            id: rolPermiso[j]['dataValues']['fk_idPermiso']
+                        }
+                    })
+
+                    let permisoJson = {
+                        idPermiso: permiso['dataValues']['id'],
+                        nombrePermiso: permiso['dataValues']['nombrePermiso'],
+                        habilitadoPermiso: rolPermiso[j]['dataValues']['habilitadoPermiso']
+                    }
+
+                    permisosJson.push(permisoJson)
+                }
+
+                const response = {
+                    id: roles[i]['dataValues']['id'],
+                    nombreRol: roles[i]['dataValues']['nombreRol'],
+                    descripcionRol: roles[i]['dataValues']['descripcionRol'],
+                    activo: roles[i]['dataValues']['activo'],
+                    permisos: permisosJson
+                }
+
+                rolesResponse.push(response)
+
+            }
+
+            res.status(200).json(rolesResponse)
 
         } catch (error) {
             console.log(error)
@@ -51,6 +92,7 @@ const rolesController = {
             })
 
             const idNuevoRol = nuevoRol['dataValues']['id']
+            const permisosJson = []
 
             for (let i = 0; i < permisos.length; i++) {
 
@@ -59,11 +101,21 @@ const rolesController = {
                     fk_idRol: idNuevoRol,
                     habilitadoPermiso: permisos[i]['habilitadoPermiso']
                 })
+
+                permisosJson.push(permisoRol)
+            }
+
+            const response = {
+                id: nuevoRol['dataValues']['id'],
+                nombreRol: nuevoRol['dataValues']['nombreRol'],
+                descripcionRol: nuevoRol['dataValues']['descripcionRol'],
+                activo: nuevoRol['dataValues']['activo'],
+                permisos: permisosJson
             }
 
             res.status(200).json({
                 msg: `Rol con nombre -${nombreRol}- y id -${idNuevoRol}- creado`,
-                nuevoRol
+                nuevoRol: response
             })
 
         } catch (error) {
@@ -93,25 +145,8 @@ const rolesController = {
             }
 
             const rolPermiso = await RolPermiso.findAll({
-                attributes: ['habilitadoPermiso', 'fk_idPermiso'],
                 where: {
                     fk_idRol: id
-                }
-            })
-
-            const idPermisos = []
-
-            for (let i = 0; i < rolPermiso.length; i++) {
-                idPermisos[i] = rolPermiso[i]['dataValues']['fk_idPermiso']
-
-            }
-
-            const permisos = await Permiso.findAll({
-                attributes: ['id', 'nombrePermiso'],
-                where: {
-                    id: {
-                        [Op.or]: idPermisos
-                    }
                 }
             })
 
@@ -119,19 +154,30 @@ const rolesController = {
 
             for (let j = 0; j < rolPermiso.length; j++) {
 
+                const permiso = await Permiso.findOne({
+                    where: {
+                        id: rolPermiso[j]['dataValues']['fk_idPermiso']
+                    }
+                })
+
                 let permisoJson = {
-                    idPermiso: permisos[j]['dataValues']['id'],
-                    nombrePermiso: permisos[j]['dataValues']['nombrePermiso'],
+                    idPermiso: permiso['dataValues']['id'],
+                    nombrePermiso: permiso['dataValues']['nombrePermiso'],
                     habilitadoPermiso: rolPermiso[j]['dataValues']['habilitadoPermiso']
                 }
 
                 permisosJson.push(permisoJson)
             }
 
-            res.status(200).json({
-                rol,
-                permisosJson
-            })
+            const response = {
+                id: rol['dataValues']['id'],
+                nombreRol: rol['dataValues']['nombreRol'],
+                descripcionRol: rol['dataValues']['descripcionRol'],
+                activo: rol['dataValues']['activo'],
+                permisos: permisosJson
+            }
+
+            res.status(200).json(response)
 
         } catch (error) {
             console.log(error)
