@@ -74,9 +74,7 @@ const rolesController = {
             res.status(500).json({
                 msg: 'Error - Hable con el administrador'
             });
-
         }
-
     },
 
     createRol: async (req: Request, res: Response) => {
