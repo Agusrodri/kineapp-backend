@@ -136,7 +136,7 @@ const rolesController = {
         } catch (error) {
             console.log(error)
             res.status(500).json({
-                msg: 'Error - Hable con el administrador'
+                msg: 'Ocurrió un error inesperado. Por favor, intente nuevamente más tarde.'
             });
 
         }
@@ -182,15 +182,15 @@ const rolesController = {
 
             for (let j = 0; j < rolPermiso.length; j++) {
 
-                const permisos = await Permiso.findOne({
+                const permiso = await Permiso.findOne({
                     where: {
                         id: rolPermiso[j]['dataValues']['fk_idPermiso']
                     }
                 })
 
                 let permisoJson = {
-                    idPermiso: permisos[j]['dataValues']['id'],
-                    nombrePermiso: permisos[j]['dataValues']['nombrePermiso'],
+                    idPermiso: permiso['dataValues']['id'],
+                    nombrePermiso: permiso['dataValues']['nombrePermiso'],
                     habilitadoPermiso: rolPermiso[j]['dataValues']['habilitadoPermiso']
                 }
 
@@ -213,9 +213,8 @@ const rolesController = {
         } catch (error) {
             console.log(error)
             res.status(500).json({
-                msg: 'Error - Hable con el administrador'
+                msg: `${error}`
             });
-
         }
 
     },
