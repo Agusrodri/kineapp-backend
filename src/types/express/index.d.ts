@@ -5,7 +5,8 @@ declare global {
         interface Request {
             shouldRunNextMiddleware?: Record<boolean, any>,
             file?: any,
-            typeFile?: string
+            typeFile?: string,
+            fileValidationError?: Record<boolean, any>
 
         }
     }

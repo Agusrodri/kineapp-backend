@@ -26,7 +26,7 @@ const validarJWT = async (req: Request, res: Response, next: NextFunction) => {
 
         if (!existsUsuarioWithToken) {
             return res.status(401).json({
-                msg: 'Token no válido - usuario no existe en DB'
+                msg: 'Su sesión expiró. Por favor, inicie sesión nuevamente.'
             })
         }
 
@@ -35,7 +35,7 @@ const validarJWT = async (req: Request, res: Response, next: NextFunction) => {
     } catch (error) {
         console.log(error);
         res.status(401).json({
-            msg: 'Token no válido'
+            msg: 'Su sesión expiró. Por favor, inicie sesión nuevamente.'
         })
     }
 

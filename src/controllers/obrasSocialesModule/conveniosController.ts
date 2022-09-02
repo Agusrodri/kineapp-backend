@@ -24,7 +24,51 @@ const conveniosController = {
                 throw new Error("No existen convenios cargados.")
             }
 
-            res.status(200).json(convenios)
+            const conveniosResponse = []
+
+            for (let i = 0; i < convenios.length; i++) {
+                const conveniosTratamientoGenerales = await ConvenioTratamientoGeneral.findAll({
+                    where: {
+                        fk_idConvenio: convenios[i]['dataValues']['id'],
+                        activo: true
+                    }
+                })
+
+                const tratamientos = []
+
+                for (let i = 0; i < conveniosTratamientoGenerales.length; i++) {
+
+                    const tratamientoGeneral = await TratamientoGeneral.findOne({
+                        where: {
+                            id: conveniosTratamientoGenerales[i]['dataValues']['fk_idTratamientoGeneral'],
+                            activo: true
+                        }
+                    })
+
+                    const tratamientoToAdd = {
+                        idTratamientoGeneral: tratamientoGeneral['dataValues']['id'],
+                        nombre: tratamientoGeneral['dataValues']['nombre'],
+                        monto: conveniosTratamientoGenerales[i]['dataValues']['monto']
+                    }
+
+                    tratamientos.push(tratamientoToAdd)
+                }
+
+                const convenioResp = {
+                    id: convenios[i]['dataValues']['id'],
+                    nombre: convenios[i]['dataValues']['nombre'],
+                    descripcion: convenios[i]['dataValues']['descripcion'],
+                    fk_idObraSocial: convenios[i]['dataValues']['fk_idObraSocial'],
+                    fk_idPersonaJuridica: convenios[i]['dataValues']['fk_idPersonaJuridica'],
+                    activo: convenios[i]['dataValues']['activo'],
+                    tratamientos: tratamientos
+                }
+
+                conveniosResponse.push(convenioResp)
+
+            }
+
+            res.status(200).json(conveniosResponse)
 
         } catch (error) {
             res.status(500).json({
@@ -77,7 +121,18 @@ const conveniosController = {
                 tratamientos.push(tratamientoToAdd)
             }
 
-            res.status(200).json({ convenio, tratamientos })
+            const convenioResp = {
+                id: convenio['dataValues']['id'],
+                nombre: convenio['dataValues']['nombre'],
+                descripcion: convenio['dataValues']['descripcion'],
+                fk_idObraSocial: convenio['dataValues']['fk_idObraSocial'],
+                fk_idPersonaJuridica: convenio['dataValues']['fk_idPersonaJuridica'],
+                activo: convenio['dataValues']['activo'],
+                tratamientos: tratamientos
+            }
+
+
+            res.status(200).json(convenioResp)
 
         } catch (error) {
             res.status(500).json({
@@ -198,20 +253,46 @@ const conveniosController = {
                 activo: true
             })
 
+            const tratamientosResponse = []
             for (let i = 0; i < tratamientos.length; i++) {
 
-                await ConvenioTratamientoGeneral.create({
+                const conveniosTratamientoGeneral = await ConvenioTratamientoGeneral.create({
                     monto: tratamientos[i]['monto'],
                     fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral'],
                     fk_idConvenio: convenioToCreate['dataValues']['id'],
                     activo: true
                 })
 
+                const tratamientoGeneral = await TratamientoGeneral.findOne({
+                    where: {
+                        id: conveniosTratamientoGeneral['dataValues']['fk_idTratamientoGeneral'],
+                        activo: true
+                    }
+                })
+
+                const tratamientoToAdd = {
+                    idTratamientoGeneral: tratamientoGeneral['dataValues']['id'],
+                    nombre: tratamientoGeneral['dataValues']['nombre'],
+                    monto: conveniosTratamientoGeneral['dataValues']['monto']
+                }
+
+                tratamientosResponse.push(tratamientoToAdd)
+
+            }
+
+            const convenioResp = {
+                id: convenioToCreate['dataValues']['id'],
+                nombre: convenioToCreate['dataValues']['nombre'],
+                descripcion: convenioToCreate['dataValues']['descripcion'],
+                fk_idObraSocial: convenioToCreate['dataValues']['fk_idObraSocial'],
+                fk_idPersonaJuridica: convenioToCreate['dataValues']['fk_idPersonaJuridica'],
+                activo: convenioToCreate['dataValues']['activo'],
+                tratamientos: tratamientosResponse
             }
 
             res.status(200).json({
                 msg: "Convenio creado con éxito.",
-                convenio: convenioToCreate
+                convenio: convenioResp
             })
 
 
@@ -260,19 +341,45 @@ const conveniosController = {
                 }
             })
 
+            const tratamientosResponse = []
             for (let i = 0; i < tratamientos.length; i++) {
 
-                await ConvenioTratamientoGeneral.create({
+                const conveniosTratamientoGeneral = await ConvenioTratamientoGeneral.create({
                     monto: tratamientos[i]['monto'],
                     fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral'],
                     fk_idConvenio: convenioToFind['dataValues']['id'],
                     activo: true
                 })
+
+                const tratamientoGeneral = await TratamientoGeneral.findOne({
+                    where: {
+                        id: conveniosTratamientoGeneral['dataValues']['fk_idTratamientoGeneral'],
+                        activo: true
+                    }
+                })
+
+                const tratamientoToAdd = {
+                    idTratamientoGeneral: tratamientoGeneral['dataValues']['id'],
+                    nombre: tratamientoGeneral['dataValues']['nombre'],
+                    monto: conveniosTratamientoGeneral['dataValues']['monto']
+                }
+
+                tratamientosResponse.push(tratamientoToAdd)
+            }
+
+            const convenioResp = {
+                id: convenioToFind['dataValues']['id'],
+                nombre: convenioToFind['dataValues']['nombre'],
+                descripcion: convenioToFind['dataValues']['descripcion'],
+                fk_idObraSocial: convenioToFind['dataValues']['fk_idObraSocial'],
+                fk_idPersonaJuridica: convenioToFind['dataValues']['fk_idPersonaJuridica'],
+                activo: convenioToFind['dataValues']['activo'],
+                tratamientos: tratamientosResponse
             }
 
             res.status(200).json({
                 msg: "Convenio actualizado con éxito.",
-                convenio: convenioToFind
+                convenio: convenioResp
             })
 
         } catch (error) {

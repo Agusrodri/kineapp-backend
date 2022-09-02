@@ -9,6 +9,9 @@ const fileController = {
 
         try {
 
+            if (req.fileValidationError) {
+                throw new Error(`Sólo se permiten archivos de tipo ${req.typeFile.toUpperCase()}`)
+            }
             if (req.file == undefined) {
                 return res.status(400).json({ message: "Por favor suba un archivo." });
             }
@@ -41,8 +44,9 @@ const fileController = {
 
         } catch (err) {
             res.status(500).json({
-                message: `No fue posible subir el archivo: ${req.file.originalname}. ${err}`,
+                message: `No fue posible subir el archivo. ${err}`,
             });
+            //${req.file.originalname}
         }
     },
 

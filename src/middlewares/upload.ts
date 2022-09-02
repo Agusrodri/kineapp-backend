@@ -1,5 +1,5 @@
 import multer from 'multer';
-import { Request } from "express"
+import { NextFunction, Request, Response } from "express"
 import url from 'url'
 
 const maxSize = 2 * 1024 * 1024;
@@ -7,13 +7,13 @@ const maxSize = 2 * 1024 * 1024;
 const fileFilter = (req: Request, file, cb) => {
 
     if (file.mimetype.split('/')[1] === req.typeFile) {
-
+        req.fileValidationError = false
         cb(null, true);
 
     } else {
-
-        cb(`Sólo se permiten archivos de tipo ${req.typeFile.toUpperCase()}`, false);
-
+        req.fileValidationError = true
+        cb(null, false);
+        //cb(`Sólo se permiten archivos de tipo ${req.typeFile.toUpperCase()}`, false, new Error("Probando error"));
     }
 };
 
