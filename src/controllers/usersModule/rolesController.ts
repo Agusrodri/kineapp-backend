@@ -161,22 +161,53 @@ const rolesController = {
 
             for (let x = 0; x < body.permisos.length; x++) {
 
-                const rolPermisoUpdate = await RolPermiso.findOne({
+                const rolPermisoToUpdate = await RolPermiso.findOne({
                     where: {
-                        [Op.and]: [
-                            { fk_idRol: id },
-                            { fk_idPermiso: body.permisos[x]["idPermiso"] }
-                        ]
+                        fk_idRol: id,
+                        fk_idPermiso: body.permisos[x]["idPermiso"]
                     }
                 })
 
-                await rolPermisoUpdate.update(body.permisos[x])
+                await rolPermisoToUpdate.update(body.permisos[x])
+
+            }
+
+            const rolPermiso = await RolPermiso.findAll({
+                where: {
+                    fk_idRol: id
+                }
+            })
+
+            const permisosJson = []
+
+            for (let j = 0; j < rolPermiso.length; j++) {
+
+                const permisos = await Permiso.findOne({
+                    where: {
+                        id: rolPermiso[j]['dataValues']['fk_idPermiso']
+                    }
+                })
+
+                let permisoJson = {
+                    idPermiso: permisos[j]['dataValues']['id'],
+                    nombrePermiso: permisos[j]['dataValues']['nombrePermiso'],
+                    habilitadoPermiso: rolPermiso[j]['dataValues']['habilitadoPermiso']
+                }
+
+                permisosJson.push(permisoJson)
+            }
+
+            const response = {
+                id: rol['dataValues']['id'],
+                nombreRol: rol['dataValues']['nombreRol'],
+                descripcionRol: rol['dataValues']['descripcionRol'],
+                activo: rol['dataValues']['activo'],
+                permisos: permisosJson
             }
 
             res.status(200).json({
                 msg: `Rol actualizado correctamente.`,
-                rol
-
+                rol: response
             })
 
         } catch (error) {
