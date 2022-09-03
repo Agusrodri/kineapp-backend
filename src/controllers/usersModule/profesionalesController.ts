@@ -8,6 +8,7 @@ import Usuario from '../../models/entities/usersModule/usuario';
 import sendEmail from '../../helpers/send-email';
 import Paciente from '../../models/entities/usersModule/paciente';
 import TipoDNI from '../../models/entities/usersModule/tipoDNI';
+import { Op } from 'sequelize';
 
 const profesionalesController = {
 
@@ -414,14 +415,16 @@ const profesionalesController = {
                     throw new Error("Ya existe un profesional asociado al usuario indicado.")
                 }
 
-                const profesionalMatricula = await Profesional.findOne({
-                    where: {
-                        numeroMatricula: numeroMatricula
-                    }
-                })
+                if (numeroMatricula) {
+                    const profesionalMatricula = await Profesional.findOne({
+                        where: {
+                            numeroMatricula: numeroMatricula
+                        }
+                    })
 
-                if (profesionalMatricula) {
-                    throw new Error("El número de matrícula ingresado ya se encuentra en uso.")
+                    if (profesionalMatricula) {
+                        throw new Error("El número de matrícula ingresado ya se encuentra en uso.")
+                    }
                 }
 
                 const newProfesional = await Profesional.create({
@@ -514,9 +517,41 @@ const profesionalesController = {
 
             await profesionalToUpdate.update({ fk_idRolInterno: idRol })
 
+            const usuario = await Usuario.findOne({
+                where: {
+                    id: profesional['dataValues']['fk_idUsuario'],
+                    activo: true
+                }
+            })
+
+            const rolInterno = await RolInterno.findOne({
+                where: {
+                    id: profesionalToUpdate['dataValues']['fk_idRolInterno']
+                }
+            })
+
+            const tipoDNI = await TipoDNI.findByPk(profesional['dataValues']['fk_idTipoDNI'])
+
+            const response = {
+                id: profesional['dataValues']['id'],
+                nombre: profesional['dataValues']['nombre'],
+                apellido: profesional['dataValues']['apellido'],
+                dni: profesional['dataValues']['dni'],
+                idTipoDNI: profesional['dataValues']['fk_idTipoDNI'],
+                fechaNacimiento: profesional['dataValues']['fechaNacimiento'],
+                numeroMatricula: profesional['dataValues']['numeroMatricula'],
+                nivelEducativo: profesional['dataValues']['nivelEducativo'],
+                idUsuario: profesional['dataValues']['fk_idUsuario'],
+                email: usuario['dataValues']['email'],
+                telefono: usuario['dataValues']['telefono'],
+                tipoDNI: tipoDNI['dataValues']['tipoDNI'],
+                rol: rolInterno['dataValues']['nombreRol'],
+
+            }
+
             res.status(200).json({
                 msg: "Profesional editado correctamente.",
-                profesional,
+                profesional: response,
                 newPjProfesional: profesionalToUpdate
             })
 
