@@ -129,7 +129,8 @@ const tratamientosParticularesController = {
             await tratamientoToEdit.update({ monto: monto, descripcion: descripcion })
 
             res.status(200).json({
-                msg: "Tratamiento particular actualizado correctamente."
+                msg: "Tratamiento particular actualizado correctamente.",
+                tratamientoParticular: tratamientoToEdit
             })
 
         } catch (error) {

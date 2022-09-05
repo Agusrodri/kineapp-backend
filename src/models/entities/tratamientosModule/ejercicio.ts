@@ -25,6 +25,10 @@ const Ejercicio = db.define('Ejercicio', {
 
     activo: {
         type: DataTypes.BOOLEAN
+    },
+
+    codigo: {
+        type: DataTypes.INTEGER
     }
 })
 

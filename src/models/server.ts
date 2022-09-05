@@ -1,6 +1,7 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
+import path from "path";
 import routes from "../router/indexRoute";
 import db from "../database/connection";
 
@@ -55,6 +56,10 @@ class Server {
                 extended: true,
             })
         );
+
+        //servir archivos públicos
+        this.app.use(express.static('public'))
+        //console.log("DIRNAME ", __dirname)
     }
 
     routes() {
