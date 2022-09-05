@@ -112,7 +112,7 @@ const tratamientosParticularesController = {
         try {
 
             const { idPersonaJuridica } = req.params
-            const { idTratamientoParticular, monto, descripcion } = req.body
+            const { idTratamientoParticular, nombre, monto, descripcion } = req.body
 
             const tratamientoToEdit = await TratamientoParticular.findOne({
                 where: {
@@ -126,7 +126,11 @@ const tratamientosParticularesController = {
                 throw new Error("No existe el tratamiento particular solicitado.")
             }
 
-            await tratamientoToEdit.update({ monto: monto, descripcion: descripcion })
+            if (tratamientoToEdit['dataValues']['fk_idTratamientoGeneral']) {
+                await tratamientoToEdit.update({ monto: monto, descripcion: descripcion })
+            } else {
+                await tratamientoToEdit.update({ nombre: nombre, monto: monto, descripcion: descripcion })
+            }
 
             res.status(200).json({
                 msg: "Tratamiento particular actualizado correctamente.",
