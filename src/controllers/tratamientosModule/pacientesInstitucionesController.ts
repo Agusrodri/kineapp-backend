@@ -30,8 +30,8 @@ const pacientesInstitucionesController = {
 
                 //obtener datos restantes - tipoDNI, obraSocial y plan
                 const tipoDNI = await TipoDNI.findByPk(paciente['dataValues']['fk_idTipoDNI'])
-                const obraSocial = await ObraSocial.findByPk(paciente['dataValues']['fk_idObraSocial'])
-                const plan = await Plan.findByPk(paciente['dataValues']['fk_idPlan'])
+                const obraSocial = paciente['dataValues']['fk_idObraSocial'] ? await ObraSocial.findByPk(paciente['dataValues']['fk_idObraSocial']) : null
+                const plan = paciente['dataValues']['fk_idPlan'] ? await Plan.findByPk(paciente['dataValues']['fk_idPlan']) : null
 
                 //verificar si el paciente tiene usuario asociado - si no lo tiene, es debido a que la institución lo creó
                 if (paciente['dataValues']['fk_idUsuario']) {
@@ -56,10 +56,10 @@ const pacientesInstitucionesController = {
                         tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                         idTipoDNI: paciente['dataValues']['fk_idTipoDNI'],
                         fechaNacimiento: paciente['dataValues']['fechaNacimiento'],
-                        obraSocial: obraSocial['dataValues']['nombre'],
-                        idObraSocial: obraSocial['dataValues']['id'],
-                        plan: plan['dataValues']['nombre'],
-                        idPlan: plan['dataValues']['id'],
+                        obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null ,
+                        idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
+                        plan: plan? plan['dataValues']['nombre'] : null,
+                        idPlan: plan? plan['dataValues']['id']: null,
                         numeroAfiliado: paciente['dataValues']['numeroAfiliado'],
                         email,
                         telefono
@@ -77,10 +77,10 @@ const pacientesInstitucionesController = {
                         tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                         idTipoDNI: paciente['dataValues']['fk_idTipoDNI'],
                         fechaNacimiento: paciente['dataValues']['fechaNacimiento'],
-                        obraSocial: obraSocial['dataValues']['nombre'],
-                        idObraSocial: obraSocial['dataValues']['id'],
-                        plan: plan['dataValues']['nombre'],
-                        idPlan: plan['dataValues']['id'],
+                        obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null,
+                        idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
+                        plan: plan? plan['dataValues']['nombre'] : null,
+                        idPlan: plan? plan['dataValues']['id']: null,
                         numeroAfiliado: paciente['dataValues']['numeroAfiliado'],
                         email: paciente['dataValues']['emailPersonal'],
                         telefono: paciente['dataValues']['telefonoPersonal']
@@ -129,8 +129,8 @@ const pacientesInstitucionesController = {
 
             //obtener datos restantes - tipoDNI, obraSocial y plan
             const tipoDNI = await TipoDNI.findByPk(paciente['dataValues']['fk_idTipoDNI'])
-            const obraSocial = await ObraSocial.findByPk(paciente['dataValues']['fk_idObraSocial'])
-            const plan = await Plan.findByPk(paciente['dataValues']['fk_idPlan'])
+            const obraSocial = paciente['dataValues']['fk_idObraSocial'] ? await ObraSocial.findByPk(paciente['dataValues']['fk_idObraSocial']) : null
+            const plan = paciente['dataValues']['fk_idPlan'] ? await Plan.findByPk(paciente['dataValues']['fk_idPlan']) : null
 
             //verificar si el paciente tiene usuario asociado - si no lo tiene, es debido a que la institución lo creó
             if (paciente['dataValues']['fk_idUsuario']) {
@@ -155,10 +155,10 @@ const pacientesInstitucionesController = {
                     tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                     idTipoDNI: paciente['dataValues']['fk_idTipoDNI'],
                     fechaNacimiento: paciente['dataValues']['fechaNacimiento'],
-                    obraSocial: obraSocial['dataValues']['nombre'],
-                    idObraSocial: obraSocial['dataValues']['id'],
-                    plan: plan['dataValues']['nombre'],
-                    idPlan: plan['dataValues']['id'],
+                    obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null ,
+                    idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
+                    plan: plan? plan['dataValues']['nombre'] : null,
+                    idPlan: plan? plan['dataValues']['id']: null,
                     numeroAfiliado: paciente['dataValues']['numeroAfiliado'],
                     email,
                     telefono
@@ -176,10 +176,10 @@ const pacientesInstitucionesController = {
                     tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                     idTipoDNI: paciente['dataValues']['fk_idTipoDNI'],
                     fechaNacimiento: paciente['dataValues']['fechaNacimiento'],
-                    obraSocial: obraSocial['dataValues']['nombre'],
-                    idObraSocial: obraSocial['dataValues']['id'],
-                    plan: plan['dataValues']['nombre'],
-                    idPlan: plan['dataValues']['id'],
+                    obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null ,
+                    idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
+                    plan: plan? plan['dataValues']['nombre'] : null,
+                    idPlan: plan? plan['dataValues']['id']: null,
                     numeroAfiliado: paciente['dataValues']['numeroAfiliado'],
                     email: paciente['dataValues']['emailPersonal'],
                     telefono: paciente['dataValues']['telefonoPersonal']
@@ -251,8 +251,8 @@ const pacientesInstitucionesController = {
 
             //obtener datos restantes - tipoDNI, obraSocial y plan
             const tipoDNI = await TipoDNI.findByPk(newPaciente['dataValues']['fk_idTipoDNI'])
-            const obraSocial = await ObraSocial.findByPk(newPaciente['dataValues']['fk_idObraSocial'])
-            const plan = await Plan.findByPk(newPaciente['dataValues']['fk_idPlan'])
+            const obraSocial = newPaciente['dataValues']['fk_idObraSocial'] ? await ObraSocial.findByPk(newPaciente['dataValues']['fk_idObraSocial']) : null
+            const plan = newPaciente['dataValues']['fk_idPlan'] ? await Plan.findByPk(newPaciente['dataValues']['fk_idPlan']) : null
 
             //response final
             const pacienteResponse = {
@@ -265,10 +265,10 @@ const pacientesInstitucionesController = {
                 tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                 idTipoDNI: newPaciente['dataValues']['fk_idTipoDNI'],
                 fechaNacimiento: newPaciente['dataValues']['fechaNacimiento'],
-                obraSocial: obraSocial['dataValues']['nombre'],
-                idObraSocial: obraSocial['dataValues']['id'],
-                plan: plan['dataValues']['nombre'],
-                idPlan: plan['dataValues']['id'],
+                obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null ,
+                idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
+                plan: plan? plan['dataValues']['nombre'] : null,
+                idPlan: plan? plan['dataValues']['id']: null,
                 numeroAfiliado: newPaciente['dataValues']['numeroAfiliado'],
                 email: newPaciente['dataValues']['emailPersonal'],
                 telefono: newPaciente['dataValues']['telefonoPersonal']
@@ -340,8 +340,8 @@ const pacientesInstitucionesController = {
 
             //obtener datos restantes - tipoDNI, obraSocial y plan
             const tipoDNI = await TipoDNI.findByPk(pacienteToEdit['dataValues']['fk_idTipoDNI'])
-            const obraSocial = await ObraSocial.findByPk(pacienteToEdit['dataValues']['fk_idObraSocial'])
-            const plan = await Plan.findByPk(pacienteToEdit['dataValues']['fk_idPlan'])
+            const obraSocial = pacienteToEdit['dataValues']['fk_idObraSocial'] ? await ObraSocial.findByPk(pacienteToEdit['dataValues']['fk_idObraSocial']) : null
+            const plan = pacienteToEdit['dataValues']['fk_idPlan'] ? await Plan.findByPk(pacienteToEdit['dataValues']['fk_idPlan']) : null
 
             //verificar si el paciente tiene usuario - si lo creó la institución, no tiene usuario
             if (pacienteToEdit['dataValues']['fk_idUsuario']) {
@@ -385,10 +385,10 @@ const pacientesInstitucionesController = {
                     tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                     idTipoDNI: pacienteToEdit['dataValues']['fk_idTipoDNI'],
                     fechaNacimiento: pacienteToEdit['dataValues']['fechaNacimiento'],
-                    obraSocial: obraSocial['dataValues']['nombre'],
-                    idObraSocial: obraSocial['dataValues']['id'],
-                    plan: plan['dataValues']['nombre'],
-                    idPlan: plan['dataValues']['id'],
+                    obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null,
+                    idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
+                    plan: plan? plan['dataValues']['nombre'] : null,
+                    idPlan: plan? plan['dataValues']['id']: null,
                     numeroAfiliado: pacienteToEdit['dataValues']['numeroAfiliado'],
                     email: emailUsuario,
                     telefono: telefonoUsuario
@@ -424,10 +424,10 @@ const pacientesInstitucionesController = {
                     tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                     idTipoDNI: pacienteToEdit['dataValues']['fk_idTipoDNI'],
                     fechaNacimiento: pacienteToEdit['dataValues']['fechaNacimiento'],
-                    obraSocial: obraSocial['dataValues']['nombre'],
-                    idObraSocial: obraSocial['dataValues']['id'],
-                    plan: plan['dataValues']['nombre'],
-                    idPlan: plan['dataValues']['id'],
+                    obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null ,
+                    idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
+                    plan: plan? plan['dataValues']['nombre'] : null,
+                    idPlan: plan? plan['dataValues']['id']: null,
                     numeroAfiliado: pacienteToEdit['dataValues']['numeroAfiliado'],
                     email: pacienteToEdit['dataValues']['emailPersonal'],
                     telefono: pacienteToEdit['dataValues']['telefonoPersonal']
