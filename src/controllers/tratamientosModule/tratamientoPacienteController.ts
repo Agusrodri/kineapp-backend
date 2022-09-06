@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import moment from 'moment'
 import TratamientoParticular from '../../models/entities/obrasSocialesModule/tratamientoParticular';
 import TratamientoPaciente from '../../models/entities/tratamientosModule/tratamientoPaciente';
 import PersonaJuridicaPaciente from '../../models/entities/usersModule/personaJuridicaPaciente';
@@ -100,7 +101,8 @@ const tratamientoPacienteController = {
                 where: {
                     fk_idPaciente: idPaciente,
                     fk_idTratamiento: idTratamientoParticular,
-                    activo: true
+                    activo: true,
+                    finalizado: false
                 }
             })
 
@@ -234,7 +236,9 @@ const tratamientoPacienteController = {
             }
 
             const nuevaFechaFinReal = (new Date()).toISOString().split("T")[0]
-            console.log("Nueva fecha: ", nuevaFechaFinReal)
+            //const fechaMoment = moment().format()
+            
+            //console.log("Nueva fecha: ", nuevaFechaFinReal)
             await tratamientoPaciente.update({ fechaFinReal: nuevaFechaFinReal, finalizado: true })
 
             res.status(200).json({
