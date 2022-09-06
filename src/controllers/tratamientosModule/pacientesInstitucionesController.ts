@@ -43,7 +43,7 @@ const pacientesInstitucionesController = {
                         }
                     })
 
-                    //si el paciente tiene un usuario asociado, traer su email y teléfono
+                    //si el paciente tiene un usuario asociado, traer su email y telefono
                     const { email, telefono } = usuarioPaciente['dataValues']
 
                     //objeto a agregar al array de response
