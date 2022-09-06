@@ -5,6 +5,67 @@ import PersonaJuridicaPaciente from '../../models/entities/usersModule/personaJu
 
 const tratamientoPacienteController = {
 
+    getAllTratamientos: async (req: Request, res: Response) => {
+
+        try{
+
+            const { idPersonaJuridica, idPaciente } = req.params
+            const pjPaciente = await PersonaJuridicaPaciente.findOne({
+                where: {
+                    fk_idPaciente: idPaciente,
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            if (!pjPaciente) {
+                throw new Error("No existe el paciente solicitado dentro de la institución.")
+            }
+
+            const tratamientosPaciente = await TratamientoPaciente.findAll({
+                where:{
+                    fk_idPaciente: idPaciente,
+                    activo: true
+                }
+            })
+
+            const tratamientosPacienteResp = []
+            for(let i=0; i<tratamientosPaciente.length; i++){
+
+                const tratamientoParticular = await TratamientoParticular.findOne({
+                    where: {
+                        id: tratamientosPaciente[i]['dataValues']['fk_idTratamiento'],
+                        fk_idPersonaJuridica: idPersonaJuridica,
+                        activo: true
+                    }
+                })
+
+                const tratamientoPaciente = {
+                    id: tratamientosPaciente[i]['dataValues']['id'],
+                    fechaInicio: tratamientosPaciente[i]['dataValues']['fechaInicio'],
+                    fechaFinEstimada: tratamientosPaciente[i]['dataValues']['fechaFinEstimada'],
+                    fechaFinReal: tratamientosPaciente[i]['dataValues']['fechaFinReal'],
+                    idPaciente: tratamientosPaciente[i]['dataValues']['fk_idPaciente'],
+                    fk_idTratamiento: tratamientosPaciente[i]['dataValues']['fk_idTratamiento'],
+                    tratamiento: tratamientoParticular['dataValues']['nombre'],
+                    nombrePaciente: tratamientosPaciente[i]['dataValues']['nombrePaciente'],
+                    finalizado: tratamientosPaciente[i]['dataValues']['finalizado'],
+                    activo: tratamientosPaciente[i]['dataValues']['activo']
+
+                }
+
+                tratamientosPacienteResp.push(tratamientoPaciente)
+
+            }
+            res.status(200).json(tratamientosPacienteResp)
+        }catch(error){
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+
+    },
+
     agregarTratamientoPaciente: async (req: Request, res: Response) => {
 
         try {
