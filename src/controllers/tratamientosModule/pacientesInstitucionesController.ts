@@ -477,7 +477,6 @@ const pacientesInstitucionesController = {
         }
     }
 
-
 }
 
 export default pacientesInstitucionesController;
