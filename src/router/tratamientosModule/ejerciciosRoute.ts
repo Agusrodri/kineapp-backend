@@ -3,6 +3,7 @@ import ejerciciosController from "../../controllers/tratamientosModule/ejercicio
 
 const router = Router()
 
+router.get("/ejercicios/:idPersonaJuridica", ejerciciosController.getEjercicios);
 
 //module.exports = router
 
