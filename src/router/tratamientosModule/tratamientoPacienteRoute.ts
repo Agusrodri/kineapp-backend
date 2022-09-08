@@ -9,5 +9,4 @@ router.get("/getTratamientosPaciente/:idPersonaJuridica/:idPaciente", tratamient
 router.get("/finalizarTratamientoPaciente/:idPersonaJuridica/:idPaciente/:idTratamientoPaciente", tratamientoPacienteController.finalizarTratamiento);
 router.delete("/eliminarTratamientoPaciente/:idPersonaJuridica/:idPaciente/:idTratamientoPaciente", tratamientoPacienteController.eliminarTratamiento);
 
-
 export default router;

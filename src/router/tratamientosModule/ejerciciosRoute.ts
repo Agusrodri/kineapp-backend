@@ -10,6 +10,4 @@ router.put("/ejercicios/editar/:idPersonaJuridica/:idEjercicio", ejerciciosContr
 router.delete("/ejercicios/eliminarGIF/:idPersonaJuridica/:idEjercicio", ejerciciosController.eliminarGIF);
 router.delete("/ejercicios/eliminar/:idPersonaJuridica/:idEjercicio", ejerciciosController.eliminarEjercicio);
 
-//module.exports = router
-
 export default router;

@@ -9,7 +9,4 @@ router.post("/pacientesInstitucion/agregarPaciente/:idPersonaJuridica", paciente
 router.put("/pacientesInstitucion/editarPaciente/:idPersonaJuridica/:idPaciente", pacientesInstitucionesController.editarPaciente);
 router.delete("/pacientesInstitucion/eliminarPaciente/:idPersonaJuridica/:idPaciente", pacientesInstitucionesController.eliminarPaciente);
 
-
-//module.exports = router
-
 export default router;
