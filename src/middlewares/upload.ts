@@ -34,7 +34,7 @@ const storage = multer.diskStorage({
         if (ext == "pdf") {
             cb(null, "file-" + "id-" + queryObject['id'] + "." + ext);
         } else if (ext == "gif") {
-            const modifiedName = "file-" + "id-" + queryObject['id'] + "-codigo-" + queryObject['codigo'] + "." + ext
+            const modifiedName = "file-" + "id-ejercicio-" + queryObject['id'] + "." + ext
             req.lastModifiedName = modifiedName
             cb(null, modifiedName);
         }

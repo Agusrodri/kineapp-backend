@@ -19,17 +19,15 @@ const fileController = {
 
             const queryObject = url.parse(req.url, true).query;
             const idEjercicio = parseInt(queryObject['id'].toString());
-            const codigoEjercicio = queryObject['codigo']
             const ejercicio = await Ejercicio.findOne({
                 where: {
                     id: idEjercicio,
-                    codigo: codigoEjercicio,
                     activo: true
                 }
             })
 
             if (!ejercicio) {
-                throw new Error("El id y código no se corresponden. Intente nuevamente.")
+                throw new Error("No existe un ejercicio con el id ingresado. Intente nuevamente.")
             }
 
             await ejercicio.update({ gif: `${globalThis.__baseurl2}${req.lastModifiedName}` })
