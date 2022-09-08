@@ -58,27 +58,24 @@ const ejerciciosController = {
         try {
 
             const { idPersonaJuridica } = req.params
-            const { nombre, complejidad, descripcion, codigo } = req.body
+            const { nombre, complejidad, descripcion } = req.body
 
             const ejercicio = await Ejercicio.findOne({
                 where: {
-                    [Op.or]: {
-                        nombre: nombre,
-                        codigo: codigo
-                    },
-                    fk_idPersonaJuridica: idPersonaJuridica
+                    nombre: nombre,
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    activo: true
                 }
             })
 
             if (ejercicio) {
-                throw new Error("Ya existe un ejercicio con ese nombre o código en la institución.")
+                throw new Error("Ya existe un ejercicio con ese nombre en la institución.")
             }
 
             const newEjercicio = await Ejercicio.create({
                 nombre: nombre,
                 complejidad: complejidad,
                 descripcion: descripcion,
-                codigo: codigo,
                 fk_idPersonaJuridica: idPersonaJuridica,
                 gif: "gif-not-uploaded",
                 activo: true
