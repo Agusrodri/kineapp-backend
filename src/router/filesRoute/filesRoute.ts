@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { check } from "express-validator";
-import nodeMailer from 'nodemailer'
 import validatePDF from "../../middlewares/validatePDF";
+import validateGIF from "../../middlewares/validateGIF";
 import fileController from "../../controllers/files/fileController";
 import uploadFile from "../../middlewares/upload";
-import validateRequest from "../../middlewares/validateRequest";
+
 
 const router = Router()
 
+//------------archivos de habilitaciones-------------
 router.post("/uploadHabilitaciones", [
 
     validatePDF.validate,
@@ -19,6 +20,14 @@ router.post("/uploadHabilitaciones", [
 router.get("/downloadHabilitacion/:path/:fileName", fileController.downloadHabilitaciones)
 
 router.get("/getHabilitaciones/:path", fileController.getHabilitacionesFiles)
+
+//------------archivos de ejercicios-------------
+router.post("/uploadGIF", [
+
+    validateGIF.validate,
+    uploadFile.single('file')
+
+], fileController.uploadGIFS)
 
 //module.exports = router
 

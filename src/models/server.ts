@@ -58,7 +58,7 @@ class Server {
         );
 
         //servir archivos públicos
-        this.app.use(express.static('public'))
+        this.app.use(express.static(globalThis.__basedir + "/resources/static/assets/files/public"))
         //console.log("DIRNAME ", __dirname)
     }
 

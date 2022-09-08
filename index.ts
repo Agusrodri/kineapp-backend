@@ -7,6 +7,7 @@ if (!process.env.PORT) {
 
 globalThis.__basedir = __dirname
 globalThis.__baseurl = "http://api-kineapp.herokuapp.com/api/"
+globalThis.__baseurl2 = "http://api-kineapp.herokuapp.com/"
 
 //globalThis.__baseurl = "http://localhost:8003/api/"
 

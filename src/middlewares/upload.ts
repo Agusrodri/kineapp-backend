@@ -22,7 +22,6 @@ const storage = multer.diskStorage({
     destination: (req: Request, file, cb) => {
 
         const queryObject = url.parse(req.url, true).query;
-
         cb(null, globalThis.__basedir + "/resources/static/assets/files/" + queryObject['path']);
 
     },
@@ -32,7 +31,13 @@ const storage = multer.diskStorage({
         const ext = file.mimetype.split('/')[1]
         const queryObject = url.parse(req.url, true).query;
 
-        cb(null, "file-" + "id-" + queryObject['id'] + "." + ext);
+        if (ext == "pdf") {
+            cb(null, "file-" + "id-" + queryObject['id'] + "." + ext);
+        } else if (ext == "gif") {
+            const modifiedName = "file-" + "id-" + queryObject['id'] + "-codigo-" + queryObject['codigo'] + "." + ext
+            req.lastModifiedName = modifiedName
+            cb(null, modifiedName);
+        }
     },
 });
 

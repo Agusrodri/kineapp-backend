@@ -6,7 +6,8 @@ declare global {
             shouldRunNextMiddleware?: Record<boolean, any>,
             file?: any,
             typeFile?: string,
-            fileValidationError?: Record<boolean, any>
+            fileValidationError?: Record<boolean, any>,
+            lastModifiedName?: string
 
         }
     }
