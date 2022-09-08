@@ -2,7 +2,7 @@ import multer from 'multer';
 import { NextFunction, Request, Response } from "express"
 import url from 'url'
 
-const maxSize = 2 * 1024 * 1024;
+const maxSize = 4 * 1024 * 1024;
 
 const fileFilter = (req: Request, file, cb) => {
 
