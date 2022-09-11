@@ -15,8 +15,7 @@ const rutinaController = {
             const tratamientoPaciente = await TratamientoPaciente.findOne({
                 where: {
                     id: idTratamientoPaciente,
-                    activo: true,
-                    finalizado: false
+                    activo: true
                 }
             })
 
