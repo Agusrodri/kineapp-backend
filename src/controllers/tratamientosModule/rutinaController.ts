@@ -205,6 +205,10 @@ const rutinaController = {
                 throw new Error("No se encontró la rutina solicitada.")
             }
 
+            if (rutinaToEnd['dataValues']['finalizada'] == true) {
+                throw new Error("La rutina ya se encuentra finalizada.")
+            }
+
             const fechaFinRutina = (new Date()).toISOString().split("T")[0]
             await rutinaToEnd.update({ finalizada: true, fechaFinalizacion: fechaFinRutina })
 
