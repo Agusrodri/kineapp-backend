@@ -56,10 +56,10 @@ const pacientesInstitucionesController = {
                         tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                         idTipoDNI: paciente['dataValues']['fk_idTipoDNI'],
                         fechaNacimiento: paciente['dataValues']['fechaNacimiento'],
-                        obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null ,
-                        idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
-                        plan: plan? plan['dataValues']['nombre'] : null,
-                        idPlan: plan? plan['dataValues']['id']: null,
+                        obraSocial: obraSocial ? obraSocial['dataValues']['nombre'] : null,
+                        idObraSocial: obraSocial ? obraSocial['dataValues']['id'] : null,
+                        plan: plan ? plan['dataValues']['nombre'] : null,
+                        idPlan: plan ? plan['dataValues']['id'] : null,
                         numeroAfiliado: paciente['dataValues']['numeroAfiliado'],
                         email,
                         telefono
@@ -77,10 +77,10 @@ const pacientesInstitucionesController = {
                         tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                         idTipoDNI: paciente['dataValues']['fk_idTipoDNI'],
                         fechaNacimiento: paciente['dataValues']['fechaNacimiento'],
-                        obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null,
-                        idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
-                        plan: plan? plan['dataValues']['nombre'] : null,
-                        idPlan: plan? plan['dataValues']['id']: null,
+                        obraSocial: obraSocial ? obraSocial['dataValues']['nombre'] : null,
+                        idObraSocial: obraSocial ? obraSocial['dataValues']['id'] : null,
+                        plan: plan ? plan['dataValues']['nombre'] : null,
+                        idPlan: plan ? plan['dataValues']['id'] : null,
                         numeroAfiliado: paciente['dataValues']['numeroAfiliado'],
                         email: paciente['dataValues']['emailPersonal'],
                         telefono: paciente['dataValues']['telefonoPersonal']
@@ -133,7 +133,7 @@ const pacientesInstitucionesController = {
             const plan = paciente['dataValues']['fk_idPlan'] ? await Plan.findByPk(paciente['dataValues']['fk_idPlan']) : null
 
             //verificar si el paciente tiene usuario asociado - si no lo tiene, es debido a que la institución lo creó
-            if (paciente['dataValues']['fk_idUsuario']) {
+            if (paciente['dataValues']['fk_idUsuario'] ? paciente['dataValues']['fk_idUsuario'] : null) {
                 //obtener usuario asociado al paciente
                 const usuarioPaciente = await Usuario.findOne({
                     where: {
@@ -155,10 +155,10 @@ const pacientesInstitucionesController = {
                     tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                     idTipoDNI: paciente['dataValues']['fk_idTipoDNI'],
                     fechaNacimiento: paciente['dataValues']['fechaNacimiento'],
-                    obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null ,
-                    idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
-                    plan: plan? plan['dataValues']['nombre'] : null,
-                    idPlan: plan? plan['dataValues']['id']: null,
+                    obraSocial: obraSocial ? obraSocial['dataValues']['nombre'] : null,
+                    idObraSocial: obraSocial ? obraSocial['dataValues']['id'] : null,
+                    plan: plan ? plan['dataValues']['nombre'] : null,
+                    idPlan: plan ? plan['dataValues']['id'] : null,
                     numeroAfiliado: paciente['dataValues']['numeroAfiliado'],
                     email,
                     telefono
@@ -176,10 +176,10 @@ const pacientesInstitucionesController = {
                     tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                     idTipoDNI: paciente['dataValues']['fk_idTipoDNI'],
                     fechaNacimiento: paciente['dataValues']['fechaNacimiento'],
-                    obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null ,
-                    idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
-                    plan: plan? plan['dataValues']['nombre'] : null,
-                    idPlan: plan? plan['dataValues']['id']: null,
+                    obraSocial: obraSocial ? obraSocial['dataValues']['nombre'] : null,
+                    idObraSocial: obraSocial ? obraSocial['dataValues']['id'] : null,
+                    plan: plan ? plan['dataValues']['nombre'] : null,
+                    idPlan: plan ? plan['dataValues']['id'] : null,
                     numeroAfiliado: paciente['dataValues']['numeroAfiliado'],
                     email: paciente['dataValues']['emailPersonal'],
                     telefono: paciente['dataValues']['telefonoPersonal']
@@ -265,10 +265,10 @@ const pacientesInstitucionesController = {
                 tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                 idTipoDNI: newPaciente['dataValues']['fk_idTipoDNI'],
                 fechaNacimiento: newPaciente['dataValues']['fechaNacimiento'],
-                obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null ,
-                idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
-                plan: plan? plan['dataValues']['nombre'] : null,
-                idPlan: plan? plan['dataValues']['id']: null,
+                obraSocial: obraSocial ? obraSocial['dataValues']['nombre'] : null,
+                idObraSocial: obraSocial ? obraSocial['dataValues']['id'] : null,
+                plan: plan ? plan['dataValues']['nombre'] : null,
+                idPlan: plan ? plan['dataValues']['id'] : null,
                 numeroAfiliado: newPaciente['dataValues']['numeroAfiliado'],
                 email: newPaciente['dataValues']['emailPersonal'],
                 telefono: newPaciente['dataValues']['telefonoPersonal']
@@ -385,10 +385,10 @@ const pacientesInstitucionesController = {
                     tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                     idTipoDNI: pacienteToEdit['dataValues']['fk_idTipoDNI'],
                     fechaNacimiento: pacienteToEdit['dataValues']['fechaNacimiento'],
-                    obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null,
-                    idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
-                    plan: plan? plan['dataValues']['nombre'] : null,
-                    idPlan: plan? plan['dataValues']['id']: null,
+                    obraSocial: obraSocial ? obraSocial['dataValues']['nombre'] : null,
+                    idObraSocial: obraSocial ? obraSocial['dataValues']['id'] : null,
+                    plan: plan ? plan['dataValues']['nombre'] : null,
+                    idPlan: plan ? plan['dataValues']['id'] : null,
                     numeroAfiliado: pacienteToEdit['dataValues']['numeroAfiliado'],
                     email: emailUsuario,
                     telefono: telefonoUsuario
@@ -424,10 +424,10 @@ const pacientesInstitucionesController = {
                     tipoDNI: tipoDNI['dataValues']['tipoDNI'],
                     idTipoDNI: pacienteToEdit['dataValues']['fk_idTipoDNI'],
                     fechaNacimiento: pacienteToEdit['dataValues']['fechaNacimiento'],
-                    obraSocial: obraSocial? obraSocial['dataValues']['nombre'] : null ,
-                    idObraSocial: obraSocial? obraSocial['dataValues']['id']: null,
-                    plan: plan? plan['dataValues']['nombre'] : null,
-                    idPlan: plan? plan['dataValues']['id']: null,
+                    obraSocial: obraSocial ? obraSocial['dataValues']['nombre'] : null,
+                    idObraSocial: obraSocial ? obraSocial['dataValues']['id'] : null,
+                    plan: plan ? plan['dataValues']['nombre'] : null,
+                    idPlan: plan ? plan['dataValues']['id'] : null,
                     numeroAfiliado: pacienteToEdit['dataValues']['numeroAfiliado'],
                     email: pacienteToEdit['dataValues']['emailPersonal'],
                     telefono: pacienteToEdit['dataValues']['telefonoPersonal']
