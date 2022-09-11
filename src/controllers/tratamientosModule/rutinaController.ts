@@ -24,6 +24,10 @@ const rutinaController = {
                 throw new Error("No existe el tratamiento solicitado.")
             }
 
+            if (tratamientoPaciente['dataValues']['finalizado'] == true) {
+                throw new Error("No fue posible crear la rutina. El tratamiento se encuentra finalizado.")
+            }
+
             const newRutina = await Rutina.create({
                 //order: 
                 fk_idTratamientoPaciente: idTratamientoPaciente,
