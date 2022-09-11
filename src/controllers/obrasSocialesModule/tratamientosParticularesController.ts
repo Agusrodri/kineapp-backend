@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import { Op } from "sequelize";
 import PjTratamientoGeneral from "../../models/entities/obrasSocialesModule/pjTratamientoGeneral";
 import TratamientoParticular from "../../models/entities/obrasSocialesModule/tratamientoParticular";
 
@@ -113,6 +114,19 @@ const tratamientosParticularesController = {
 
             const { idPersonaJuridica } = req.params
             const { idTratamientoParticular, nombre, monto, descripcion } = req.body
+
+            const tratamientoToFind = await TratamientoParticular.findOne({
+                where: {
+                    id: { [Op.notIn]: [idTratamientoParticular] },
+                    nombre: nombre,
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            if (tratamientoToFind) {
+                throw new Error("Ya existe un tratamiento con ese nombre dentro de la institución. Por favor, ingrese un nombre diferente.")
+            }
 
             const tratamientoToEdit = await TratamientoParticular.findOne({
                 where: {

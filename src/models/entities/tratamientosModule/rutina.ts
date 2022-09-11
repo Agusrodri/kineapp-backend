@@ -14,6 +14,14 @@ const Rutina = db.define('Rutina', {
     activo: {
         type: DataTypes.BOOLEAN
     },
+
+    finalizada: {
+        type: DataTypes.BOOLEAN
+    },
+
+    fechaFinalizacion: {
+        type: DataTypes.DATE
+    }
 })
 
 export default Rutina;

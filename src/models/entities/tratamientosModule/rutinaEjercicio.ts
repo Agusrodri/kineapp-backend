@@ -21,6 +21,10 @@ const RutinaEjercicio = db.define('RutinaEjercicio', {
 
     fk_idEjercicio: {
         type: DataTypes.INTEGER
+    },
+
+    nombreEjercicio: {
+        type: DataTypes.STRING
     }
 })
 
