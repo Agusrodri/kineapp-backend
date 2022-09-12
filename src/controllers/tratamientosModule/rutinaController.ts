@@ -167,7 +167,7 @@ const rutinaController = {
                     //contadorCheck:
                     fk_idRutina: rutinaToEdit['dataValues']['id'],
                     fk_idEjercicio: ejercicios[i]['id'],
-                    nombreEjercicio: ejercicios[i]['nombre']
+                    nombreEjercicio: ejercicios[i]['nombreEjercicio']
                 })
 
                 ejerciciosRutina.push(newRutinaEjercicio)
