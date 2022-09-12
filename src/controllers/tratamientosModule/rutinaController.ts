@@ -105,7 +105,8 @@ const rutinaController = {
                     duracion: rutinaEjercicios[i]['dataValues']['duracion'],
                     fk_idRutina: rutinaEjercicios[i]['dataValues']['fk_idRutina'],
                     fk_idEjercicio: rutinaEjercicios[i]['dataValues']['fk_idEjercicio'],
-                    nombreEjercicio: rutinaEjercicios[i]['dataValues']['nombreEjercicio']
+                    nombreEjercicio: rutinaEjercicios[i]['dataValues']['nombreEjercicio'],
+                    cantidadRepeticiones: rutinaEjercicios[i]['dataValues']['cantidadRepeticiones']
                 }
 
                 rutinaEjerciciosRes.push(rutinaEjercicio)
