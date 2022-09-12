@@ -266,7 +266,7 @@ const institucionesController = {
 
             const usuario = await Usuario.findOne({
                 where: {
-                    id: idPersonaJuridica,
+                    id: personaJuridicaToHabilitar['dataValues']['fk_idUsuarios'],
                     activo: true
                 }
             })
