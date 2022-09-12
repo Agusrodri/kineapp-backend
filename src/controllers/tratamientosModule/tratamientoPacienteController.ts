@@ -8,7 +8,7 @@ const tratamientoPacienteController = {
 
     getAllTratamientos: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
             const { idPersonaJuridica, idPaciente } = req.params
             const pjPaciente = await PersonaJuridicaPaciente.findOne({
@@ -24,14 +24,18 @@ const tratamientoPacienteController = {
             }
 
             const tratamientosPaciente = await TratamientoPaciente.findAll({
-                where:{
+                where: {
                     fk_idPaciente: idPaciente,
                     activo: true
                 }
             })
 
+            if (!tratamientosPaciente) {
+                res.status(200).json([])
+            }
+
             const tratamientosPacienteResp = []
-            for(let i=0; i<tratamientosPaciente.length; i++){
+            for (let i = 0; i < tratamientosPaciente.length; i++) {
 
                 const tratamientoParticular = await TratamientoParticular.findOne({
                     where: {
@@ -59,7 +63,7 @@ const tratamientoPacienteController = {
 
             }
             res.status(200).json(tratamientosPacienteResp)
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
@@ -176,7 +180,7 @@ const tratamientoPacienteController = {
             }
 
             const tratamientoParticular = await TratamientoParticular.findOne({
-                where:{
+                where: {
                     id: tratamientoPaciente['dataValues']['fk_idTratamiento'],
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
@@ -237,7 +241,7 @@ const tratamientoPacienteController = {
 
             const nuevaFechaFinReal = (new Date()).toISOString().split("T")[0]
             //const fechaMoment = moment().format()
-            
+
             //console.log("Nueva fecha: ", nuevaFechaFinReal)
             await tratamientoPaciente.update({ fechaFinReal: nuevaFechaFinReal, finalizado: true })
 

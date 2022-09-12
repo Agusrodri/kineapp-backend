@@ -11,7 +11,6 @@ const rutinaController = {
 
             const { idTratamientoPaciente } = req.params
             const ejercicios = req.body //consultar si pasar también el orden
-
             const tratamientoPaciente = await TratamientoPaciente.findOne({
                 where: {
                     id: idTratamientoPaciente,
@@ -251,6 +250,68 @@ const rutinaController = {
             res.status(200).json({
                 msg: "Rutina eliminada correctamente."
             })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    getRutinasPaciente: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idTratamientoPaciente } = req.params
+            const rutinas = await Rutina.findAll({
+                where: {
+                    fk_idTratamientoPaciente: idTratamientoPaciente,
+                    activo: true
+                }
+            })
+
+            if (!rutinas) {
+                throw new Error("No existen rutinas cargadas para este tratamiento.")
+            }
+
+            const response = []
+
+            for (let i = 0; i < rutinas.length; i++) {
+                const rutinaEjercicios = await RutinaEjercicio.findAll({
+                    where: {
+                        fk_idRutina: rutinas[i]['dataValues']['id']
+                    }
+                })
+
+                const rutinaEjerciciosRes = []
+                for (let i = 0; i < rutinaEjercicios.length; i++) {
+
+                    const rutinaEjercicio = {
+                        id: rutinaEjercicios[i]['dataValues']['id'],
+                        duracion: rutinaEjercicios[i]['dataValues']['duracion'],
+                        fk_idRutina: rutinaEjercicios[i]['dataValues']['fk_idRutina'],
+                        fk_idEjercicio: rutinaEjercicios[i]['dataValues']['fk_idEjercicio'],
+                        nombreEjercicio: rutinaEjercicios[i]['dataValues']['nombreEjercicio'],
+                        cantidadRepeticiones: rutinaEjercicios[i]['dataValues']['cantidadRepeticiones']
+                    }
+
+                    rutinaEjerciciosRes.push(rutinaEjercicio)
+                }
+
+                const responseRutina = {
+                    id: rutinas[i]['dataValues']['id'],
+                    idTratamientoPaciente: rutinas[i]['dataValues']['fk_idTratamientoPaciente'],
+                    activo: rutinas[i]['dataValues']['activo'],
+                    finalizada: rutinas[i]['dataValues']['finalizada'],
+                    fechaFinalizacion: rutinas[i]['dataValues']['fechaFinalizacion'],
+                    rutinaEjercicios: rutinaEjerciciosRes
+                }
+
+                response.push(responseRutina)
+
+            }
+
+            res.status(200).json(response)
 
         } catch (error) {
             res.status(500).json({
