@@ -41,7 +41,7 @@ const rutinaController = {
 
                 const newRutinaEjercicio = await RutinaEjercicio.create({
                     duracion: ejercicios[i]['duracion'],
-                    cantidadRepeticiones: ejercicios[i]['cantidadRepeticiones'],
+                    cantidadRepeticiones: ejercicios[i]['repeticiones'],
                     //contadorCheck:
                     fk_idRutina: newRutina['dataValues']['id'],
                     fk_idEjercicio: ejercicios[i]['id'],
@@ -163,7 +163,7 @@ const rutinaController = {
 
                 const newRutinaEjercicio = await RutinaEjercicio.create({
                     duracion: ejercicios[i]['duracion'],
-                    cantidadRepeticiones: ejercicios[i]['cantidadRepeticiones'],
+                    cantidadRepeticiones: ejercicios[i]['repeticiones'],
                     //contadorCheck:
                     fk_idRutina: rutinaToEdit['dataValues']['id'],
                     fk_idEjercicio: ejercicios[i]['id'],
