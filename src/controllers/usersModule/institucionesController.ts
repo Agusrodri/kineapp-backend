@@ -262,7 +262,7 @@ const institucionesController = {
                 throw new Error("No se encontró la institución solicitada.")
             }
 
-            await personaJuridicaToHabilitar.update({ habilitado: true })
+
 
             const usuario = await Usuario.findOne({
                 where: {
@@ -275,6 +275,11 @@ const institucionesController = {
                 throw new Error("No se encontró un usuario asociado a la institución solicitada.")
             }
 
+            if (personaJuridicaToHabilitar['dataValues']['habilitado'] == true && usuario['dataValues']['habilitado'] == true) {
+                throw new Error("La institución ya se encuentra habilitada.")
+            }
+
+            await personaJuridicaToHabilitar.update({ habilitado: true })
             await usuario.update({ habilitado: true })
 
             res.status(200).json({
