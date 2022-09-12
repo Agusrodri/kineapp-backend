@@ -125,7 +125,9 @@ const institucionesController = {
                 telefono: telefono,
                 rolActivo: idRol,
                 rolInternoActivo: null,
-                personaJuridica: null
+                personaJuridica: null,
+                activo: true,
+                habilitado: false
             })
             const idNuevoUsuario = nuevoUsuario['dataValues']['id']
 
@@ -249,7 +251,6 @@ const institucionesController = {
         try {
 
             const { idPersonaJuridica } = req.params
-
             const personaJuridicaToHabilitar = await PersonaJuridica.findOne({
                 where: {
                     id: idPersonaJuridica,
@@ -261,7 +262,20 @@ const institucionesController = {
                 throw new Error("No se encontró la institución solicitada.")
             }
 
-            personaJuridicaToHabilitar.update({ habilitado: true })
+            await personaJuridicaToHabilitar.update({ habilitado: true })
+
+            const usuario = await Usuario.findOne({
+                where: {
+                    id: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            if (!usuario) {
+                throw new Error("No se encontró un usuario asociado a la institución solicitada.")
+            }
+
+            await usuario.update({ habilitado: true })
 
             res.status(200).json({
                 msg: "Institución habilitada con éxito."

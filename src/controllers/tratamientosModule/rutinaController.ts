@@ -163,7 +163,7 @@ const rutinaController = {
 
                 const newRutinaEjercicio = await RutinaEjercicio.create({
                     duracion: ejercicios[i]['duracion'],
-                    cantidadRepeticiones: ejercicios[i]['repeticiones'],
+                    cantidadRepeticiones: ejercicios[i]['cantidadRepeticiones'],
                     //contadorCheck:
                     fk_idRutina: rutinaToEdit['dataValues']['id'],
                     fk_idEjercicio: ejercicios[i]['id'],
@@ -218,8 +218,39 @@ const rutinaController = {
             const fechaFinRutina = (new Date()).toISOString().split("T")[0]
             await rutinaToEnd.update({ finalizada: true, fechaFinalizacion: fechaFinRutina })
 
+            const rutinaEjercicios = await RutinaEjercicio.findAll({
+                where: {
+                    fk_idRutina: rutinaToEnd['dataValues']['id']
+                }
+            })
+
+            const rutinaEjerciciosRes = []
+            for (let i = 0; i < rutinaEjercicios.length; i++) {
+
+                const rutinaEjercicio = {
+                    id: rutinaEjercicios[i]['dataValues']['id'],
+                    duracion: rutinaEjercicios[i]['dataValues']['duracion'],
+                    fk_idRutina: rutinaEjercicios[i]['dataValues']['fk_idRutina'],
+                    fk_idEjercicio: rutinaEjercicios[i]['dataValues']['fk_idEjercicio'],
+                    nombreEjercicio: rutinaEjercicios[i]['dataValues']['nombreEjercicio'],
+                    cantidadRepeticiones: rutinaEjercicios[i]['dataValues']['cantidadRepeticiones']
+                }
+
+                rutinaEjerciciosRes.push(rutinaEjercicio)
+            }
+
+            const responseFinal = {
+                id: rutinaToEnd['dataValues']['id'],
+                idTratamientoPaciente: rutinaToEnd['dataValues']['fk_idTratamientoPaciente'],
+                activo: rutinaToEnd['dataValues']['activo'],
+                finalizada: rutinaToEnd['dataValues']['finalizada'],
+                fechaFinalizacion: rutinaToEnd['dataValues']['fechaFinalizacion'],
+                rutinaEjercicios: rutinaEjerciciosRes
+            }
+
             res.status(200).json({
-                msg: "Rutina finalizada con éxito."
+                msg: "Rutina finalizada con éxito.",
+                rutina: responseFinal
             })
 
         } catch (error) {
