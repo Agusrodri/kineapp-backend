@@ -63,7 +63,10 @@ const rutinaController = {
 
             }
 
-            res.status(200).json(rutinaResponse)
+            res.status(200).json({
+                msg: "Rutina creada con éxito.",
+                rutina: rutinaResponse
+            })
 
         } catch (error) {
             res.status(500).json({
@@ -180,7 +183,10 @@ const rutinaController = {
                 rutinaEjercicios: ejerciciosRutina
             }
 
-            res.status(200).json(responseFinal)
+            res.status(200).json({
+                msg: "Rutina actualizada con éxito.",
+                rutina: responseFinal
+            })
 
         } catch (error) {
             res.status(500).json({

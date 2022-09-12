@@ -203,7 +203,6 @@ const loginControllers = {
             if (rolActivo) {
 
                 const rolToFind = await Rol.findByPk(rolActivo)
-
                 const rolPermisos = await RolPermiso.findAll({
                     where: {
                         fk_idRol: rolActivo,
@@ -227,7 +226,6 @@ const loginControllers = {
 
                 const idPaciente = paciente ? paciente['dataValues']['id'] : null
                 const idInstitucion = institucion ? institucion['dataValues']['id'] : null
-
                 const permisos = []
 
                 for (let i = 0; i < rolPermisos.length; i++) {
