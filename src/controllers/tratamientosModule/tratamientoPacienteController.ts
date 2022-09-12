@@ -31,7 +31,7 @@ const tratamientoPacienteController = {
             })
 
             if (!tratamientosPaciente) {
-                res.status(200).json([])
+                return res.status(200).json([])
             }
 
             const tratamientosPacienteResp = []
