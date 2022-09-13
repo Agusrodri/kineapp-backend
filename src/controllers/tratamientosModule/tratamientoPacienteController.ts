@@ -245,9 +245,30 @@ const tratamientoPacienteController = {
             //console.log("Nueva fecha: ", nuevaFechaFinReal)
             await tratamientoPaciente.update({ fechaFinReal: nuevaFechaFinReal, finalizado: true })
 
+            const tratamientoParticular = await TratamientoParticular.findOne({
+                where: {
+                    id: tratamientoPaciente['dataValues']['fk_idTratamiento'],
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            const response = {
+                id: tratamientoPaciente['dataValues']['id'],
+                fechaInicio: tratamientoPaciente['dataValues']['fechaInicio'],
+                fechaFinEstimada: tratamientoPaciente['dataValues']['fechaFinEstimada'],
+                fechaFinReal: tratamientoPaciente['dataValues']['fechaFinReal'],
+                idPaciente: tratamientoPaciente['dataValues']['fk_idPaciente'],
+                fk_idTratamiento: tratamientoPaciente['dataValues']['fk_idTratamiento'],
+                tratamiento: tratamientoParticular['dataValues']['nombre'],
+                nombrePaciente: tratamientoPaciente['dataValues']['nombrePaciente'],
+                finalizado: tratamientoPaciente['dataValues']['finalizado'],
+                activo: tratamientoPaciente['dataValues']['activo']
+            }
+
             res.status(200).json({
                 msg: "Tratamiento finalizado con éxito.",
-                tratamientoPacienteFinalizado: tratamientoPaciente
+                tratamientoPacienteFinalizado: response
             })
 
         } catch (error) {
