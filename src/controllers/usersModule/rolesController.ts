@@ -16,6 +16,7 @@ const rolesController = {
 
             const roles = await Rol.findAll({
                 where: {
+                    id: {[Op.notIn]: [1, 74]},
                     activo: true
                 }
             })
@@ -112,14 +113,14 @@ const rolesController = {
             }
 
             res.status(200).json({
-                msg: `Rol con nombre -${nombreRol}- y id -${idNuevoRol}- creado`,
+                msg: "Rol creado correctamente.",
                 nuevoRol: response
             })
 
         } catch (error) {
             console.log(error)
             res.status(500).json({
-                msg: 'Error - Hable con el administrador'
+                msg: `${error}`
             });
 
         }
