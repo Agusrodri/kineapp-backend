@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import moment from 'moment'
+//import moment from 'moment'
 import TratamientoParticular from '../../models/entities/obrasSocialesModule/tratamientoParticular';
 import TratamientoPaciente from '../../models/entities/tratamientosModule/tratamientoPaciente';
 import PersonaJuridicaPaciente from '../../models/entities/usersModule/personaJuridicaPaciente';
