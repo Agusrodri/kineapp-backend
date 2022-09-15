@@ -14,8 +14,9 @@ import pacientesInstitucionesRoute from "./tratamientosModule/pacientesInstituci
 import tratamientoPacienteRoute from "./tratamientosModule/tratamientoPacienteRoute"
 import ejerciciosRoute from "./tratamientosModule/ejerciciosRoute"
 import rutinaRoute from "./tratamientosModule/rutinaRoute"
+import rutinaPacienteRoute from "./tratamientosModule/rutinaPacienteRoute"
 
 export default [conveniosRoute, obrasSocialesRoute, tratamientosGeneralesRoute, tratamientosParticularesRoute,
     institucionesRoute, loginRoute, pacientesRoute, profesionalesRoute, rolesInternosRoute,
     rolesRoute, filesRoute, utilityRoute, pacientesInstitucionesRoute, tratamientoPacienteRoute, ejerciciosRoute,
-    rutinaRoute]
+    rutinaRoute, rutinaPacienteRoute]

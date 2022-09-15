@@ -26,6 +26,18 @@ const rutinaController = {
                 throw new Error("No fue posible crear la rutina. El tratamiento se encuentra finalizado.")
             }
 
+            const rutinaToFind = await Rutina.findOne({
+                where: {
+                    fk_idTratamientoPaciente: idTratamientoPaciente,
+                    activo: true,
+                    finalizada: false
+                }
+            })
+
+            if (rutinaToFind) {
+                throw new Error("El paciente ya posee una rutina activa dentro de este tratamiento. Finalice la misma antes de agregar una nueva.")
+            }
+
             const newRutina = await Rutina.create({
                 //order: 
                 fk_idTratamientoPaciente: idTratamientoPaciente,

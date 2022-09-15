@@ -118,7 +118,7 @@ const tratamientosParticularesController = {
             const tratamientoToFind = await TratamientoParticular.findOne({
                 where: {
                     id: { [Op.notIn]: [idTratamientoParticular] },
-                    nombre: nombre,
+                    nombre: nombre ? nombre : "",
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
                 }
