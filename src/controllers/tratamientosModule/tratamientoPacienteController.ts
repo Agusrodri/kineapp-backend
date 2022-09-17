@@ -105,6 +105,7 @@ const tratamientoPacienteController = {
                 where: {
                     fk_idPaciente: idPaciente,
                     fk_idTratamiento: idTratamientoParticular,
+                    fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true,
                     finalizado: false
                 }
@@ -120,6 +121,7 @@ const tratamientoPacienteController = {
                 fechaFinReal: null,
                 fk_idPaciente: idPaciente,
                 fk_idTratamiento: idTratamientoParticular,
+                fk_idPersonaJuridica: idPersonaJuridica,
                 nombrePaciente: nombrePaciente,
                 finalizado: false,
                 activo: true
@@ -132,6 +134,7 @@ const tratamientoPacienteController = {
                 fechaFinReal: newTratamientoPaciente['dataValues']['fechaFinReal'],
                 idPaciente: newTratamientoPaciente['dataValues']['fk_idPaciente'],
                 fk_idTratamiento: newTratamientoPaciente['dataValues']['fk_idTratamiento'],
+                fk_idPersonaJuridica: newTratamientoPaciente['dataValues']['fk_idPersonaJuridica'],
                 tratamiento: tratamientoParticular['dataValues']['nombre'],
                 nombrePaciente: newTratamientoPaciente['dataValues']['nombrePaciente'],
                 finalizado: newTratamientoPaciente['dataValues']['finalizado'],
@@ -170,7 +173,8 @@ const tratamientoPacienteController = {
             const tratamientoPaciente = await TratamientoPaciente.findOne({
                 where: {
                     id: idTratamientoPaciente,
-                    fk_idPaciente: idPaciente
+                    fk_idPaciente: idPaciente,
+                    fk_idPersonaJuridica: idPersonaJuridica
                     //no se coloca activo porque puede solicitar visualizar un tratamiento ya finalizado
                 }
             })
@@ -194,6 +198,7 @@ const tratamientoPacienteController = {
                 fechaFinReal: tratamientoPaciente['dataValues']['fechaFinReal'],
                 idPaciente: tratamientoPaciente['dataValues']['fk_idPaciente'],
                 fk_idTratamiento: tratamientoPaciente['dataValues']['fk_idTratamiento'],
+                fk_idPersonaJuridica: tratamientoPaciente['dataValues']['fk_idPersonaJuridica'],
                 tratamiento: tratamientoParticular['dataValues']['nombre'],
                 nombrePaciente: tratamientoPaciente['dataValues']['nombrePaciente'],
                 finalizado: tratamientoPaciente['dataValues']['finalizado'],
@@ -230,6 +235,7 @@ const tratamientoPacienteController = {
                 where: {
                     id: idTratamientoPaciente,
                     fk_idPaciente: idPaciente,
+                    fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true,
                     finalizado: false
                 }
@@ -260,6 +266,7 @@ const tratamientoPacienteController = {
                 fechaFinReal: tratamientoPaciente['dataValues']['fechaFinReal'],
                 idPaciente: tratamientoPaciente['dataValues']['fk_idPaciente'],
                 fk_idTratamiento: tratamientoPaciente['dataValues']['fk_idTratamiento'],
+                fk_idPersonaJuridica: tratamientoPaciente['dataValues']['fk_idPersonaJuridica'],
                 tratamiento: tratamientoParticular['dataValues']['nombre'],
                 nombrePaciente: tratamientoPaciente['dataValues']['nombrePaciente'],
                 finalizado: tratamientoPaciente['dataValues']['finalizado'],
@@ -299,6 +306,7 @@ const tratamientoPacienteController = {
                 where: {
                     id: idTratamientoPaciente,
                     fk_idPaciente: idPaciente,
+                    fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
                 }
             })

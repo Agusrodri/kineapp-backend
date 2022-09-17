@@ -34,6 +34,10 @@ const TratamientoPaciente = db.define('TratamientoPaciente', {
     finalizado: {
         type: DataTypes.BOOLEAN
     },
+
+    fk_idPersonaJuridica: {
+        type: DataTypes.INTEGER
+    }
 })
 
 export default TratamientoPaciente;
