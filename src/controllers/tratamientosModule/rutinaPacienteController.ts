@@ -40,6 +40,7 @@ const rutinaPacienteController = {
                     fechaFinReal: tratamientosPaciente[i]['dataValues']['fechaFinReal'],
                     idPaciente: tratamientosPaciente[i]['dataValues']['fk_idPaciente'],
                     fk_idTratamiento: tratamientosPaciente[i]['dataValues']['fk_idTratamiento'],
+                    fk_idPersonaJuridica: tratamientosPaciente[i]['dataValues']['fk_idPersonaJuridica'],
                     tratamiento: tratamientoParticular ? tratamientoParticular['dataValues']['nombre'] : null,
                     nombrePaciente: tratamientosPaciente[i]['dataValues']['nombrePaciente'],
                     finalizado: tratamientosPaciente[i]['dataValues']['finalizado'],
@@ -61,32 +62,32 @@ const rutinaPacienteController = {
 
     setContadorCheck: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idRutina} = req.params
+            const { idRutina } = req.params
             const ejercicios = req.body
             const rutina = await Rutina.findOne({
-                where:{
+                where: {
                     id: idRutina,
                     activo: true,
                     finalizada: false
                 }
             })
 
-            if(!rutina){
+            if (!rutina) {
                 throw new Error("No se encontró la rutina solicitada.")
             }
 
             const rutinaEjercicioRes = []
 
-            for(let i=0; i<ejercicios.length; i++){
+            for (let i = 0; i < ejercicios.length; i++) {
                 const rutinaEjercicio = await RutinaEjercicio.findOne({
-                    where:{
+                    where: {
                         fk_idRutina: idRutina,
                         fk_idEjercicio: ejercicios[i]['id']
                     }
                 })
-                await rutinaEjercicio.update({contadorCheck: ejercicios[i]['contadorCheck']})
+                await rutinaEjercicio.update({ contadorCheck: ejercicios[i]['contadorCheck'] })
                 rutinaEjercicioRes.push(rutinaEjercicio)
             }
 
@@ -98,12 +99,12 @@ const rutinaPacienteController = {
                 finalizada: rutina['dataValues']['finalizada'],
                 fechaFinalizacion: rutina['dataValues']['fechaFinalizacion'],
                 rutinaEjercicios: rutinaEjercicioRes
-            } 
+            }
 
             res.status(200).json(response)
 
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
