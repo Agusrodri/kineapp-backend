@@ -17,6 +17,10 @@ const Rutina = db.define('Rutina', {
 
     fechaFinalizacion: {
         type: DataTypes.DATE
+    },
+
+    fk_idProfesional: {
+        type: DataTypes.INTEGER
     }
 })
 

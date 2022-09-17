@@ -9,7 +9,7 @@ const rutinaController = {
 
         try {
 
-            const { idTratamientoPaciente } = req.params
+            const { idTratamientoPaciente, idProfesional } = req.params
             const ejercicios = req.body //consultar si pasar también el orden
             const tratamientoPaciente = await TratamientoPaciente.findOne({
                 where: {
@@ -41,6 +41,7 @@ const rutinaController = {
             const newRutina = await Rutina.create({
                 //order: 
                 fk_idTratamientoPaciente: idTratamientoPaciente,
+                fk_idProfesional: idProfesional,
                 activo: true,
                 finalizada: false,
                 fechaFinalizacion: null
@@ -67,6 +68,7 @@ const rutinaController = {
                 id: newRutina['dataValues']['id'],
                 orden: newRutina['dataValues']['orden'],
                 idTratamientoPaciente: newRutina['dataValues']['fk_idTratamientoPaciente'],
+                idProfesional: newRutina['dataValues']['fk_idProfesional'],
                 activo: newRutina['dataValues']['activo'],
                 finalizada: newRutina['dataValues']['finalizada'],
                 fechaFinalizacion: newRutina['dataValues']['fechaFinalizacion'],
@@ -126,6 +128,7 @@ const rutinaController = {
             const responseFinal = {
                 id: rutinaToFind['dataValues']['id'],
                 idTratamientoPaciente: rutinaToFind['dataValues']['fk_idTratamientoPaciente'],
+                idProfesional: rutinaToFind['dataValues']['fk_idProfesional'],
                 activo: rutinaToFind['dataValues']['activo'],
                 finalizada: rutinaToFind['dataValues']['finalizada'],
                 fechaFinalizacion: rutinaToFind['dataValues']['fechaFinalizacion'],
@@ -189,6 +192,7 @@ const rutinaController = {
             const responseFinal = {
                 id: rutinaToEdit['dataValues']['id'],
                 idTratamientoPaciente: rutinaToEdit['dataValues']['fk_idTratamientoPaciente'],
+                idProfesional: rutinaToEdit['dataValues']['fk_idProfesional'],
                 activo: rutinaToEdit['dataValues']['activo'],
                 finalizada: rutinaToEdit['dataValues']['finalizada'],
                 fechaFinalizacion: rutinaToEdit['dataValues']['fechaFinalizacion'],
@@ -254,6 +258,7 @@ const rutinaController = {
             const responseFinal = {
                 id: rutinaToEnd['dataValues']['id'],
                 idTratamientoPaciente: rutinaToEnd['dataValues']['fk_idTratamientoPaciente'],
+                idProfesional: rutinaToEnd['dataValues']['fk_idProfesional'],
                 activo: rutinaToEnd['dataValues']['activo'],
                 finalizada: rutinaToEnd['dataValues']['finalizada'],
                 fechaFinalizacion: rutinaToEnd['dataValues']['fechaFinalizacion'],
@@ -344,6 +349,7 @@ const rutinaController = {
                 const responseRutina = {
                     id: rutinas[i]['dataValues']['id'],
                     idTratamientoPaciente: rutinas[i]['dataValues']['fk_idTratamientoPaciente'],
+                    idProfesional: rutinas[i]['dataValues']['fk_idProfesional'],
                     activo: rutinas[i]['dataValues']['activo'],
                     finalizada: rutinas[i]['dataValues']['finalizada'],
                     fechaFinalizacion: rutinas[i]['dataValues']['fechaFinalizacion'],
