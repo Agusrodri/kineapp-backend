@@ -4,5 +4,6 @@ import rutinaPacienteController from "../../controllers/tratamientosModule/rutin
 const router = Router()
 
 router.get("/tratamientosPaciente/:idPaciente", rutinaPacienteController.getTratamientosPaciente);
+router.put("/checkEjercicios/:idRutina", rutinaPacienteController.setContadorCheck);
 
 export default router;
