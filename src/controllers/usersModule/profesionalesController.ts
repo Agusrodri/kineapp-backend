@@ -331,7 +331,8 @@ const profesionalesController = {
                 //verificar si el email pertenece a un paciente
                 const pacienteToFind = await Paciente.findOne({
                     where: {
-                        fk_idUsuario: idUsuarioEncontrado
+                        fk_idUsuario: idUsuarioEncontrado,
+                        activo: true
                     }
                 })
 

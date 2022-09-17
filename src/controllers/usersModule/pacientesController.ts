@@ -5,6 +5,10 @@ import sendEmail from '../../helpers/send-email';
 import Paciente from '../../models/entities/usersModule/paciente';
 import UsuarioRol from '../../models/entities/usersModule/usuarioRol';
 import Profesional from '../../models/entities/usersModule/profesional';
+import PersonaJuridicaPaciente from '../../models/entities/usersModule/personaJuridicaPaciente';
+import TipoDNI from '../../models/entities/usersModule/tipoDNI';
+import ObraSocial from '../../models/entities/obrasSocialesModule/obraSocial';
+import Plan from '../../models/entities/obrasSocialesModule/plan';
 
 const pacientesController = {
 
@@ -206,6 +210,84 @@ const pacientesController = {
 
             res.status(200).json({
                 msg: "Paciente eliminado correctamente."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    createPacienteConUsuario: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idPersonaJuridica } = req.params
+            const { email } = req.body
+
+            //verificar si el email corresponde a un usuario
+            const usuarioToFind = await Usuario.findOne({
+                where: {
+                    email: email,
+                    activo: true,
+                    habilitado: true
+                }
+            })
+
+            if (!usuarioToFind) {
+                throw new Error("El email ingresado no coincide con ningún usuario del sistema.")
+            }
+
+            const idUsuarioEncontrado = usuarioToFind['dataValues']['id']
+
+            //verificar si el email pertenece a un paciente
+            const pacienteToFind = await Paciente.findOne({
+                where: {
+                    fk_idUsuario: idUsuarioEncontrado,
+                    activo: true
+                }
+            })
+
+            if (!pacienteToFind) {
+                throw new Error("El email ingresado no coincide con ningún paciente del sistema.")
+            }
+
+            const pjPaciente = await PersonaJuridicaPaciente.findOne({
+                where: {
+                    fk_idPaciente: pacienteToFind['dataValues']['id'],
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            if (pjPaciente) {
+                throw new Error("El usuario ya es paciente de esta institución.")
+            }
+
+            const { nombre, apellido, dni, fk_idTipoDNI, fechaNacimiento, fk_idObraSocial, fk_idPlan, numeroAfiliado } = pacienteToFind['dataValues']
+
+            //obtener datos restantes - tipoDNI, obraSocial y plan
+            const tipoDNI = await TipoDNI.findByPk(pacienteToFind['dataValues']['fk_idTipoDNI'])
+            const obraSocial = pacienteToFind['dataValues']['fk_idObraSocial'] ? await ObraSocial.findByPk(pacienteToFind['dataValues']['fk_idObraSocial']) : null
+            const plan = pacienteToFind['dataValues']['fk_idPlan'] ? await Plan.findByPk(pacienteToFind['dataValues']['fk_idPlan']) : null
+
+            res.status(200).json({
+                msg: "Información del usuario encontrado.",
+                idUsuario: idUsuarioEncontrado,
+                nombre,
+                apellido,
+                dni,
+                idTipoDNI: fk_idTipoDNI,
+                tipoDNI: tipoDNI['dataValues']['tipoDNI'],
+                fechaNacimiento,
+                telefono: usuarioToFind['dataValues']['telefono'],
+                email: usuarioToFind['dataValues']['email'],
+                idObraSocial: fk_idObraSocial,
+                obraSocial: obraSocial ? obraSocial['dataValues']['nombre'] : null,
+                idPlan: fk_idPlan,
+                plan: plan ? plan['dataValues']['nombre'] : null,
+                numeroAfiliado
             })
 
         } catch (error) {
