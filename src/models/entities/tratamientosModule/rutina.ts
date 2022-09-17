@@ -21,6 +21,10 @@ const Rutina = db.define('Rutina', {
 
     fk_idProfesional: {
         type: DataTypes.INTEGER
+    },
+
+    profesional: {
+        type: DataTypes.STRING
     }
 })
 

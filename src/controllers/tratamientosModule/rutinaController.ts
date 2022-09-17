@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import TratamientoPaciente from '../../models/entities/tratamientosModule/tratamientoPaciente';
 import Rutina from '../../models/entities/tratamientosModule/rutina';
 import RutinaEjercicio from '../../models/entities/tratamientosModule/rutinaEjercicio';
+import Profesional from '../../models/entities/usersModule/profesional';
 
 const rutinaController = {
 
@@ -38,10 +39,12 @@ const rutinaController = {
                 throw new Error("El paciente ya posee una rutina activa dentro de este tratamiento. Finalice la misma antes de agregar una nueva.")
             }
 
+            const profesional = await Profesional.findByPk(idProfesional)
             const newRutina = await Rutina.create({
                 //order: 
                 fk_idTratamientoPaciente: idTratamientoPaciente,
                 fk_idProfesional: idProfesional,
+                profesional: profesional ? `${profesional['dataValues']['nombre']} ${profesional['dataValues']['apellido']}` : "Nombre del profesional desconocido.",
                 activo: true,
                 finalizada: false,
                 fechaFinalizacion: null
@@ -72,6 +75,7 @@ const rutinaController = {
                 activo: newRutina['dataValues']['activo'],
                 finalizada: newRutina['dataValues']['finalizada'],
                 fechaFinalizacion: newRutina['dataValues']['fechaFinalizacion'],
+                profesional: newRutina['dataValues']['profesional'],
                 rutinaEjercicios: ejerciciosRutina
 
             }
@@ -132,6 +136,7 @@ const rutinaController = {
                 activo: rutinaToFind['dataValues']['activo'],
                 finalizada: rutinaToFind['dataValues']['finalizada'],
                 fechaFinalizacion: rutinaToFind['dataValues']['fechaFinalizacion'],
+                profesional: rutinaToFind['dataValues']['profesional'],
                 rutinaEjercicios: rutinaEjerciciosRes
             }
 
@@ -196,6 +201,7 @@ const rutinaController = {
                 activo: rutinaToEdit['dataValues']['activo'],
                 finalizada: rutinaToEdit['dataValues']['finalizada'],
                 fechaFinalizacion: rutinaToEdit['dataValues']['fechaFinalizacion'],
+                profesional: rutinaToEdit['dataValues']['profesional'],
                 rutinaEjercicios: ejerciciosRutina
             }
 
@@ -262,6 +268,7 @@ const rutinaController = {
                 activo: rutinaToEnd['dataValues']['activo'],
                 finalizada: rutinaToEnd['dataValues']['finalizada'],
                 fechaFinalizacion: rutinaToEnd['dataValues']['fechaFinalizacion'],
+                profesional: rutinaToEnd['dataValues']['profesional'],
                 rutinaEjercicios: rutinaEjerciciosRes
             }
 
@@ -353,6 +360,7 @@ const rutinaController = {
                     activo: rutinas[i]['dataValues']['activo'],
                     finalizada: rutinas[i]['dataValues']['finalizada'],
                     fechaFinalizacion: rutinas[i]['dataValues']['fechaFinalizacion'],
+                    profesional: rutinas[i]['dataValues']['profesional'],
                     rutinaEjercicios: rutinaEjerciciosRes
                 }
 
