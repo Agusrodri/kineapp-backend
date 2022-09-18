@@ -85,6 +85,8 @@ const rutinaController = {
                 finalizada: newRutina['dataValues']['finalizada'],
                 fechaFinalizacion: newRutina['dataValues']['fechaFinalizacion'],
                 profesional: newRutina['dataValues']['profesional'],
+                contadorRacha: newRutina['dataValues']['contadorRacha'],
+                dateLastRacha: newRutina['dataValues']['dateLastRacha'],
                 rutinaEjercicios: ejerciciosRutina
 
             }
@@ -146,6 +148,8 @@ const rutinaController = {
                 finalizada: rutinaToFind['dataValues']['finalizada'],
                 fechaFinalizacion: rutinaToFind['dataValues']['fechaFinalizacion'],
                 profesional: rutinaToFind['dataValues']['profesional'],
+                contadorRacha: rutinaToFind['dataValues']['contadorRacha'],
+                dateLastRacha: rutinaToFind['dataValues']['dateLastRacha'],
                 rutinaEjercicios: rutinaEjerciciosRes
             }
 
@@ -211,6 +215,8 @@ const rutinaController = {
                 finalizada: rutinaToEdit['dataValues']['finalizada'],
                 fechaFinalizacion: rutinaToEdit['dataValues']['fechaFinalizacion'],
                 profesional: rutinaToEdit['dataValues']['profesional'],
+                contadorRacha: rutinaToEdit['dataValues']['contadorRacha'],
+                dateLastRacha: rutinaToEdit['dataValues']['dateLastRacha'],
                 rutinaEjercicios: ejerciciosRutina
             }
 
@@ -278,6 +284,8 @@ const rutinaController = {
                 finalizada: rutinaToEnd['dataValues']['finalizada'],
                 fechaFinalizacion: rutinaToEnd['dataValues']['fechaFinalizacion'],
                 profesional: rutinaToEnd['dataValues']['profesional'],
+                contadorRacha: rutinaToEnd['dataValues']['contadorRacha'],
+                dateLastRacha: rutinaToEnd['dataValues']['dateLastRacha'],
                 rutinaEjercicios: rutinaEjerciciosRes
             }
 
@@ -370,13 +378,12 @@ const rutinaController = {
                     finalizada: rutinas[i]['dataValues']['finalizada'],
                     fechaFinalizacion: rutinas[i]['dataValues']['fechaFinalizacion'],
                     profesional: rutinas[i]['dataValues']['profesional'],
+                    contadorRacha: rutinas[i]['dataValues']['contadorRacha'],
+                    dateLastRacha: rutinas[i]['dataValues']['dateLastRacha'],
                     rutinaEjercicios: rutinaEjerciciosRes
                 }
-
                 response.push(responseRutina)
-
             }
-
             res.status(200).json(response)
 
         } catch (error) {
