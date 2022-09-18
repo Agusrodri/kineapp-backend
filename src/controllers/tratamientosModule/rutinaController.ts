@@ -3,6 +3,7 @@ import TratamientoPaciente from '../../models/entities/tratamientosModule/tratam
 import Rutina from '../../models/entities/tratamientosModule/rutina';
 import RutinaEjercicio from '../../models/entities/tratamientosModule/rutinaEjercicio';
 import Profesional from '../../models/entities/usersModule/profesional';
+import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
 
 const rutinaController = {
 
@@ -10,8 +11,8 @@ const rutinaController = {
 
         try {
 
-            const { idTratamientoPaciente, idProfesional } = req.params
-            const ejercicios = req.body //consultar si pasar también el orden
+            const { idTratamientoPaciente } = req.params
+            const { idPersonaJuridica, idProfesional, ejercicios } = req.body //consultar si pasar también el orden
             const tratamientoPaciente = await TratamientoPaciente.findOne({
                 where: {
                     id: idTratamientoPaciente,
@@ -39,15 +40,23 @@ const rutinaController = {
                 throw new Error("El paciente ya posee una rutina activa dentro de este tratamiento. Finalice la misma antes de agregar una nueva.")
             }
 
-            const profesional = await Profesional.findByPk(idProfesional)
+            const profesional = await Profesional.findByPk(idProfesional ? idProfesional : 0)
+            const institucion = await PersonaJuridica.findByPk(idPersonaJuridica ? idPersonaJuridica : 0)
+            const nombreProfesionalToSet = profesional ?
+                (`${profesional['dataValues']['nombre']} ${profesional['dataValues']['apellido']}`) :
+                (institucion ? (`${institucion['nombre']}`) : "Nombre del profesional desconocido.")
+
+
             const newRutina = await Rutina.create({
                 //order: 
                 fk_idTratamientoPaciente: idTratamientoPaciente,
                 fk_idProfesional: idProfesional,
-                profesional: profesional ? `${profesional['dataValues']['nombre']} ${profesional['dataValues']['apellido']}` : "Nombre del profesional desconocido.",
+                profesional: nombreProfesionalToSet,
                 activo: true,
                 finalizada: false,
-                fechaFinalizacion: null
+                fechaFinalizacion: null,
+                contadorRacha: 0,
+                dateLastRacha: "1663209114000"
             })
 
             const ejerciciosRutina = []

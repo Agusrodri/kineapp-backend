@@ -26,6 +26,7 @@ const tratamientoPacienteController = {
             const tratamientosPaciente = await TratamientoPaciente.findAll({
                 where: {
                     fk_idPaciente: idPaciente,
+                    fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
                 }
             })
@@ -52,6 +53,7 @@ const tratamientoPacienteController = {
                     fechaFinReal: tratamientosPaciente[i]['dataValues']['fechaFinReal'],
                     idPaciente: tratamientosPaciente[i]['dataValues']['fk_idPaciente'],
                     fk_idTratamiento: tratamientosPaciente[i]['dataValues']['fk_idTratamiento'],
+                    fk_idPersonaJuridica: tratamientosPaciente[i]['dataValues']['fk_idPersonaJuridica'],
                     tratamiento: tratamientoParticular['dataValues']['nombre'],
                     nombrePaciente: tratamientosPaciente[i]['dataValues']['nombrePaciente'],
                     finalizado: tratamientosPaciente[i]['dataValues']['finalizado'],

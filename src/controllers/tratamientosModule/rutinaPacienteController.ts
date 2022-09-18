@@ -3,7 +3,7 @@ import Rutina from '../../models/entities/tratamientosModule/rutina';
 import TratamientoParticular from '../../models/entities/obrasSocialesModule/tratamientoParticular';
 import TratamientoPaciente from '../../models/entities/tratamientosModule/tratamientoPaciente';
 import RutinaEjercicio from '../../models/entities/tratamientosModule/rutinaEjercicio';
-import { Op } from 'sequelize';
+import { Op, where } from 'sequelize';
 
 const rutinaPacienteController = {
 
@@ -80,6 +80,7 @@ const rutinaPacienteController = {
 
             const rutinaEjercicioRes = []
 
+            let contadorRutinaEjercicio = 0
             for (let i = 0; i < ejercicios.length; i++) {
                 const rutinaEjercicio = await RutinaEjercicio.findOne({
                     where: {
@@ -88,21 +89,93 @@ const rutinaPacienteController = {
                     }
                 })
                 await rutinaEjercicio.update({ contadorCheck: ejercicios[i]['contadorCheck'] })
+
+                if (ejercicios[i]['contadorCheck'] == rutinaEjercicio['dataValues']['cantidadRepeticiones']) {
+                    contadorRutinaEjercicio++
+                }
                 rutinaEjercicioRes.push(rutinaEjercicio)
             }
 
+            if (contadorRutinaEjercicio == rutinaEjercicioRes.length) {
+
+                //obtenemos el último valor del contador de racha
+                const lastContadorRacha = rutina['dataValues']['contadorRacha'];
+
+                //obtenemos la fecha donde se actualizó ese último valor de contador
+                const dateLastRacha = rutina['dataValues']['dateLastRacha']
+
+                //creamos una fecha actual para actualizar dateLastRacha de rutina
+                const newDateLastRacha = (new Date().getTime()).toString();
+
+                //realizamos la diferencia entre la nueva fecha y la anterior
+                const difBetweenDates = Number(newDateLastRacha) - Number(dateLastRacha)
+                const secondsDifBetweenDates = difBetweenDates / 1000
+
+                //si la diferencia es mayor a 1 día, el contador se resetea. Si no, se incrementa en 1 
+                secondsDifBetweenDates <= 86400 ? //86400 seconds == 24 hours == 1 day
+                    await rutina.update({ contadorRacha: lastContadorRacha + 1, dateLastRacha: newDateLastRacha }) :
+                    await rutina.update({ contadorRacha: 0, dateLastRacha: newDateLastRacha })
+
+                return res.status(200).json({
+                    rutinaFinalizada: true
+                })
+            } else {
+                return res.status(200).json({
+                    rutinaFinalizada: false
+                })
+            }
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    getTratamiento: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idTratamientoPaciente } = req.params
+            const tratamientoPaciente = await TratamientoPaciente.findOne({
+                where: {
+                    id: idTratamientoPaciente,
+                    activo: true
+                }
+            })
+
+            if (!tratamientoPaciente) {
+                throw new Error("No existe el tratamiento solicitado.")
+
+            }
+
+            const tratamientoParticular = await TratamientoParticular.findOne({
+                where: {
+                    id: tratamientoPaciente['dataValues']['fk_idTratamiento'],
+                    activo: true
+                }
+            })
+
+            if (!tratamientoParticular) {
+                throw new Error("No existe el tratamiento particular asociado.")
+
+            }
+
             const response = {
-                id: rutina['dataValues']['id'],
-                orden: rutina['dataValues']['orden'],
-                idTratamientoPaciente: rutina['dataValues']['fk_idTratamientoPaciente'],
-                activo: rutina['dataValues']['activo'],
-                finalizada: rutina['dataValues']['finalizada'],
-                fechaFinalizacion: rutina['dataValues']['fechaFinalizacion'],
-                rutinaEjercicios: rutinaEjercicioRes
+                id: tratamientoPaciente['dataValues']['id'],
+                fechaInicio: tratamientoPaciente['dataValues']['fechaInicio'],
+                fechaFinEstimada: tratamientoPaciente['dataValues']['fechaFinEstimada'],
+                fechaFinReal: tratamientoPaciente['dataValues']['fechaFinReal'],
+                idPaciente: tratamientoPaciente['dataValues']['fk_idPaciente'],
+                fk_idTratamiento: tratamientoPaciente['dataValues']['fk_idTratamiento'],
+                fk_idPersonaJuridica: tratamientoPaciente['dataValues']['fk_idPersonaJuridica'],
+                tratamiento: tratamientoParticular['dataValues']['nombre'],
+                nombrePaciente: tratamientoPaciente['dataValues']['nombrePaciente'],
+                finalizado: tratamientoPaciente['dataValues']['finalizado'],
+                activo: tratamientoPaciente['dataValues']['activo']
             }
 
             res.status(200).json(response)
-
 
         } catch (error) {
             res.status(500).json({

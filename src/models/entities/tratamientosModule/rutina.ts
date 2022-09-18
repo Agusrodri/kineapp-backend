@@ -25,6 +25,14 @@ const Rutina = db.define('Rutina', {
 
     profesional: {
         type: DataTypes.STRING
+    },
+
+    contadorRacha: {
+        type: DataTypes.INTEGER
+    },
+
+    dateLastRacha: {
+        type: DataTypes.STRING
     }
 })
 
