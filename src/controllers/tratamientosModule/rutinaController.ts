@@ -4,6 +4,7 @@ import Rutina from '../../models/entities/tratamientosModule/rutina';
 import RutinaEjercicio from '../../models/entities/tratamientosModule/rutinaEjercicio';
 import Profesional from '../../models/entities/usersModule/profesional';
 import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
+import Ejercicio from 'models/entities/tratamientosModule/ejercicio';
 
 const rutinaController = {
 
@@ -128,13 +129,25 @@ const rutinaController = {
             const rutinaEjerciciosRes = []
             for (let i = 0; i < rutinaEjercicios.length; i++) {
 
+                const ejercicio = await Ejercicio.findOne({
+                    where: {
+                        id: rutinaEjercicios[i]['dataValues']['fk_idEjercicio'],
+                        activo: true
+                    }
+                })
+
                 const rutinaEjercicio = {
                     id: rutinaEjercicios[i]['dataValues']['id'],
                     duracion: rutinaEjercicios[i]['dataValues']['duracion'],
                     fk_idRutina: rutinaEjercicios[i]['dataValues']['fk_idRutina'],
                     fk_idEjercicio: rutinaEjercicios[i]['dataValues']['fk_idEjercicio'],
                     nombreEjercicio: rutinaEjercicios[i]['dataValues']['nombreEjercicio'],
-                    cantidadRepeticiones: rutinaEjercicios[i]['dataValues']['cantidadRepeticiones']
+                    cantidadRepeticiones: rutinaEjercicios[i]['dataValues']['cantidadRepeticiones'],
+                    complejidad: ejercicio ? ejercicio['dataValues']['complejidad'] : null,
+                    descripcion: ejercicio ? ejercicio['dataValues']['descripcion'] : null,
+                    gif: ejercicio ? ejercicio['dataValues']['gif'] : null,
+                    fk_idPersonaJuridica: ejercicio ? ejercicio['dataValues']['fk_idPersonaJuridica'] : null,
+                    activo: ejercicio ? ejercicio['dataValues']['activo'] : null
                 }
 
                 rutinaEjerciciosRes.push(rutinaEjercicio)
