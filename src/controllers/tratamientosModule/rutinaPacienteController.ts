@@ -124,7 +124,6 @@ const rutinaPacienteController = {
                     rutinaFinalizada: false
                 })
             }
-
         } catch (error) {
             res.status(500).json({
                 msg: `${error}`

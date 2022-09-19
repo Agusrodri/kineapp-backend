@@ -8,6 +8,7 @@ router.post("/pacientes/crearPaciente/:idUsuario", pacientesController.createPac
 router.put("/pacientes/editarPaciente/:idUsuario", pacientesController.editarPaciente);
 router.post("/pacientes/eliminarPaciente/:idUsuario", pacientesController.eliminarPaciente);
 router.post("/crearPacienteConUsuario/:idPersonaJuridica", pacientesController.createPacienteConUsuario);
+router.post("/agregarPacienteUsuario/:idPersonaJuridica/:idPaciente/:idUsuario", pacientesController.createPacienteFromUsuario);
 
 //module.exports = router
 
