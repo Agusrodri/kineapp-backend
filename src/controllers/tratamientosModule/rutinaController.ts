@@ -4,7 +4,7 @@ import Rutina from '../../models/entities/tratamientosModule/rutina';
 import RutinaEjercicio from '../../models/entities/tratamientosModule/rutinaEjercicio';
 import Profesional from '../../models/entities/usersModule/profesional';
 import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
-import Ejercicio from 'models/entities/tratamientosModule/ejercicio';
+import Ejercicio from '../../models/entities/tratamientosModule/ejercicio';
 
 const rutinaController = {
 
