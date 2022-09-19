@@ -143,6 +143,7 @@ const rutinaController = {
                     fk_idEjercicio: rutinaEjercicios[i]['dataValues']['fk_idEjercicio'],
                     nombreEjercicio: rutinaEjercicios[i]['dataValues']['nombreEjercicio'],
                     cantidadRepeticiones: rutinaEjercicios[i]['dataValues']['cantidadRepeticiones'],
+                    contadorCheck: rutinaEjercicios[i]['dataValues']['contadorCheck'],
                     complejidad: ejercicio ? ejercicio['dataValues']['complejidad'] : null,
                     descripcion: ejercicio ? ejercicio['dataValues']['descripcion'] : null,
                     gif: ejercicio ? ejercicio['dataValues']['gif'] : null,
