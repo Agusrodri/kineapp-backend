@@ -148,6 +148,7 @@ const rutinaController = {
                     gif: ejercicio ? ejercicio['dataValues']['gif'] : null,
                     fk_idPersonaJuridica: ejercicio ? ejercicio['dataValues']['fk_idPersonaJuridica'] : null,
                     activo: ejercicio ? ejercicio['dataValues']['activo'] : null
+
                 }
 
                 rutinaEjerciciosRes.push(rutinaEjercicio)
