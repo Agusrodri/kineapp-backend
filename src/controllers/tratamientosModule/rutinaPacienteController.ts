@@ -65,7 +65,7 @@ const rutinaPacienteController = {
         try {
 
             const { idRutina } = req.params
-            const ejercicios = req.body
+            const { jsonRutina, completa } = req.body
             const rutina = await Rutina.findOne({
                 where: {
                     id: idRutina,
@@ -78,25 +78,15 @@ const rutinaPacienteController = {
                 throw new Error("No se encontró la rutina solicitada.")
             }
 
-            const rutinaEjercicioRes = []
-
-            let contadorRutinaEjercicio = 0
-            for (let i = 0; i < ejercicios.length; i++) {
-                const rutinaEjercicio = await RutinaEjercicio.findOne({
-                    where: {
-                        fk_idRutina: idRutina,
-                        fk_idEjercicio: ejercicios[i]['id']
-                    }
-                })
-                await rutinaEjercicio.update({ contadorCheck: ejercicios[i]['contadorCheck'] })
-
-                if (ejercicios[i]['contadorCheck'] == rutinaEjercicio['dataValues']['cantidadRepeticiones']) {
-                    contadorRutinaEjercicio++
+            const rutinaEjercicios = await RutinaEjercicio.findAll({
+                where: {
+                    fk_idRutina: idRutina
                 }
-                rutinaEjercicioRes.push(rutinaEjercicio)
-            }
+            })
 
-            if (contadorRutinaEjercicio == rutinaEjercicioRes.length) {
+            if (completa === true) {
+
+                await rutina.update({ jsonRutina: jsonRutina })
 
                 //obtenemos el último valor del contador de racha
                 const lastContadorRacha = rutina['dataValues']['contadorRacha'];
@@ -116,12 +106,34 @@ const rutinaPacienteController = {
                     await rutina.update({ contadorRacha: lastContadorRacha + 1, dateLastRacha: newDateLastRacha }) :
                     await rutina.update({ contadorRacha: 0, dateLastRacha: newDateLastRacha })
 
-                return res.status(200).json({
-                    rutinaFinalizada: true
+                rutinaEjercicios.forEach(async rutinaEjercicio => {
+                    await rutinaEjercicio.update({ contadorCheck: 0 })
                 })
-            } else {
+
                 return res.status(200).json({
-                    rutinaFinalizada: false
+                    restart: true,
+                    jsonRutina: jsonRutina
+                })
+
+            } else {
+
+                await rutina.update({ jsonRutina: jsonRutina })
+
+                jsonRutina.forEach(repeticion => {
+                    repeticion.forEach(async ejercicio => {
+                        const rutinaEjercicio = await RutinaEjercicio.findOne({
+                            where: {
+                                fk_idRutina: idRutina,
+                                fk_idEjercicio: ejercicio['ejercicios']['id']
+                            }
+                        })
+                        await rutinaEjercicio.update({ contadorCheck: ejercicio['ejercicios']['contadorCheck'] })
+                    });
+                });
+
+                return res.status(200).json({
+                    restart: false,
+                    jsonRutina: jsonRutina
                 })
             }
         } catch (error) {

@@ -33,6 +33,10 @@ const Rutina = db.define('Rutina', {
 
     dateLastRacha: {
         type: DataTypes.STRING
+    },
+
+    jsonRutina: {
+        type: DataTypes.STRING
     }
 })
 
