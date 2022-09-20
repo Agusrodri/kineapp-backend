@@ -51,7 +51,7 @@ const rutinaController = {
             const newRutina = await Rutina.create({
                 //order: 
                 fk_idTratamientoPaciente: idTratamientoPaciente,
-                fk_idProfesional: idProfesional,
+                fk_idProfesional: idProfesional ? idProfesional : (idPersonaJuridica ? idPersonaJuridica : null),
                 profesional: nombreProfesionalToSet,
                 activo: true,
                 finalizada: false,
