@@ -119,17 +119,17 @@ const rutinaPacienteController = {
 
                 await rutina.update({ jsonRutina: JSON.stringify(jsonRutina) })
 
-                jsonRutina.forEach(repeticion => {
-                    repeticion.forEach(async ejercicio => {
+                for (let i = 0; i < jsonRutina.length; i++) {
+                    for (let j = 0; j < jsonRutina[i]['ejercicios'].length; j++) {
                         const rutinaEjercicio = await RutinaEjercicio.findOne({
                             where: {
                                 fk_idRutina: idRutina,
-                                fk_idEjercicio: ejercicio['ejercicios']['id']
+                                fk_idEjercicio: jsonRutina[i]['ejercicios'][j]['fk_idEjercicio']
                             }
                         })
-                        await rutinaEjercicio.update({ contadorCheck: ejercicio['ejercicios']['contadorCheck'] })
-                    });
-                });
+                        await rutinaEjercicio.update({ contadorCheck: jsonRutina[i]['ejercicios'][j]['contadorCheck'] })
+                    }
+                }
 
                 return res.status(200).json({
                     restart: false,
