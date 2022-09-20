@@ -86,7 +86,7 @@ const rutinaPacienteController = {
 
             if (completa === true) {
 
-                await rutina.update({ jsonRutina: jsonRutina })
+                await rutina.update({ jsonRutina: JSON.stringify(jsonRutina) })
 
                 //obtenemos el último valor del contador de racha
                 const lastContadorRacha = rutina['dataValues']['contadorRacha'];
@@ -117,7 +117,7 @@ const rutinaPacienteController = {
 
             } else {
 
-                await rutina.update({ jsonRutina: jsonRutina })
+                await rutina.update({ jsonRutina: JSON.stringify(jsonRutina) })
 
                 jsonRutina.forEach(repeticion => {
                     repeticion.forEach(async ejercicio => {
