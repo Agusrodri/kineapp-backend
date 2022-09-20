@@ -165,7 +165,8 @@ const rutinaController = {
                 profesional: rutinaToFind['dataValues']['profesional'],
                 contadorRacha: rutinaToFind['dataValues']['contadorRacha'],
                 dateLastRacha: rutinaToFind['dataValues']['dateLastRacha'],
-                rutinaEjercicios: rutinaEjerciciosRes
+                rutinaEjercicios: rutinaEjerciciosRes,
+                jsonRutina: rutinaToFind['dataValues']['jsonRutina'] ? rutinaToFind['dataValues']['jsonRutina'] : null
             }
 
             res.status(200).json(responseFinal)
@@ -268,7 +269,7 @@ const rutinaController = {
             }
 
             const fechaFinRutina = (new Date()).toISOString().split("T")[0]
-            await rutinaToEnd.update({ finalizada: true, fechaFinalizacion: fechaFinRutina })
+            await rutinaToEnd.update({ finalizada: true, fechaFinalizacion: fechaFinRutina, jsonRutina: null })
 
             const rutinaEjercicios = await RutinaEjercicio.findAll({
                 where: {
@@ -332,7 +333,7 @@ const rutinaController = {
                 throw new Error("No se encontró la rutina solicitada.")
             }
 
-            await rutinaToDelete.update({ activo: false })
+            await rutinaToDelete.update({ activo: false, jsonRutina: null })
 
             res.status(200).json({
                 msg: "Rutina eliminada correctamente."
