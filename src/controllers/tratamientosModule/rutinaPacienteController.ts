@@ -86,7 +86,7 @@ const rutinaPacienteController = {
                     }
                 })
 
-                await rutina.update({ jsonRutina: JSON.stringify(jsonRutina) })
+                await rutina.update({ jsonRutina: null })
 
                 //obtenemos el último valor del contador de racha
                 const lastContadorRacha = rutina['dataValues']['contadorRacha'];
