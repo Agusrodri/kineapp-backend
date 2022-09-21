@@ -65,7 +65,7 @@ const rutinaPacienteController = {
         try {
 
             const { idRutina } = req.params
-            const { jsonRutina, completa } = req.body
+            const { jsonRutina, completa, rutinaEjercicios } = req.body
             const rutina = await Rutina.findOne({
                 where: {
                     id: idRutina,
@@ -78,13 +78,13 @@ const rutinaPacienteController = {
                 throw new Error("No se encontró la rutina solicitada.")
             }
 
-            const rutinaEjercicios = await RutinaEjercicio.findAll({
-                where: {
-                    fk_idRutina: idRutina
-                }
-            })
-
             if (completa === true) {
+
+                const rutinaEjerciciosAll = await RutinaEjercicio.findAll({
+                    where: {
+                        fk_idRutina: idRutina
+                    }
+                })
 
                 await rutina.update({ jsonRutina: JSON.stringify(jsonRutina) })
 
@@ -106,7 +106,7 @@ const rutinaPacienteController = {
                     await rutina.update({ contadorRacha: lastContadorRacha + 1, dateLastRacha: newDateLastRacha }) :
                     await rutina.update({ contadorRacha: 0, dateLastRacha: newDateLastRacha })
 
-                rutinaEjercicios.forEach(async rutinaEjercicio => {
+                rutinaEjerciciosAll.forEach(async rutinaEjercicio => {
                     await rutinaEjercicio.update({ contadorCheck: 0 })
                 })
 
@@ -119,16 +119,14 @@ const rutinaPacienteController = {
 
                 await rutina.update({ jsonRutina: JSON.stringify(jsonRutina) })
 
-                for (let i = 0; i < jsonRutina.length; i++) {
-                    for (let j = 0; j < jsonRutina[i]['ejercicios'].length; j++) {
-                        const rutinaEjercicio = await RutinaEjercicio.findOne({
-                            where: {
-                                fk_idRutina: idRutina,
-                                fk_idEjercicio: jsonRutina[i]['ejercicios'][j]['fk_idEjercicio']
-                            }
-                        })
-                        await rutinaEjercicio.update({ contadorCheck: jsonRutina[i]['ejercicios'][j]['contadorCheck'] })
-                    }
+                for (let i = 0; i < rutinaEjercicios.length; i++) {
+                    const rutinaEjercicio = await RutinaEjercicio.findOne({
+                        where: {
+                            fk_idRutina: idRutina,
+                            fk_idEjercicio: rutinaEjercicios[i]['id']
+                        }
+                    })
+                    await rutinaEjercicio.update({ contadorCheck: rutinaEjercicios[i]['contadorCheck'] })
                 }
 
                 return res.status(200).json({
