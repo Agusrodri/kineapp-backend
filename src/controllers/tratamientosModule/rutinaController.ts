@@ -365,6 +365,41 @@ const rutinaController = {
             const response = []
 
             for (let i = 0; i < rutinas.length; i++) {
+
+                let mostrarRutinaBandera: boolean;
+                if (!rutinas[i]['dataValues']['finalizada']) {
+
+                    //levar fecha actual a las 00
+                    const newDate = new Date();
+                    const utcDay = ((((newDate.toISOString()).split("T")))[0].split("-"))[2];
+                    const newDateUTC = new Date(Date.UTC(newDate.getFullYear(),
+                        newDate.getMonth(),
+                        Number(utcDay),
+                        0,
+                        0,
+                        0,
+                        0
+                    ));
+
+                    //llevar fecha última modificación a las 00
+                    const dateLastUpdate = rutinas[i]['dataValues']['updatedAt'];
+                    const utcDayLastUpdate = ((((dateLastUpdate.toISOString()).split("T")))[0].split("-"))[2];
+                    const newDateLastUpdateUTC = new Date(Date.UTC(dateLastUpdate.getFullYear(),
+                        dateLastUpdate.getMonth(),
+                        Number(utcDayLastUpdate),
+                        0,
+                        0,
+                        0,
+                        0
+                    ));
+
+                    const newDateDayFinal = ((((newDateUTC.toISOString()).split("T")))[0].split("-"))[2];
+                    const dateLastUpdateDayFinal = ((((newDateLastUpdateUTC.toISOString()).split("T")))[0].split("-"))[2];
+
+                    const diffDays = newDateDayFinal == dateLastUpdateDayFinal;
+                    diffDays ? mostrarRutinaBandera = false : mostrarRutinaBandera = true;
+                }
+
                 const rutinaEjercicios = await RutinaEjercicio.findAll({
                     where: {
                         fk_idRutina: rutinas[i]['dataValues']['id']
@@ -396,7 +431,8 @@ const rutinaController = {
                     profesional: rutinas[i]['dataValues']['profesional'],
                     contadorRacha: rutinas[i]['dataValues']['contadorRacha'],
                     dateLastRacha: rutinas[i]['dataValues']['dateLastRacha'],
-                    rutinaEjercicios: rutinaEjerciciosRes
+                    rutinaEjercicios: rutinaEjerciciosRes,
+                    mostrarRutinaBandera
                 }
                 response.push(responseRutina)
             }
