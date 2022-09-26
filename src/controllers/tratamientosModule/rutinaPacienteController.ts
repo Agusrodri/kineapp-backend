@@ -3,7 +3,8 @@ import Rutina from '../../models/entities/tratamientosModule/rutina';
 import TratamientoParticular from '../../models/entities/obrasSocialesModule/tratamientoParticular';
 import TratamientoPaciente from '../../models/entities/tratamientosModule/tratamientoPaciente';
 import RutinaEjercicio from '../../models/entities/tratamientosModule/rutinaEjercicio';
-import { Op, where } from 'sequelize';
+import { Op } from 'sequelize';
+import RutinaComentario from '../../models/entities/tratamientosModule/rutinaComentario';
 
 const rutinaPacienteController = {
 
@@ -210,8 +211,84 @@ const rutinaPacienteController = {
                 msg: `${error}`
             });
         }
-    }
+    },
 
+    comentarRutina: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idRutina } = req.params
+            const { comentario, isComentarioPaciente } = req.body
+
+            //verificar que la rutina exista y no esté finalizada
+            const rutina = await Rutina.findOne({
+                where: {
+                    id: idRutina,
+                    activo: true,
+                    finalizada: false
+                }
+            })
+
+            if (!rutina) {
+                throw new Error("No existe la rutina solicitada.")
+            }
+
+            const newComentario = await RutinaComentario.create({
+                comentario: comentario,
+                isComentarioPaciente: isComentarioPaciente,
+                fecha: new Date().toISOString().split("T")[0],
+                fk_idRutina: Number(idRutina)
+            })
+
+            res.status(200).json({
+                msg: "Comentario enviado con éxito.",
+                comentario: newComentario
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    getComentariosRutina: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idRutina } = req.params
+
+            //verificar que la rutina exista y no esté finalizada
+            const rutina = await Rutina.findOne({
+                where: {
+                    id: idRutina,
+                    activo: true,
+                    finalizada: false
+                }
+            })
+
+            if (!rutina) {
+                throw new Error("No existe la rutina solicitada.")
+            }
+
+            const comentarios = await RutinaComentario.findAll({
+                where: {
+                    fk_idRutina: idRutina
+                }
+            })
+
+            if (!comentarios) {
+                throw new Error("No se encontraron comentarios dentro de esta rutina.")
+            }
+
+            res.status(200).json(comentarios)
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    }
 }
 
 export default rutinaPacienteController;
