@@ -57,7 +57,8 @@ const rutinaController = {
                 finalizada: false,
                 fechaFinalizacion: null,
                 contadorRacha: 0,
-                dateLastRacha: "1663209114000"
+                dateLastRacha: "1663209114000",
+                updatedAt: new Date(1900, 1, 1)
             })
 
             const ejerciciosRutina = []
