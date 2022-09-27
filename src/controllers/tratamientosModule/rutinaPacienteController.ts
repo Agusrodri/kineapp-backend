@@ -47,9 +47,7 @@ const rutinaPacienteController = {
                     finalizado: tratamientosPaciente[i]['dataValues']['finalizado'],
                     activo: tratamientosPaciente[i]['dataValues']['activo']
                 }
-
                 tratamientosResponse.push(tratamientoPaciente)
-
             }
 
             res.status(200).json(tratamientosResponse)
@@ -87,7 +85,7 @@ const rutinaPacienteController = {
                     }
                 })
 
-                await rutina.update({ jsonRutina: null })
+                await rutina.update({ jsonRutina: jsonRutina })
 
                 //obtenemos el último valor del contador de racha
                 const lastContadorRacha = rutina['dataValues']['contadorRacha'];
