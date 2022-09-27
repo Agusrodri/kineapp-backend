@@ -437,7 +437,7 @@ const rutinaController = {
                     contadorRacha: rutinas[i]['dataValues']['contadorRacha'],
                     dateLastRacha: rutinas[i]['dataValues']['dateLastRacha'],
                     rutinaEjercicios: rutinaEjerciciosRes,
-                    mostrarRutinaBandera:!rutinas[i]['dataValues']['jsonRutina'] ? true : null
+                    mostrarRutinaBandera:!rutinas[i]['dataValues']['jsonRutina'] ? true : (rutinas[i]['dataValues']['mostrarRutinaBandera'] != null ? rutinas[i]['dataValues']['mostrarRutinaBandera'] : null)
                 }
                 response.push(responseRutina)
             }
