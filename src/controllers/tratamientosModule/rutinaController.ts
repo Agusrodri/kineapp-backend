@@ -57,8 +57,7 @@ const rutinaController = {
                 finalizada: false,
                 fechaFinalizacion: null,
                 contadorRacha: 0,
-                dateLastRacha: "1663209114000",
-                updatedAt: new Date(1900, 1, 1)
+                dateLastRacha: "1663209114000"
             })
 
             const ejerciciosRutina = []
@@ -433,7 +432,7 @@ const rutinaController = {
                     contadorRacha: rutinas[i]['dataValues']['contadorRacha'],
                     dateLastRacha: rutinas[i]['dataValues']['dateLastRacha'],
                     rutinaEjercicios: rutinaEjerciciosRes,
-                    mostrarRutinaBandera
+                    mostrarRutinaBandera: rutinas[i]['dataValues']['jsonRutina'] ? mostrarRutinaBandera: true
                 }
                 response.push(responseRutina)
             }
