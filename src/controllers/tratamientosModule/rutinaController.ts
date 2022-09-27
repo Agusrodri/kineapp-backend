@@ -367,7 +367,7 @@ const rutinaController = {
 
             for (let i = 0; i < rutinas.length; i++) {
 
-                let mostrarRutinaBandera: boolean;
+                //let mostrarRutinaBandera: boolean;
                 if (!rutinas[i]['dataValues']['finalizada']) {
 
                     //levar fecha actual a las 00
@@ -398,8 +398,11 @@ const rutinaController = {
                     const dateLastUpdateDayFinal = ((((newDateLastUpdateUTC.toISOString()).split("T")))[0].split("-"))[2];
 
                     const diffDays = newDateDayFinal == dateLastUpdateDayFinal;
-                    diffDays ? mostrarRutinaBandera = false : mostrarRutinaBandera = true;
-                    await rutinas[i].update({mostrarRutinaBandera: mostrarRutinaBandera });
+                    //diffDays ? mostrarRutinaBandera = false : mostrarRutinaBandera = true;
+
+                    if(!diffDays){
+                        await rutinas[i].update({mostrarRutinaBandera: true });
+                    }
                 }
 
                 const rutinaEjercicios = await RutinaEjercicio.findAll({
