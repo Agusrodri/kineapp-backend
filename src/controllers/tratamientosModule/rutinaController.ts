@@ -398,6 +398,7 @@ const rutinaController = {
 
                     const diffDays = newDateDayFinal == dateLastUpdateDayFinal;
                     diffDays ? mostrarRutinaBandera = false : mostrarRutinaBandera = true;
+                    await rutinas[i].update({mostrarRutinaBandera: mostrarRutinaBandera })
                 }
 
                 const rutinaEjercicios = await RutinaEjercicio.findAll({
@@ -432,7 +433,7 @@ const rutinaController = {
                     contadorRacha: rutinas[i]['dataValues']['contadorRacha'],
                     dateLastRacha: rutinas[i]['dataValues']['dateLastRacha'],
                     rutinaEjercicios: rutinaEjerciciosRes,
-                    mostrarRutinaBandera: rutinas[i]['dataValues']['jsonRutina'] ? mostrarRutinaBandera: true
+                    mostrarRutinaBandera: rutinas[i]['dataValues']['mostrarRutinaBandera']
                 }
                 response.push(responseRutina)
             }
