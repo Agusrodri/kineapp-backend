@@ -135,7 +135,7 @@ const rutinaPacienteController = {
 
             } else {
 
-                await rutina.update({ jsonRutina: JSON.stringify(jsonRutina) })
+                await rutina.update({ jsonRutina: JSON.stringify(jsonRutina), mostrarRutinaBandera: true })
 
                 for (let i = 0; i < rutinaEjercicios.length; i++) {
                     const rutinaEjercicio = await RutinaEjercicio.findOne({
