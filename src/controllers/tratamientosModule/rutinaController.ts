@@ -166,7 +166,8 @@ const rutinaController = {
                 contadorRacha: rutinaToFind['dataValues']['contadorRacha'],
                 dateLastRacha: rutinaToFind['dataValues']['dateLastRacha'],
                 rutinaEjercicios: rutinaEjerciciosRes,
-                jsonRutina: rutinaToFind['dataValues']['jsonRutina'] ? rutinaToFind['dataValues']['jsonRutina'] : null
+                jsonRutina: rutinaToFind['dataValues']['jsonRutina'] ? rutinaToFind['dataValues']['jsonRutina'] : null,
+                mostrarRutinaBandera: rutinaToFind['dataValues']['mostrarRutinaBandera'] ? rutinaToFind['dataValues']['mostrarRutinaBandera'] : null
             }
 
             res.status(200).json(responseFinal)
