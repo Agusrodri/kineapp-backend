@@ -63,20 +63,24 @@ const rutinaPacienteController = {
 
         try {
 
-            const { idRutina } = req.params
-            const { jsonRutina, completa, rutinaEjercicios } = req.body
+            const { idRutina } = req.params;
+            const { jsonRutina, completa, rutinaEjercicios } = req.body;
+
+            //búsqueda de la rutina solicitada por parámetro
             const rutina = await Rutina.findOne({
                 where: {
                     id: idRutina,
                     activo: true,
                     finalizada: false
                 }
-            })
+            });
 
+            //error en caso de no hallar la rutina
             if (!rutina) {
                 throw new Error("No se encontró la rutina solicitada.")
             }
 
+            //se recibe una bandera en el body de la petición que indica si la rutina se encuentra completa o no
             if (completa === true) {
 
                 const rutinaEjerciciosAll = await RutinaEjercicio.findAll({
@@ -85,6 +89,8 @@ const rutinaPacienteController = {
                     }
                 })
 
+                //se actualiza la rutina con el objeto JSON recibido en el body
+                //el mismo contiene información necesaria para ejecutar procesos en el frontend
                 await rutina.update({ jsonRutina: JSON.stringify(jsonRutina), mostrarRutinaBandera: false })
 
                 //obtenemos el último valor del contador de racha
@@ -121,8 +127,8 @@ const rutinaPacienteController = {
 
                 //si la diferencia es mayor a 2 días, el contador se resetea. Si no, se incrementa en 1 
                 //secondsDifBetweenDates < 172800 ? //172800 seconds == 48 hours == 2 days
-                    await rutina.update({ contadorRacha: lastContadorRacha + 1, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
-                   // await rutina.update({ contadorRacha: 0, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
+                await rutina.update({ contadorRacha: lastContadorRacha + 1, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
+                // await rutina.update({ contadorRacha: 0, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
 
                 rutinaEjerciciosAll.forEach(async rutinaEjercicio => {
                     await rutinaEjercicio.update({ contadorCheck: 0 })
