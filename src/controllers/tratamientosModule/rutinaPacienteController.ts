@@ -65,20 +65,24 @@ const rutinaPacienteController = {
 
         try {
 
-            const { idRutina } = req.params
-            const { jsonRutina, completa, rutinaEjercicios } = req.body
+            const { idRutina } = req.params;
+            const { jsonRutina, completa, rutinaEjercicios } = req.body;
+
+            //búsqueda de la rutina solicitada por parámetro
             const rutina = await Rutina.findOne({
                 where: {
                     id: idRutina,
                     activo: true,
                     finalizada: false
                 }
-            })
+            });
 
+            //error en caso de no hallar la rutina
             if (!rutina) {
                 throw new Error("No se encontró la rutina solicitada.")
             }
 
+            //se recibe una bandera en el body de la petición que indica si la rutina se encuentra completa o no
             if (completa === true) {
 
                 const rutinaEjerciciosAll = await RutinaEjercicio.findAll({
