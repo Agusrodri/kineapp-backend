@@ -47,9 +47,7 @@ const rutinaPacienteController = {
                     finalizado: tratamientosPaciente[i]['dataValues']['finalizado'],
                     activo: tratamientosPaciente[i]['dataValues']['activo']
                 }
-
                 tratamientosResponse.push(tratamientoPaciente)
-
             }
 
             res.status(200).json(tratamientosResponse)
@@ -91,13 +89,13 @@ const rutinaPacienteController = {
                     }
                 })
 
-                await rutina.update({ jsonRutina: null })
+                await rutina.update({ jsonRutina: JSON.stringify(jsonRutina), mostrarRutinaBandera: false })
 
                 //obtenemos el último valor del contador de racha
                 const lastContadorRacha = rutina['dataValues']['contadorRacha'];
 
                 //obtenemos la fecha donde se actualizó ese último valor de contador
-                const dateLastRacha = rutina['dataValues']['dateLastRacha'];
+                /* const dateLastRacha = rutina['dataValues']['dateLastRacha'];
                 const newDateLastRachaFormat = new Date(Number(dateLastRacha));
                 const utcDayLastUpdate = ((((newDateLastRachaFormat.toISOString()).split("T")))[0].split("-"))[2];
                 const dateLastRachaUTC = new Date(Date.UTC(newDateLastRachaFormat.getFullYear(),
@@ -107,7 +105,7 @@ const rutinaPacienteController = {
                     0,
                     0,
                     0
-                ));
+                )); */
 
                 //creamos una fecha actual para actualizar dateLastRacha de rutina
                 const newDateLastRacha = new Date();
@@ -122,13 +120,13 @@ const rutinaPacienteController = {
                 ));
 
                 //realizamos la diferencia entre la nueva fecha y la anterior
-                const difBetweenDates = Number(newDateLastRachaUTC.getTime()) - Number(dateLastRachaUTC.getTime())
-                const secondsDifBetweenDates = difBetweenDates / 1000
+                /* const difBetweenDates = Number(newDateLastRachaUTC.getTime()) - Number(dateLastRachaUTC.getTime())
+                const secondsDifBetweenDates = difBetweenDates / 1000 */
 
                 //si la diferencia es mayor a 2 días, el contador se resetea. Si no, se incrementa en 1 
-                secondsDifBetweenDates < 172800 ? //172800 seconds == 48 hours == 2 days
-                    await rutina.update({ contadorRacha: lastContadorRacha + 1, dateLastRacha: newDateLastRachaUTC.getTime().toString() }) :
-                    await rutina.update({ contadorRacha: 0, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
+                //secondsDifBetweenDates < 172800 ? //172800 seconds == 48 hours == 2 days
+                    await rutina.update({ contadorRacha: lastContadorRacha + 1, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
+                   // await rutina.update({ contadorRacha: 0, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
 
                 rutinaEjerciciosAll.forEach(async rutinaEjercicio => {
                     await rutinaEjercicio.update({ contadorCheck: 0 })
@@ -141,7 +139,7 @@ const rutinaPacienteController = {
 
             } else {
 
-                await rutina.update({ jsonRutina: JSON.stringify(jsonRutina) })
+                await rutina.update({ jsonRutina: JSON.stringify(jsonRutina), mostrarRutinaBandera: true })
 
                 for (let i = 0; i < rutinaEjercicios.length; i++) {
                     const rutinaEjercicio = await RutinaEjercicio.findOne({

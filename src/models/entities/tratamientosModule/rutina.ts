@@ -37,6 +37,10 @@ const Rutina = db.define('Rutina', {
 
     jsonRutina: {
         type: DataTypes.STRING
+    },
+
+    mostrarRutinaBandera: {
+        type: DataTypes.BOOLEAN
     }
 })
 
