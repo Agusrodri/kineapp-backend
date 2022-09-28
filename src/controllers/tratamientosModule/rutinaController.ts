@@ -440,12 +440,20 @@ const rutinaController = {
                     const difBetweenDates = Number(newDateLastRachaUTC.getTime()) - Number(dateLastRachaUTC.getTime())
                     const secondsDifBetweenDates = difBetweenDates / 1000
 
+                    const difBetweenDatesUpdate = Number(newDateUTC.getTime()) - Number(newDateLastUpdateUTC.getTime())
+                    const secondsDifBetweenDatesUpdate = difBetweenDatesUpdate / 1000
+
                     console.log("SECONDS: ", secondsDifBetweenDates)
+                    console.log("Seconds 2 ", secondsDifBetweenDatesUpdate)
 
                     //si la diferencia es mayor a 2 días, el contador se resetea. Si no, se incrementa en 1 
-                    secondsDifBetweenDates < 172800 ? //172800 seconds == 48 hours == 2 days
-                        await rutinas[i].update({ contadorRacha: lastContadorRacha}) :
-                        await rutinas[i].update({ contadorRacha: 0})
+                    /* secondsDifBetweenDates < 172800 ? //172800 seconds == 48 hours == 2 days
+                        false :
+                        await rutinas[i].update({ contadorRacha: 0}) */
+                    
+                    
+                    Math.abs(secondsDifBetweenDatesUpdate) >= 172800 ? await rutinas[i].update({ contadorRacha: 0}): false;
+                    Math.abs(secondsDifBetweenDates) >= 172800 ? await rutinas[i].update({ contadorRacha: 0}): false
 
                 }
 
