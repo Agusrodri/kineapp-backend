@@ -420,6 +420,8 @@ const rutinaController = {
                         0
                     ));
 
+                    console.log("DATE LAST RACHA: ", dateLastRachaUTC)
+
                     //creamos una fecha actual para actualizar dateLastRacha de rutina
                     const newDateLastRacha = new Date();
                     const utcDayRacha = ((((newDateLastRacha.toISOString()).split("T")))[0].split("-"))[2];
@@ -432,14 +434,18 @@ const rutinaController = {
                         0
                     ));
 
+                    console.log("NEW DATE UTC: ", newDateLastRachaUTC)
+
                     //realizamos la diferencia entre la nueva fecha y la anterior
                     const difBetweenDates = Number(newDateLastRachaUTC.getTime()) - Number(dateLastRachaUTC.getTime())
                     const secondsDifBetweenDates = difBetweenDates / 1000
 
+                    console.log("SECONDS: ", secondsDifBetweenDates)
+
                     //si la diferencia es mayor a 2 días, el contador se resetea. Si no, se incrementa en 1 
                     secondsDifBetweenDates < 172800 ? //172800 seconds == 48 hours == 2 days
-                        await rutinas[i].update({ contadorRacha: lastContadorRacha, dateLastRacha: newDateLastRachaUTC.getTime().toString() }) :
-                        await rutinas[i].update({ contadorRacha: 0, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
+                        await rutinas[i].update({ contadorRacha: lastContadorRacha}) :
+                        await rutinas[i].update({ contadorRacha: 0})
 
                 }
 
