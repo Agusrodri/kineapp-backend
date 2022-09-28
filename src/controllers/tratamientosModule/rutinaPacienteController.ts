@@ -89,6 +89,8 @@ const rutinaPacienteController = {
                     }
                 })
 
+                //se actualiza la rutina con el objeto JSON recibido en el body
+                //el mismo contiene información necesaria para ejecutar procesos en el frontend
                 await rutina.update({ jsonRutina: JSON.stringify(jsonRutina), mostrarRutinaBandera: false })
 
                 //obtenemos el último valor del contador de racha
@@ -125,8 +127,8 @@ const rutinaPacienteController = {
 
                 //si la diferencia es mayor a 2 días, el contador se resetea. Si no, se incrementa en 1 
                 //secondsDifBetweenDates < 172800 ? //172800 seconds == 48 hours == 2 days
-                    await rutina.update({ contadorRacha: lastContadorRacha + 1, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
-                   // await rutina.update({ contadorRacha: 0, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
+                await rutina.update({ contadorRacha: lastContadorRacha + 1, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
+                // await rutina.update({ contadorRacha: 0, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
 
                 rutinaEjerciciosAll.forEach(async rutinaEjercicio => {
                     await rutinaEjercicio.update({ contadorCheck: 0 })
