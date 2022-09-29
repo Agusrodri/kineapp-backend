@@ -448,25 +448,26 @@ const rutinaController = {
                     Math.abs(secondsDifBetweenDates) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;
 
 
-                    const jsonRutinaToEdit = rutinas[i]['dataValues']['jsonRutina'] ? JSON.parse(rutinas[i]['dataValues']['jsonRutina']) : "";
+                    const jsonRutinaToEdit = rutinas[i]['dataValues']['jsonRutina'] ? JSON.parse(rutinas[i]['dataValues']['jsonRutina']) : null;
 
-                    jsonRutinaToEdit.forEach(repeticion => {
-                        repeticion.checked = false;
-                        repeticion.ejercicio.forEach(ejercicio => {
-                            ejercicio.contadorCheck = 0;
-                            ejercicio.checked = false;
+                    if (jsonRutinaToEdit) {
+                        jsonRutinaToEdit.forEach(repeticion => {
+                            repeticion.checked = false;
+                            repeticion.ejercicio.forEach(ejercicio => {
+                                ejercicio.contadorCheck = 0;
+                                ejercicio.checked = false;
+                            });
                         });
-                    });
 
-                    if (Math.abs(secondsDifBetweenDatesUpdate) >= 172800) {
-                        await rutinas[i].update({ contadorRacha: 0, jsonRutina: JSON.stringify(jsonRutinaToEdit) });
+                        if (Math.abs(secondsDifBetweenDatesUpdate) >= 172800) {
+                            await rutinas[i].update({ contadorRacha: 0, jsonRutina: JSON.stringify(jsonRutinaToEdit) });
+                        }
+
+                        if (Math.abs(secondsDifBetweenDates) >= 172800) {
+                            await rutinas[i].update({ contadorRacha: 0, jsonRutina: JSON.stringify(jsonRutinaToEdit) })
+
+                        }
                     }
-
-                    if (Math.abs(secondsDifBetweenDates) >= 172800) {
-                        await rutinas[i].update({ contadorRacha: 0, jsonRutina: JSON.stringify(jsonRutinaToEdit) })
-
-                    }
-
 
                 }
 
