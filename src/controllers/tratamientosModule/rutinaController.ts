@@ -447,13 +447,15 @@ const rutinaController = {
                     Math.abs(secondsDifBetweenDatesUpdate) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;
                     Math.abs(secondsDifBetweenDates) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;
 
+                    console.log(JSON.parse(rutinas[i]['dataValues']['jsonRutina']))
+
 
                     const jsonRutinaToEdit = rutinas[i]['dataValues']['jsonRutina'] ? JSON.parse(rutinas[i]['dataValues']['jsonRutina']) : null;
 
                     if (jsonRutinaToEdit) {
                         jsonRutinaToEdit.forEach(repeticion => {
                             repeticion.checked = false;
-                            repeticion.ejercicio.forEach(ejercicio => {
+                            repeticion.ejercicios.forEach(ejercicio => {
                                 ejercicio.contadorCheck = 0;
                                 ejercicio.checked = false;
                             });
