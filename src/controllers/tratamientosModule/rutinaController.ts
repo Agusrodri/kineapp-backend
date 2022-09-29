@@ -404,9 +404,6 @@ const rutinaController = {
                         await rutinas[i].update({ mostrarRutinaBandera: true });
                     }
 
-                    //obtenemos el último valor del contador de racha
-                    const lastContadorRacha = rutinas[i]['dataValues']['contadorRacha'];
-
                     //obtenemos la fecha donde se actualizó ese último valor de contador
                     const dateLastRacha = rutinas[i]['dataValues']['dateLastRacha'];
                     const newDateLastRachaFormat = new Date(Number(dateLastRacha));
@@ -439,16 +436,9 @@ const rutinaController = {
                     const difBetweenDatesUpdate = Number(newDateUTC.getTime()) - Number(newDateLastUpdateUTC.getTime())
                     const secondsDifBetweenDatesUpdate = difBetweenDatesUpdate / 1000
 
-                    //si la diferencia es mayor a 2 días, el contador se resetea. Si no, se incrementa en 1 
-                    /* secondsDifBetweenDates < 172800 ? //172800 seconds == 48 hours == 2 days
-                        false :
-                        await rutinas[i].update({ contadorRacha: 0}) */
-
+                    //si la diferencia es mayor a 2 días, el contador se resetea 
                     Math.abs(secondsDifBetweenDatesUpdate) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;
                     Math.abs(secondsDifBetweenDates) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;
-
-                    console.log(JSON.parse(rutinas[i]['dataValues']['jsonRutina']))
-
 
                     const jsonRutinaToEdit = rutinas[i]['dataValues']['jsonRutina'] ? JSON.parse(rutinas[i]['dataValues']['jsonRutina']) : null;
 
@@ -470,7 +460,6 @@ const rutinaController = {
 
                         }
                     }
-
                 }
 
                 const rutinaEjercicios = await RutinaEjercicio.findAll({
