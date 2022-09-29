@@ -400,8 +400,8 @@ const rutinaController = {
                     const diffDays = newDateDayFinal == dateLastUpdateDayFinal;
                     //diffDays ? mostrarRutinaBandera = false : mostrarRutinaBandera = true;
 
-                    if(!diffDays){
-                        await rutinas[i].update({mostrarRutinaBandera: true });
+                    if (!diffDays) {
+                        await rutinas[i].update({ mostrarRutinaBandera: true });
                     }
 
                     //obtenemos el último valor del contador de racha
@@ -420,8 +420,6 @@ const rutinaController = {
                         0
                     ));
 
-                    console.log("DATE LAST RACHA: ", dateLastRachaUTC)
-
                     //creamos una fecha actual para actualizar dateLastRacha de rutina
                     const newDateLastRacha = new Date();
                     const utcDayRacha = ((((newDateLastRacha.toISOString()).split("T")))[0].split("-"))[2];
@@ -434,8 +432,6 @@ const rutinaController = {
                         0
                     ));
 
-                    console.log("NEW DATE UTC: ", newDateLastRachaUTC)
-
                     //realizamos la diferencia entre la nueva fecha y la anterior
                     const difBetweenDates = Number(newDateLastRachaUTC.getTime()) - Number(dateLastRachaUTC.getTime())
                     const secondsDifBetweenDates = difBetweenDates / 1000
@@ -443,17 +439,34 @@ const rutinaController = {
                     const difBetweenDatesUpdate = Number(newDateUTC.getTime()) - Number(newDateLastUpdateUTC.getTime())
                     const secondsDifBetweenDatesUpdate = difBetweenDatesUpdate / 1000
 
-                    console.log("SECONDS: ", secondsDifBetweenDates)
-                    console.log("Seconds 2 ", secondsDifBetweenDatesUpdate)
-
                     //si la diferencia es mayor a 2 días, el contador se resetea. Si no, se incrementa en 1 
                     /* secondsDifBetweenDates < 172800 ? //172800 seconds == 48 hours == 2 days
                         false :
                         await rutinas[i].update({ contadorRacha: 0}) */
-                    
-                    
-                    Math.abs(secondsDifBetweenDatesUpdate) >= 172800 ? await rutinas[i].update({ contadorRacha: 0}): false;
-                    Math.abs(secondsDifBetweenDates) >= 172800 ? await rutinas[i].update({ contadorRacha: 0}): false
+
+                    Math.abs(secondsDifBetweenDatesUpdate) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;
+                    Math.abs(secondsDifBetweenDates) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;
+
+
+                    const jsonRutinaToEdit = rutinas[i]['dataValues']['jsonRutina'] ? JSON.parse(rutinas[i]['dataValues']['jsonRutina']) : "";
+
+                    jsonRutinaToEdit.forEach(repeticion => {
+                        repeticion.checked = false;
+                        repeticion.ejercicio.forEach(ejercicio => {
+                            ejercicio.contadorCheck = 0;
+                            ejercicio.checked = false;
+                        });
+                    });
+
+                    if (Math.abs(secondsDifBetweenDatesUpdate) >= 172800) {
+                        await rutinas[i].update({ contadorRacha: 0, jsonRutina: JSON.stringify(jsonRutinaToEdit) });
+                    }
+
+                    if (Math.abs(secondsDifBetweenDates) >= 172800) {
+                        await rutinas[i].update({ contadorRacha: 0, jsonRutina: JSON.stringify(jsonRutinaToEdit) })
+
+                    }
+
 
                 }
 
@@ -489,7 +502,7 @@ const rutinaController = {
                     contadorRacha: rutinas[i]['dataValues']['contadorRacha'],
                     dateLastRacha: rutinas[i]['dataValues']['dateLastRacha'],
                     rutinaEjercicios: rutinaEjerciciosRes,
-                    mostrarRutinaBandera:!rutinas[i]['dataValues']['jsonRutina'] ? true : (rutinas[i]['dataValues']['mostrarRutinaBandera'] != null ? rutinas[i]['dataValues']['mostrarRutinaBandera'] : null)
+                    mostrarRutinaBandera: !rutinas[i]['dataValues']['jsonRutina'] ? true : (rutinas[i]['dataValues']['mostrarRutinaBandera'] != null ? rutinas[i]['dataValues']['mostrarRutinaBandera'] : null)
                 }
                 response.push(responseRutina)
             }
