@@ -83,33 +83,23 @@ const rutinaPacienteController = {
             //se recibe una bandera en el body de la petición que indica si la rutina se encuentra completa o no
             if (completa === true) {
 
+                //realizamos la búsqueda de todos los ejercicios presentes en la rutina
                 const rutinaEjerciciosAll = await RutinaEjercicio.findAll({
                     where: {
                         fk_idRutina: idRutina
                     }
-                })
+                });
 
                 //se actualiza la rutina con el objeto JSON recibido en el body
                 //el mismo contiene información necesaria para ejecutar procesos en el frontend
-                await rutina.update({ jsonRutina: JSON.stringify(jsonRutina), mostrarRutinaBandera: false })
+                //la bandera mostrarRutinaBandera indica si se debe permitir o denegar el acceso a la rutina
+                await rutina.update({ jsonRutina: JSON.stringify(jsonRutina), mostrarRutinaBandera: false });
 
                 //obtenemos el último valor del contador de racha
                 const lastContadorRacha = rutina['dataValues']['contadorRacha'];
 
-                //obtenemos la fecha donde se actualizó ese último valor de contador
-                /* const dateLastRacha = rutina['dataValues']['dateLastRacha'];
-                const newDateLastRachaFormat = new Date(Number(dateLastRacha));
-                const utcDayLastUpdate = ((((newDateLastRachaFormat.toISOString()).split("T")))[0].split("-"))[2];
-                const dateLastRachaUTC = new Date(Date.UTC(newDateLastRachaFormat.getFullYear(),
-                    newDateLastRachaFormat.getMonth(),
-                    Number(utcDayLastUpdate),
-                    0,
-                    0,
-                    0,
-                    0
-                )); */
-
                 //creamos una fecha actual para actualizar dateLastRacha de rutina
+                //realizamos la conversión al formato universal UTC
                 const newDateLastRacha = new Date();
                 const utcDay = ((((newDateLastRacha.toISOString()).split("T")))[0].split("-"))[2];
                 const newDateLastRachaUTC = new Date(Date.UTC(newDateLastRacha.getFullYear(),
@@ -121,42 +111,46 @@ const rutinaPacienteController = {
                     0
                 ));
 
-                //realizamos la diferencia entre la nueva fecha y la anterior
-                /* const difBetweenDates = Number(newDateLastRachaUTC.getTime()) - Number(dateLastRachaUTC.getTime())
-                const secondsDifBetweenDates = difBetweenDates / 1000 */
-
                 //si la diferencia es mayor a 2 días, el contador se resetea. Si no, se incrementa en 1 
                 //secondsDifBetweenDates < 172800 ? //172800 seconds == 48 hours == 2 days
-                await rutina.update({ contadorRacha: lastContadorRacha + 1, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
-                // await rutina.update({ contadorRacha: 0, dateLastRacha: newDateLastRachaUTC.getTime().toString() })
+                await rutina.update({ contadorRacha: lastContadorRacha + 1, dateLastRacha: newDateLastRachaUTC.getTime().toString() });
 
+                //reseteamos a 0 (cero) el contador particular de cada ejercicio
                 rutinaEjerciciosAll.forEach(async rutinaEjercicio => {
                     await rutinaEjercicio.update({ contadorCheck: 0 })
-                })
+                });
 
+                //respuesta final
                 return res.status(200).json({
                     restart: true,
                     jsonRutina: jsonRutina
-                })
+                });
 
             } else {
 
-                await rutina.update({ jsonRutina: JSON.stringify(jsonRutina), mostrarRutinaBandera: true })
+                //si no finalizó la rutina, también se actualiza la misma con el objeto JSON recibido en el body
+                //en este caso, la bandera mostrarRutinaBandera se coloca en true
+                await rutina.update({ jsonRutina: JSON.stringify(jsonRutina), mostrarRutinaBandera: true });
 
+                //recorremos el arreglo recibido en el body que contiene los ejercicios de la rutina
+                //actualizamos el contador de cada uno de ellos
                 for (let i = 0; i < rutinaEjercicios.length; i++) {
+
                     const rutinaEjercicio = await RutinaEjercicio.findOne({
                         where: {
                             fk_idRutina: idRutina,
                             fk_idEjercicio: rutinaEjercicios[i]['id']
                         }
-                    })
-                    await rutinaEjercicio.update({ contadorCheck: rutinaEjercicios[i]['contadorCheck'] })
+                    });
+
+                    await rutinaEjercicio.update({ contadorCheck: rutinaEjercicios[i]['contadorCheck'] });
                 }
 
+                //respuesta final
                 return res.status(200).json({
                     restart: false,
                     jsonRutina: jsonRutina
-                })
+                });
             }
         } catch (error) {
             res.status(500).json({
