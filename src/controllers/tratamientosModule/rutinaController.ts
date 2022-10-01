@@ -415,6 +415,7 @@ const rutinaController = {
                     //obtenemos la fecha donde se actualizó ese último valor de contador
                     const dateLastRacha = rutinas[i]['dataValues']['dateLastRacha'];
                     const newDateLastRachaFormat = new Date(Number(dateLastRacha));
+                    console.log("NEW DATE LAST RACHA FORMAT:", newDateLastRachaFormat)
                     const utcDayLastUpdateRacha = ((((newDateLastRachaFormat.toISOString()).split("T")))[0].split("-"))[2];
                     const dateLastRachaUTC = new Date(Date.UTC(newDateLastRachaFormat.getFullYear(),
                         newDateLastRachaFormat.getMonth(),
@@ -441,7 +442,7 @@ const rutinaController = {
                     console.log("LAST UTC:", dateLastRachaUTC)
 
                     //realizamos la diferencia entre la nueva fecha y la anterior
-                    const difBetweenDates = Number(newDateLastRachaUTC.getTime()) - Number(dateLastRachaUTC.getTime())
+                    const difBetweenDates = Number(newDateLastRachaUTC.getTime()) - Number(newDateLastRachaFormat.getTime())
                     const secondsDifBetweenDates = difBetweenDates / 1000
 
                     const difBetweenDatesUpdate = Number(newDateUTC.getTime()) - Number(newDateLastUpdateUTC.getTime())
