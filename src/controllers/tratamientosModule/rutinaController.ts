@@ -57,7 +57,7 @@ const rutinaController = {
                 finalizada: false,
                 fechaFinalizacion: null,
                 contadorRacha: 0,
-                dateLastRacha: "1663209114000"
+                dateLastRacha: "1663200000000"
             })
 
             const ejerciciosRutina = []
@@ -400,8 +400,16 @@ const rutinaController = {
                     const diffDays = newDateDayFinal == dateLastUpdateDayFinal;
                     //diffDays ? mostrarRutinaBandera = false : mostrarRutinaBandera = true;
 
+                    const jsonRutinaToEdit = rutinas[i]['dataValues']['jsonRutina'] ? JSON.parse(rutinas[i]['dataValues']['jsonRutina']) : null;
                     if (!diffDays) {
                         await rutinas[i].update({ mostrarRutinaBandera: true });
+                        jsonRutinaToEdit.forEach(repeticion => {
+                            repeticion.checked = false;
+                            repeticion.ejercicios.forEach(ejercicio => {
+                                ejercicio.contadorCheck = 0;
+                                ejercicio.checked = false;
+                            });
+                        });
                     }
 
                     //obtenemos la fecha donde se actualizó ese último valor de contador
@@ -429,6 +437,9 @@ const rutinaController = {
                         0
                     ));
 
+                    console.log("NEW UTC:", newDateLastRachaUTC)
+                    console.log("LAST UTC:", dateLastRachaUTC)
+
                     //realizamos la diferencia entre la nueva fecha y la anterior
                     const difBetweenDates = Number(newDateLastRachaUTC.getTime()) - Number(dateLastRachaUTC.getTime())
                     const secondsDifBetweenDates = difBetweenDates / 1000
@@ -436,23 +447,14 @@ const rutinaController = {
                     const difBetweenDatesUpdate = Number(newDateUTC.getTime()) - Number(newDateLastUpdateUTC.getTime())
                     const secondsDifBetweenDatesUpdate = difBetweenDatesUpdate / 1000
 
-                    console.log("DIFERENCIA 1: ", secondsDifBetweenDates);
-                    console.log("DIFERENCIA 2: ", secondsDifBetweenDatesUpdate);
+                    console.log("DIFERENCIA 1: ", Math.abs(secondsDifBetweenDates));
+                    console.log("DIFERENCIA 2: ", Math.abs(secondsDifBetweenDatesUpdate));
 
                     //si la diferencia es mayor a 2 días, el contador se resetea 
                     Math.abs(secondsDifBetweenDatesUpdate) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;
                     Math.abs(secondsDifBetweenDates) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;
 
-                    const jsonRutinaToEdit = rutinas[i]['dataValues']['jsonRutina'] ? JSON.parse(rutinas[i]['dataValues']['jsonRutina']) : null;
-
                     if (jsonRutinaToEdit) {
-                        jsonRutinaToEdit.forEach(repeticion => {
-                            repeticion.checked = false;
-                            repeticion.ejercicios.forEach(ejercicio => {
-                                ejercicio.contadorCheck = 0;
-                                ejercicio.checked = false;
-                            });
-                        });
 
                         if (Math.abs(secondsDifBetweenDatesUpdate) >= 172800) {
                             await rutinas[i].update({ contadorRacha: 0, jsonRutina: JSON.stringify(jsonRutinaToEdit) });
