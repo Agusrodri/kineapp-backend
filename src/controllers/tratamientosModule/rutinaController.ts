@@ -437,8 +437,8 @@ const rutinaController = {
                     const secondsDifBetweenDatesUpdate = difBetweenDatesUpdate / 1000
 
                     //si la diferencia es mayor a 2 días, el contador se resetea 
-                    Math.abs(secondsDifBetweenDatesUpdate) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;
-                    //Math.abs(secondsDifBetweenDates) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;;
+                    //Math.abs(secondsDifBetweenDatesUpdate) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;
+                    Math.abs(secondsDifBetweenDates) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;;
 
                     const jsonRutinaToEdit = rutinas[i]['dataValues']['jsonRutina'] ? JSON.parse(rutinas[i]['dataValues']['jsonRutina']) : null;
 
