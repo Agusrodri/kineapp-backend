@@ -382,7 +382,7 @@ const rutinaController = {
                         0
                     ));
 
-                    //llevar fecha última modificación a las 00
+                    //llevar fecha última modificación a las 00.
                     const dateLastUpdate = rutinas[i]['dataValues']['updatedAt'];
                     const utcDayLastUpdate = ((((dateLastUpdate.toISOString()).split("T")))[0].split("-"))[2];
                     const newDateLastUpdateUTC = new Date(Date.UTC(dateLastUpdate.getFullYear(),
