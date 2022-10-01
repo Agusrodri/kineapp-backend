@@ -47,6 +47,16 @@ const rutinaController = {
                 (`${profesional['dataValues']['nombre']} ${profesional['dataValues']['apellido']}`) :
                 (institucion ? (`${institucion['nombre']}`) : "Nombre del profesional desconocido.")
 
+            const newDateLastRacha = new Date();
+            const utcDayRacha = ((((newDateLastRacha.toISOString()).split("T")))[0].split("-"))[2];
+            const newDateLastRachaUTC = new Date(Date.UTC(newDateLastRacha.getFullYear(),
+                newDateLastRacha.getMonth(),
+                Number(utcDayRacha),
+                0,
+                0,
+                0,
+                0
+            ))
 
             const newRutina = await Rutina.create({
                 //order: 
@@ -57,7 +67,7 @@ const rutinaController = {
                 finalizada: false,
                 fechaFinalizacion: null,
                 contadorRacha: 0,
-                dateLastRacha: "1663200000000"
+                dateLastRacha: newDateLastRachaUTC.getTime().toString()
             })
 
             const ejerciciosRutina = []
