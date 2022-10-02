@@ -425,16 +425,6 @@ const rutinaController = {
                     //obtenemos la fecha donde se actualizó ese último valor de contador
                     const dateLastRacha = rutinas[i]['dataValues']['dateLastRacha'];
                     const newDateLastRachaFormat = new Date(Number(dateLastRacha));
-                    console.log("NEW DATE LAST RACHA FORMAT:", newDateLastRachaFormat)
-                    const utcDayLastUpdateRacha = ((((newDateLastRachaFormat.toISOString()).split("T")))[0].split("-"))[2];
-                    const dateLastRachaUTC = new Date(Date.UTC(newDateLastRachaFormat.getFullYear(),
-                        newDateLastRachaFormat.getMonth(),
-                        Number(utcDayLastUpdateRacha),
-                        0,
-                        0,
-                        0,
-                        0
-                    ));
 
                     //creamos una fecha actual para actualizar dateLastRacha de rutina
                     const newDateLastRacha = new Date();
@@ -448,18 +438,12 @@ const rutinaController = {
                         0
                     ));
 
-                    console.log("NEW UTC:", newDateLastRachaUTC)
-                    console.log("LAST UTC:", dateLastRachaUTC)
-
                     //realizamos la diferencia entre la nueva fecha y la anterior
                     const difBetweenDates = Number(newDateLastRachaUTC.getTime()) - Number(newDateLastRachaFormat.getTime())
                     const secondsDifBetweenDates = difBetweenDates / 1000
 
                     const difBetweenDatesUpdate = Number(newDateUTC.getTime()) - Number(newDateLastUpdateUTC.getTime())
                     const secondsDifBetweenDatesUpdate = difBetweenDatesUpdate / 1000
-
-                    console.log("DIFERENCIA 1: ", Math.abs(secondsDifBetweenDates));
-                    console.log("DIFERENCIA 2: ", Math.abs(secondsDifBetweenDatesUpdate));
 
                     //si la diferencia es mayor a 2 días, el contador se resetea 
                     Math.abs(secondsDifBetweenDatesUpdate) >= 172800 ? await rutinas[i].update({ contadorRacha: 0 }) : false;
@@ -522,7 +506,6 @@ const rutinaController = {
             });
         }
     }
-
 }
 
 export default rutinaController;
