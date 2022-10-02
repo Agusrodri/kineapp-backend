@@ -6,8 +6,8 @@ const db = new Sequelize('heroku_fe8c7e5eb423ca6', 'ba4faf146889f3', '71ce21dc',
     pool: {
         max: 15,
         min: 0,
-        acquire: 30000,
-        idle: 10000
+        acquire: 60000,
+        idle: 30000
     }
 });
 
