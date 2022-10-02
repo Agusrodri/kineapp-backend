@@ -105,7 +105,7 @@ const comentarioPacienteController = {
                 throw new Error("No existe el paciente solicitado.")
             }
 
-            await ComentarioPaciente.create({
+            const comentarioPaciente = await ComentarioPaciente.create({
                 puntuacion: puntuacion,
                 comentario: comentario,
                 fk_idPaciente: idPaciente,
@@ -114,16 +114,9 @@ const comentarioPacienteController = {
                 paciente: `${pacienteToFind['dataValues']['apellido']}, ${pacienteToFind['dataValues']['nombre']}`
             })
 
-            const comentariosPaciente = await ComentarioPaciente.findAll({
-                where: {
-                    fk_idPaciente: idPaciente,
-                    fk_idPersonaJuridica: idPersonaJuridica
-                }
-            })
-
             res.status(200).json({
                 msg: "Comentario enviado con éxito.",
-                comentariosPaciente
+                comentarioPaciente
             })
 
         } catch (error) {
