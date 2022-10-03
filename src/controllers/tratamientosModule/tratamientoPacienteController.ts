@@ -249,7 +249,6 @@ const tratamientoPacienteController = {
 
             const nuevaFechaFinReal = (new Date()).toISOString().split("T")[0]
             //const fechaMoment = moment().format()
-
             //console.log("Nueva fecha: ", nuevaFechaFinReal)
             await tratamientoPaciente.update({ fechaFinReal: nuevaFechaFinReal, finalizado: true })
 
