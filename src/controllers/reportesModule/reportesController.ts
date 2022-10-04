@@ -123,7 +123,7 @@ const reportesController = {
                     const promedioPuntajeMes = puntajesMes.reduce((a, b) => a + b, 0) / puntajesMes.length;
                     const puntajeMesResponse = {
                         mes: auxMes < 10 ? `0${auxMes}` : `${auxMes}`,
-                        puntaje: promedioPuntajeMes
+                        puntaje: Math.round(promedioPuntajeMes * 100) / 100
                     }
 
                     response.puntajeInstitucion.push(puntajeMesResponse)
