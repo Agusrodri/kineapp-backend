@@ -74,6 +74,9 @@ const reportesController = {
                         const tratamientosPaciente = await TratamientoPaciente.findAll({
                             where: {
                                 fk_idTratamiento: tratamientosParticulares[i]['dataValues']['id'],
+                                createdAt: {
+                                    [Op.between]: [new Date(`${anio}-${mes}-01`), new Date(`${anio}-${mes}-31`)]
+                                },
                                 activo: true
                             }
                         })
@@ -97,6 +100,8 @@ const reportesController = {
                 let auxMes = Number(mes);
 
                 while (auxMes >= 1) {
+                    console.log(auxMes)
+                    console.log(anio)
                     const comentariosPaciente = await ComentarioPaciente.findAll({
                         where: {
                             fk_idPersonaJuridica: idPersonaJuridica,
@@ -105,6 +110,8 @@ const reportesController = {
                             }
                         }
                     })
+
+                    console.log(comentariosPaciente)
 
                     const puntajesMes = []
                     if (comentariosPaciente) {
