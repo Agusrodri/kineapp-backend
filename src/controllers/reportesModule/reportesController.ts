@@ -100,8 +100,6 @@ const reportesController = {
                 let auxMes = Number(mes);
 
                 while (auxMes >= 1) {
-                    console.log(auxMes)
-                    console.log(anio)
                     const comentariosPaciente = await ComentarioPaciente.findAll({
                         where: {
                             fk_idPersonaJuridica: idPersonaJuridica,
@@ -110,8 +108,6 @@ const reportesController = {
                             }
                         }
                     })
-
-                    console.log(comentariosPaciente)
 
                     const puntajesMes = []
                     if (comentariosPaciente) {
