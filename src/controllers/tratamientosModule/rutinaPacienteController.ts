@@ -348,7 +348,8 @@ const rutinaPacienteController = {
 
                 await RecordatorioRutina.create({
                     horario: alarmas[i],
-                    fk_idRutina: rutinaActiva['dataValues']['id']
+                    fk_idRutina: rutinaActiva['dataValues']['id'],
+                    activo: true
                 })
 
             }

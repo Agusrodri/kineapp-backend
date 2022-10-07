@@ -124,6 +124,31 @@ const comentarioPacienteController = {
                 msg: `${error}`
             });
         }
+    },
+
+    getComentariosFromInstitucionView: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idPersonaJuridica } = req.params;
+            const comentarios = await ComentarioPaciente.findAll({
+                where: {
+                    fk_idPersonaJuridica: idPersonaJuridica
+                }
+            })
+
+            if (!comentarios) {
+                throw new Error("La institución no posee comentarios.")
+            }
+
+            res.status(200).json(comentarios)
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+
     }
 
 }
