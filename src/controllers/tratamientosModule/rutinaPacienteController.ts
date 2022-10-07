@@ -347,8 +347,9 @@ const rutinaPacienteController = {
             for (let i = 0; i < alarmas.length; i++) {
 
                 await RecordatorioRutina.create({
-                    horario: alarmas[i],
+                    horario: alarmas[i]['horario'],
                     fk_idRutina: rutinaActiva['dataValues']['id'],
+                    repeticion: alarmas[i]['repeticion'],
                     activo: true
                 })
 
@@ -356,6 +357,101 @@ const rutinaPacienteController = {
 
             res.status(200).json({
                 msg: "Alarmas definidas con éxito."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    getAlarmas: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idTratamientoPaciente } = req.params;
+            const tratamientoPaciente = await TratamientoPaciente.findOne({
+                where: {
+                    id: idTratamientoPaciente,
+                    activo: true
+                }
+            })
+
+            if (!tratamientoPaciente) {
+                throw new Error("No existe el tratamiento solicitado.")
+
+            }
+
+            const rutinaActiva = await Rutina.findOne({
+                where: {
+                    fk_idTratamientoPaciente: idTratamientoPaciente,
+                    activo: true,
+                    finalizada: false
+                }
+            })
+
+            if (!rutinaActiva) {
+                throw new Error("El tratamiento no posee una rutina activa.")
+            }
+
+            const recordatorios = await RecordatorioRutina.findAll({
+                where: {
+                    fk_idRutina: rutinaActiva['dataValues']['id']
+                }
+            })
+
+            const response = recordatorios ? recordatorios : [];
+
+            res.status(200).json(response)
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    modificarAlarmas: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idTratamientoPaciente } = req.params;
+            const { alarmas } = req.body;
+
+            const tratamientoPaciente = await TratamientoPaciente.findOne({
+                where: {
+                    id: idTratamientoPaciente,
+                    activo: true
+                }
+            })
+
+            if (!tratamientoPaciente) {
+                throw new Error("No existe el tratamiento solicitado.")
+
+            }
+
+            const rutinaActiva = await Rutina.findOne({
+                where: {
+                    fk_idTratamientoPaciente: idTratamientoPaciente,
+                    activo: true,
+                    finalizada: false
+                }
+            })
+
+            if (!rutinaActiva) {
+                throw new Error("El tratamiento no posee una rutina activa.")
+            }
+
+            for (let index = 0; index < alarmas.length; index++) {
+                const recordatorio = await RecordatorioRutina.findByPk(alarmas[index]['id'])
+
+                if (recordatorio) { await recordatorio.update({ horario: alarmas[index]['horario'], activo: alarmas[index]['activo'] }) }
+
+            }
+
+            res.status(200).json({
+                msg: "Alarmas actualizadas con éxito."
             })
 
         } catch (error) {
