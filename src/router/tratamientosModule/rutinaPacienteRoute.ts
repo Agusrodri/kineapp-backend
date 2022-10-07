@@ -8,5 +8,6 @@ router.put("/checkEjercicios/:idRutina", rutinaPacienteController.setContadorChe
 router.get("/tratamientoPaciente/:idTratamientoPaciente", rutinaPacienteController.getTratamiento);
 router.post("/comentarRutina/:idRutina", rutinaPacienteController.comentarRutina);
 router.get("/comentariosRutina/:idRutina", rutinaPacienteController.getComentariosRutina);
+router.post("/setAlarmas/:idTratamientoPaciente", rutinaPacienteController.setAlarmas);
 
 export default router;

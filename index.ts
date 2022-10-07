@@ -1,5 +1,6 @@
 
 import Server from "./src/models/server";
+import verifyAlarmas from "./src/helpers/verifyAlarmas";
 
 if (!process.env.PORT) {
     require("dotenv").config();
@@ -15,5 +16,7 @@ const server = new Server();
 
 
 server.listen();
+
+setInterval(verifyAlarmas, 5000);
 
 

@@ -5,6 +5,7 @@ import TratamientoPaciente from '../../models/entities/tratamientosModule/tratam
 import RutinaEjercicio from '../../models/entities/tratamientosModule/rutinaEjercicio';
 import { Op } from 'sequelize';
 import RutinaComentario from '../../models/entities/tratamientosModule/rutinaComentario';
+import RecordatorioRutina from '../../models/entities/tratamientosModule/recordatorioRutina';
 
 const rutinaPacienteController = {
 
@@ -188,6 +189,29 @@ const rutinaPacienteController = {
 
             }
 
+            const rutinaActiva = await Rutina.findOne({
+                where: {
+                    fk_idTratamientoPaciente: idTratamientoPaciente,
+                    activo: true,
+                    finalizada: false
+                }
+            })
+
+            const repeticionesRutina = [0]
+            if (rutinaActiva) {
+                const rutinaEjercicios = await RutinaEjercicio.findAll({
+                    where: {
+                        fk_idRutina: rutinaActiva['dataValues']['id']
+                    }
+                })
+
+                if (rutinaEjercicios) {
+                    for (let i = 0; i < rutinaEjercicios.length; i++) {
+                        repeticionesRutina.push(rutinaEjercicios[i]['dataValues']['cantidadRepeticiones'])
+                    }
+                }
+            }
+
             const response = {
                 id: tratamientoPaciente['dataValues']['id'],
                 fechaInicio: tratamientoPaciente['dataValues']['fechaInicio'],
@@ -199,7 +223,8 @@ const rutinaPacienteController = {
                 tratamiento: tratamientoParticular['dataValues']['nombre'],
                 nombrePaciente: tratamientoPaciente['dataValues']['nombrePaciente'],
                 finalizado: tratamientoPaciente['dataValues']['finalizado'],
-                activo: tratamientoPaciente['dataValues']['activo']
+                activo: tratamientoPaciente['dataValues']['activo'],
+                maxRepeticiones: Math.max(...repeticionesRutina)
             }
 
             res.status(200).json(response)
@@ -280,6 +305,57 @@ const rutinaPacienteController = {
             }
 
             res.status(200).json(comentarios)
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    setAlarmas: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idTratamientoPaciente } = req.params;
+            const { alarmas } = req.body;
+
+            const tratamientoPaciente = await TratamientoPaciente.findOne({
+                where: {
+                    id: idTratamientoPaciente,
+                    activo: true
+                }
+            })
+
+            if (!tratamientoPaciente) {
+                throw new Error("No existe el tratamiento solicitado.")
+
+            }
+
+            const rutinaActiva = await Rutina.findOne({
+                where: {
+                    fk_idTratamientoPaciente: idTratamientoPaciente,
+                    activo: true,
+                    finalizada: false
+                }
+            })
+
+            if (!rutinaActiva) {
+                throw new Error("El tratamiento no posee una rutina activa.")
+            }
+
+            for (let i = 0; i < alarmas.length; i++) {
+
+                await RecordatorioRutina.create({
+                    horario: alarmas[i],
+                    fk_idRutina: rutinaActiva['dataValues']['id']
+                })
+
+            }
+
+            res.status(200).json({
+                msg: "Alarmas definidas con éxito."
+            })
 
         } catch (error) {
             res.status(500).json({
