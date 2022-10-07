@@ -6,6 +6,9 @@ import RutinaEjercicio from '../../models/entities/tratamientosModule/rutinaEjer
 import { Op } from 'sequelize';
 import RutinaComentario from '../../models/entities/tratamientosModule/rutinaComentario';
 import RecordatorioRutina from '../../models/entities/tratamientosModule/recordatorioRutina';
+import Profesional from '../../models/entities/usersModule/profesional';
+import Usuario from '../../models/entities/usersModule/usuario';
+import sendNotification from '../../helpers/sendNotification';
 
 const rutinaPacienteController = {
 
@@ -262,6 +265,14 @@ const rutinaPacienteController = {
                 fecha: new Date().toISOString().split("T")[0],
                 fk_idRutina: Number(idRutina)
             })
+
+            const profesionalToNotificate = await Profesional.findByPk(rutina['dataValues']['fk_idProfesional'])
+
+            const usuarioToNotificate = await Usuario.findByPk(profesionalToNotificate['dataValues']['fk_idUsuario'])
+
+            if (usuarioToNotificate['dataValues']['subscription']) {
+                sendNotification(usuarioToNotificate['dataValues']['subscription'])
+            }
 
             res.status(200).json({
                 msg: "Comentario enviado con éxito.",
