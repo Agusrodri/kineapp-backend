@@ -74,6 +74,9 @@ const reportesController = {
                         const tratamientosPaciente = await TratamientoPaciente.findAll({
                             where: {
                                 fk_idTratamiento: tratamientosParticulares[i]['dataValues']['id'],
+                                createdAt: {
+                                    [Op.between]: [new Date(`${anio}-${mes}-01`), new Date(`${anio}-${mes}-31`)]
+                                },
                                 activo: true
                             }
                         })
@@ -116,7 +119,7 @@ const reportesController = {
                     const promedioPuntajeMes = puntajesMes.reduce((a, b) => a + b, 0) / puntajesMes.length;
                     const puntajeMesResponse = {
                         mes: auxMes < 10 ? `0${auxMes}` : `${auxMes}`,
-                        puntaje: promedioPuntajeMes
+                        puntaje: Math.round(promedioPuntajeMes * 100) / 100
                     }
 
                     response.puntajeInstitucion.push(puntajeMesResponse)
