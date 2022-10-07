@@ -42,6 +42,10 @@ const Usuario = db.define('Usuario', {
 
     tokenPassReset: {
         type: DataTypes.STRING
+    },
+
+    subscription: {
+        type: DataTypes.STRING
     }
 })
 

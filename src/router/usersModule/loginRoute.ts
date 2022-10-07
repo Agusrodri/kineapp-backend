@@ -3,6 +3,8 @@ import { check } from "express-validator";
 import validarJWT from "../../middlewares/validateJWT";
 import loginControllers from "../../controllers/usersModule/loginController";
 
+import notificationsController from "../../controllers/usersModule/notificationsController"
+
 const router = Router()
 
 
@@ -17,6 +19,7 @@ router.get("/validarJWT/:token", loginControllers.validateJWT);
 router.post("/emailToRestorePassword", loginControllers.sendEmailToRestorePassword);
 router.put("/restorePassword/:idUsuario", loginControllers.restorePassword);
 
+router.put("/setSubscription/:idUsuario", notificationsController.setSubscription);
 //module.exports = router
 
 export default router;
