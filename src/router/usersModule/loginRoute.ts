@@ -19,7 +19,9 @@ router.get("/validarJWT/:token", loginControllers.validateJWT);
 router.post("/emailToRestorePassword", loginControllers.sendEmailToRestorePassword);
 router.put("/restorePassword/:idUsuario", loginControllers.restorePassword);
 
+//notifications
 router.put("/setSubscription/:idUsuario", notificationsController.setSubscription);
-//module.exports = router
+router.get("/notificaciones/:idUsuario", notificationsController.getNotificaciones);
+router.get("/notificacion/:idNotificacion", notificationsController.getNotificacionById);
 
 export default router;

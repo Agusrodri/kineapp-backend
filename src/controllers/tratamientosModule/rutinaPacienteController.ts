@@ -9,6 +9,8 @@ import RecordatorioRutina from '../../models/entities/tratamientosModule/recorda
 import Profesional from '../../models/entities/usersModule/profesional';
 import Usuario from '../../models/entities/usersModule/usuario';
 import sendNotification from '../../helpers/sendNotification';
+import Paciente from '../../models/entities/usersModule/paciente';
+import Notificacion from '../../models/entities/usersModule/notificacion';
 
 const rutinaPacienteController = {
 
@@ -266,12 +268,38 @@ const rutinaPacienteController = {
                 fk_idRutina: Number(idRutina)
             })
 
-            const profesionalToNotificate = await Profesional.findByPk(rutina['dataValues']['fk_idProfesional'])
+            const profesionalToNotificate = await Profesional.findByPk(rutina['dataValues']['fk_idProfesional']);
+            const usuarioProfesionalToNotificate = await Usuario.findByPk(profesionalToNotificate['dataValues']['fk_idUsuario']);
+            const tratamientoPacienteToFind = await TratamientoPaciente.findByPk(rutina['dataValues']['fk_idTratamientoPaciente']);
+            const pacienteToNotificate = await Paciente.findByPk(tratamientoPacienteToFind['dataValues']['fk_idPaciente']);
+            const usuarioPacienteToNotificate = await Usuario.findByPk(pacienteToNotificate['dataValues']['fk_idUsuario']);
 
-            const usuarioToNotificate = await Usuario.findByPk(profesionalToNotificate['dataValues']['fk_idUsuario'])
+            if (isComentarioPaciente == true) {
 
-            if (usuarioToNotificate['dataValues']['subscription']) {
-                sendNotification(usuarioToNotificate['dataValues']['subscription'])
+                if (usuarioProfesionalToNotificate['dataValues']['subscription']) {
+                    const notificationBody = `El paciente ${pacienteToNotificate['dataValues']['apellido']}, ${pacienteToNotificate['dataValues']['nombre']} realizó un comentario en su rutina activa.`;
+
+                    await Notificacion.create({
+                        texto: notificationBody,
+                        check: false,
+                        fk_idUsuario: usuarioProfesionalToNotificate['dataValues']['id']
+                    })
+
+                    sendNotification(usuarioProfesionalToNotificate['dataValues']['subscription'], notificationBody)
+                }
+            } else {
+
+                if (usuarioPacienteToNotificate['dataValues']['subscription']) {
+                    const notificationBody = `El profesional ${profesionalToNotificate['dataValues']['apellido']}, ${profesionalToNotificate['dataValues']['nombre']} realizó un comentario en tu rutina activa.`;
+
+                    await Notificacion.create({
+                        texto: notificationBody,
+                        check: false,
+                        fk_idUsuario: usuarioPacienteToNotificate['dataValues']['id']
+                    })
+
+                    sendNotification(usuarioPacienteToNotificate['dataValues']['subscription'], notificationBody)
+                }
             }
 
             res.status(200).json({
@@ -361,7 +389,8 @@ const rutinaPacienteController = {
                     horario: alarmas[i]['horario'],
                     fk_idRutina: rutinaActiva['dataValues']['id'],
                     repeticion: alarmas[i]['repeticion'],
-                    activo: true
+                    activo: true,
+                    habilitado: true
                 })
 
             }

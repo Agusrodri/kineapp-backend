@@ -14,9 +14,9 @@ globalThis.__baseurl2 = "http://api-kineapp.herokuapp.com/"
 
 const server = new Server();
 
-
 server.listen();
 
-//setInterval(verifyAlarmas, 5000);
+setInterval(verifyAlarmas, 10000);
+
 
 

@@ -1,6 +1,6 @@
 import webpush from "web-push"
 
-export default async (pushSubscription: string) => {
+export default async (pushSubscription: string, body: string) => {
 
     const vapidKeys = {
         publicKey: "BNGSmnHU5QmHZpNdJLg7bK-fe5-5N4HZBihIT7avN85GpbLFQMSDybAIgLLUPwpxYSWMqoUA7thc0xeE0Qi3O1g",
@@ -15,10 +15,10 @@ export default async (pushSubscription: string) => {
 
     const payload = {
         "notification": {
-            "title": "kineapp Notification",
-            "body": "",
+            "title": "kineapp",
+            "body": body,
             "vibrate": [100, 50, 100],
-            "image": "http://api-kineapp.herokuapp.com/file-id-ejercicio-1.gif",
+            "image": "",
             /**"data": {
              * "dateOfArrival": Date.now(),
              * "primaryKey": 1
@@ -39,6 +39,6 @@ export default async (pushSubscription: string) => {
             console.log('Error', err);
         })
 
-    return
+    return;
 
 }

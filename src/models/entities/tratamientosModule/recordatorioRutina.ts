@@ -17,6 +17,10 @@ const RecordatorioRutina = db.define('RecordatorioRutina', {
 
     repeticion: {
         type: DataTypes.INTEGER
+    },
+
+    habilitado: {
+        type: DataTypes.BOOLEAN
     }
 })
 
