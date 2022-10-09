@@ -16,7 +16,7 @@ const server = new Server();
 
 server.listen();
 
-//setInterval(verifyAlarmas, 10000);
+setInterval(verifyAlarmas, 10000);
 
 
 
