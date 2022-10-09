@@ -42,7 +42,7 @@ export default async () => {
                 }
                 if (!recordatorios[i]['dataValues']['habilitado'] || !recordatorios[i]['dataValues']['activo']) { continue }
 
-                if (hours[dateNowHours.split(":")[0]].includes(dateRecordatorioHours.split(":")[0]) &&
+                if ((hours[dateNowHours.split(":")[0]].includes(dateRecordatorioHours.split(":")[0]) || dateRecordatorioHours.split(":")[0] == dateNowHours.split(":")[0]) &&
                     dateRecordatorioHours.split(":")[1] == dateNowHours.split(":")[1]) {
 
                     console.log("Horario alcanzado!!!!!!!");
