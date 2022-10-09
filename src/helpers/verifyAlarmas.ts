@@ -6,12 +6,25 @@ import Usuario from "../models/entities/usersModule/usuario";
 import sendNotification from "./sendNotification";
 import Notificacion from "../models/entities/usersModule/notificacion";
 
+const hours = {
+    "13": "1",
+    "14": "2",
+    "15": "3",
+    "16": "4",
+    "17": "5",
+    "18": "6",
+    "19": "7",
+    "20": "8",
+    "21": "9",
+    "22": "10",
+    "23": "11"
+}
 export default async () => {
     console.log("Verifying alarmas...");
     try {
         const recordatorios = await RecordatorioRutina.findAll();
         if (recordatorios) {
-            const dateNow = new Date().toLocaleString()
+            const dateNow = new Date().toLocaleString();
             console.log("----------------------------------------")
             console.log("DATE NOW: ", dateNow)
             console.log("----------------------------------------")
@@ -28,7 +41,7 @@ export default async () => {
                 }
                 if (!recordatorios[i]['dataValues']['habilitado'] || !recordatorios[i]['dataValues']['activo']) { continue }
 
-                if (dateRecordatorioHours.split(":")[0] == dateNowHours.split(":")[0] &&
+                if ((hours[`${dateRecordatorioHours.split(":")[0]}`] == dateNowHours.split(":")[0]) &&
                     dateRecordatorioHours.split(":")[1] == dateNowHours.split(":")[1]) {
 
                     console.log("Horario alcanzado!!!!!!!");
