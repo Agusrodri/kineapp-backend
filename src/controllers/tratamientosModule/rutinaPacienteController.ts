@@ -282,7 +282,8 @@ const rutinaPacienteController = {
                     await Notificacion.create({
                         texto: notificationBody,
                         check: false,
-                        fk_idUsuario: usuarioProfesionalToNotificate['dataValues']['id']
+                        fk_idUsuario: usuarioProfesionalToNotificate['dataValues']['id'],
+                        titulo: "Nuevo comentario de paciente en rutina"
                     })
 
                     sendNotification(usuarioProfesionalToNotificate['dataValues']['subscription'], notificationBody)
@@ -295,7 +296,8 @@ const rutinaPacienteController = {
                     await Notificacion.create({
                         texto: notificationBody,
                         check: false,
-                        fk_idUsuario: usuarioPacienteToNotificate['dataValues']['id']
+                        fk_idUsuario: usuarioPacienteToNotificate['dataValues']['id'],
+                        titulo: "Nuevo comentario de profesional en rutina"
                     })
 
                     sendNotification(usuarioPacienteToNotificate['dataValues']['subscription'], notificationBody)

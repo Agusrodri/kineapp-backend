@@ -14,6 +14,10 @@ const Notificacion = db.define('Notificacione', {
 
     fk_idUsuario: {
         type: DataTypes.INTEGER
+    },
+
+    titulo: {
+        type: DataTypes.STRING
     }
 })
 

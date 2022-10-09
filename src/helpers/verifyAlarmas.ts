@@ -61,15 +61,19 @@ export default async () => {
 
                     const notificationBody = `Hora de realizar la repetición número ${recordatorios[i]['dataValues']['repeticion']} de tu rutina!`;
 
-                    await Notificacion.create({
-                        texto: notificationBody,
-                        check: false,
-                        fk_idUsuario: usuarioToFind['dataValues']['id']
-                    })
+                    if (usuarioToFind) {
 
-                    if (usuarioToFind) { sendNotification(usuarioToFind['dataValues']['subscription'], notificationBody) }
+                        await Notificacion.create({
+                            texto: notificationBody,
+                            check: false,
+                            fk_idUsuario: usuarioToFind['dataValues']['id'],
+                            titulo: "Recordatorio rutina"
+                        })
 
-                    await recordatorios[i].update({ habilitado: false })
+                        sendNotification(usuarioToFind['dataValues']['subscription'], notificationBody)
+
+                        await recordatorios[i].update({ habilitado: false })
+                    }
                 }
             }
         }
