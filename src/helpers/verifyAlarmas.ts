@@ -7,18 +7,18 @@ import sendNotification from "./sendNotification";
 import Notificacion from "../models/entities/usersModule/notificacion";
 
 const hours = {
-    "13": "1",
-    "14": "2",
-    "15": "3",
-    "16": "4",
-    "17": "5",
-    "18": "6",
-    "19": "7",
-    "20": "8",
-    "21": "9",
-    "22": "10",
-    "23": "11",
-    "00": "12"
+    "1": "01" || "13",
+    "2": "02" || "14",
+    "3": "03" || "15",
+    "4": "04" || "16",
+    "5": "05" || "17",
+    "6": "06" || "18",
+    "7": "07" || "19",
+    "8": "08" || "20",
+    "9": "09" || "21",
+    "10": "10" || "22",
+    "11": "11" || "23",
+    "12": "12" || "00"
 }
 export default async () => {
     console.log("Verifying alarmas...");
@@ -42,7 +42,7 @@ export default async () => {
                 }
                 if (!recordatorios[i]['dataValues']['habilitado'] || !recordatorios[i]['dataValues']['activo']) { continue }
 
-                if ((hours[`${dateRecordatorioHours.split(":")[0]}`] == dateNowHours.split(":")[0] || dateRecordatorioHours.split(":")[0] == dateNowHours.split(":")[0]) &&
+                if ((dateRecordatorioHours.split(":")[0] == hours[`${dateNowHours.split(":")[0]}`] || dateRecordatorioHours.split(":")[0] == dateNowHours.split(":")[0]) &&
                     dateRecordatorioHours.split(":")[1] == dateNowHours.split(":")[1]) {
 
                     console.log("Horario alcanzado!!!!!!!");
