@@ -17,7 +17,8 @@ const hours = {
     "20": "8",
     "21": "9",
     "22": "10",
-    "23": "11"
+    "23": "11",
+    "00": "12"
 }
 export default async () => {
     console.log("Verifying alarmas...");
