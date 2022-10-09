@@ -8,7 +8,7 @@ export default async () => {
 
     try {
         const dateNow = new Date().toLocaleString();
-        const dateNowDay = dateNow.split(" ")[0].split("/")[0]
+        const dateNowDay = dateNow.split(" ")[0].split("/")[1]
 
         if (dateNowDay == "1") {
             const institucionesToNotificate = await PersonaJuridica.findAll({
