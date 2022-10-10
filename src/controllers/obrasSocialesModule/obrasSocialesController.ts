@@ -290,6 +290,8 @@ const obrasSocialesController = {
                     }
                 })
 
+                if (!tratamiento) { continue }
+
                 const cobertura = {
                     idTratamiento: tratamiento['dataValues']['id'],
                     tratamiento: tratamiento['dataValues']['nombre'],
