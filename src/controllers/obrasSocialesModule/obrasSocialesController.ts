@@ -491,8 +491,6 @@ const obrasSocialesController = {
 
             }
 
-
-
             res.status(200).json({
                 msg: "Los tratamientos se agregaron al plan correctamente."
             })
@@ -536,6 +534,14 @@ const obrasSocialesController = {
                 throw new Error("No existe el plan solicitado.")
             }
 
+            const idObraSocial = planToEdit['dataValues']['fk_idObraSocial'];
+            const obraSocial = await ObraSocial.findOne({
+                where: {
+                    id: idObraSocial,
+                    activo: true
+                }
+            })
+
             await planToEdit.update({ nombre: nombre })
             await PlanTratamientoGeneral.destroy({
                 where: {
@@ -543,7 +549,11 @@ const obrasSocialesController = {
                 }
             })
 
+            let tratamientosNotificacion = []
             for (let i = 0; i < tratamientos.length; i++) {
+
+                const tratamientoGeneral = await TratamientoGeneral.findByPk(tratamientos[i]['idTratamientoGeneral']);
+                tratamientosNotificacion.push(tratamientoGeneral['dataValues']['nombre']);
 
                 await PlanTratamientoGeneral.create({
                     porcentajeCobertura: tratamientos[i]['porcentajeCobertura'],
@@ -551,6 +561,73 @@ const obrasSocialesController = {
                     fk_idPlan: idPlan,
                     fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral']
                 })
+            }
+
+            let notificationBody = `Los siguientes tratamientos fueron agregados al plan ${planToEdit['dataValues']['nombre']} de la obra social ${obraSocial['dataValues']['nombre']}: `
+
+            tratamientosNotificacion.forEach((tratamiento, index) => {
+                notificationBody = notificationBody + tratamiento + (index < (tratamientosNotificacion.length - 1) ? "" : ", ")
+            });
+
+            const pacientes = await Paciente.findAll({
+                where: {
+                    fk_idPlan: idPlan,
+                    activo: true
+                }
+            })
+
+            if (pacientes) {
+                for (let index = 0; index < pacientes.length; index++) {
+
+                    const usuario = pacientes[index]['dataValues']['fk_idUsuario'] ?
+                        await Usuario.findByPk(pacientes[index]['dataValues']['fk_idUsuario']) : null;
+
+                    if (usuario && usuario['dataValues']['subscription']) {
+
+                        await Notificacion.create({
+                            texto: notificationBody,
+                            check: false,
+                            fk_idUsuario: usuario['dataValues']['id'],
+                            titulo: "Actualización de Plan"
+                        })
+                        sendNotification(usuario['dataValues']['subscription'], notificationBody)
+                    }
+                }
+            }
+
+            const convenios = await Convenio.findAll({
+                where: {
+                    fk_idObraSocial: idObraSocial,
+                    activo: true
+                }
+            })
+
+            if (convenios) {
+                for (let index = 0; index < convenios.length; index++) {
+                    const institucionToNotificate = await PersonaJuridica.findOne({
+                        where: {
+                            id: convenios[index]['dataValues']['fk_idPersonaJuridica'],
+                            activo: true
+                        }
+                    });
+
+                    if (!institucionToNotificate) { continue }
+
+                    const usuarioInstitucionToNotificate = await Usuario.findByPk(institucionToNotificate['dataValues']['fk_idUsuarios']);
+                    const idInstitucion = institucionToNotificate['dataValues']['id'];
+                    const idConvenio = convenios[index]['dataValues']['fk_idPersonaJuridica'];
+                    if (usuarioInstitucionToNotificate && usuarioInstitucionToNotificate['dataValues']['subscription']) {
+
+                        await Notificacion.create({
+                            texto: notificationBody,
+                            check: false,
+                            fk_idUsuario: usuarioInstitucionToNotificate['dataValues']['id'],
+                            titulo: "Actualización de Plan",
+                            router: `app/convenios/${idInstitucion}/${idConvenio}`
+                        })
+                        sendNotification(usuarioInstitucionToNotificate['dataValues']['subscription'], notificationBody)
+                    }
+                }
             }
 
             res.status(200).json({
@@ -593,7 +670,6 @@ const obrasSocialesController = {
             });
         }
     }
-
 
 }
 
