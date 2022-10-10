@@ -566,7 +566,7 @@ const obrasSocialesController = {
             let notificationBody = `Los siguientes tratamientos fueron agregados al plan ${planToEdit['dataValues']['nombre']} de la obra social ${obraSocial['dataValues']['nombre']}: `
 
             tratamientosNotificacion.forEach((tratamiento, index) => {
-                notificationBody = notificationBody + tratamiento + (index < (tratamientosNotificacion.length - 1) ? "" : ", ")
+                notificationBody = notificationBody + tratamiento + (index < (tratamientosNotificacion.length - 1) ? ", " : "")
             });
 
             const pacientes = await Paciente.findAll({
