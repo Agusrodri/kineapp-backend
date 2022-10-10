@@ -128,6 +128,7 @@ const rutinaController = {
 
                 const notificationBody = `El profesional ${newRutina['dataValues']['profesional']} te asignó una rutina${nombreTratamiento}`
                 const usuario = await Usuario.findByPk(paciente['dataValues']['fk_idUsuario']);
+                const idPaciente = tratamientoPaciente['dataValues']['fk_idPaciente'];
 
                 if (usuario && usuario['dataValues']['subscription']) {
 
@@ -135,7 +136,8 @@ const rutinaController = {
                         texto: notificationBody,
                         check: false,
                         fk_idUsuario: usuario['dataValues']['id'],
-                        titulo: "Asignación de Rutina"
+                        titulo: "Asignación de Rutina",
+                        router: `app/tratamientos-paciente/${idPaciente}/${idTratamientoPaciente}`
                     })
                     sendNotification(usuario['dataValues']['subscription'], notificationBody)
                 }

@@ -8,6 +8,8 @@ import Paciente from '../../models/entities/usersModule/paciente';
 import Usuario from '../../models/entities/usersModule/usuario';
 import sendNotification from '../../helpers/sendNotification';
 import Notificacion from '../../models/entities/usersModule/notificacion';
+import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
+import Convenio from '../../models/entities/obrasSocialesModule/convenio';
 
 const obrasSocialesController = {
 
@@ -372,6 +374,29 @@ const obrasSocialesController = {
             const { idPlan } = req.params
             const { tratamientos } = req.body
 
+            const plan = await Plan.findOne({
+                where: {
+                    id: idPlan,
+                    activo: true
+                }
+            })
+
+            if (!plan) {
+                throw new Error("No existe el plan solicitado")
+            }
+
+            const idObraSocial = plan['dataValues']['fk_idObraSocial'];
+            const obraSocial = await ObraSocial.findOne({
+                where: {
+                    id: idObraSocial,
+                    activo: true
+                }
+            })
+
+            if (!obraSocial) {
+                throw new Error("No existe la obra social asociada al plan indicado.")
+            }
+
             let tratamientosNotificacion = []
             for (let i = 0; i < tratamientos.length; i++) {
 
@@ -397,10 +422,10 @@ const obrasSocialesController = {
                 })
             }
 
-            let notificationBody = `Los siguientes tratamientos fueron agregados a tu plan: \n`
+            let notificationBody = `Los siguientes tratamientos fueron agregados al plan ${plan['dataValues']['nombre']} de la obra social ${obraSocial['dataValues']['nombre']}: `
 
-            tratamientosNotificacion.forEach(tratamiento => {
-                notificationBody = notificationBody + '\n' + " - " + tratamiento
+            tratamientosNotificacion.forEach((tratamiento, index) => {
+                notificationBody = notificationBody + tratamiento + (index < (tratamientosNotificacion.length - 1) ? "" : ", ")
             });
 
             const pacientes = await Paciente.findAll({
@@ -428,6 +453,45 @@ const obrasSocialesController = {
                     }
                 }
             }
+
+            const convenios = await Convenio.findAll({
+                where: {
+                    fk_idObraSocial: idObraSocial,
+                    activo: true
+                }
+            })
+
+            if (convenios) {
+                for (let index = 0; index < convenios.length; index++) {
+                    const institucionToNotificate = await PersonaJuridica.findOne({
+                        where: {
+                            id: convenios[index]['dataValues']['fk_idPersonaJuridica'],
+                            activo: true
+                        }
+                    });
+
+                    if (!institucionToNotificate) { continue }
+
+                    const usuarioInstitucionToNotificate = await Usuario.findByPk(institucionToNotificate['dataValues']['fk_idUsuarios']);
+                    const idInstitucion = institucionToNotificate['dataValues']['id'];
+                    const idConvenio = convenios[index]['dataValues']['fk_idPersonaJuridica'];
+                    if (usuarioInstitucionToNotificate && usuarioInstitucionToNotificate['dataValues']['subscription']) {
+
+                        await Notificacion.create({
+                            texto: notificationBody,
+                            check: false,
+                            fk_idUsuario: usuarioInstitucionToNotificate['dataValues']['id'],
+                            titulo: "Actualización de Plan",
+                            router: `app/convenios/${idInstitucion}/${idConvenio}`
+                        })
+                        sendNotification(usuarioInstitucionToNotificate['dataValues']['subscription'], notificationBody)
+                    }
+
+                }
+
+            }
+
+
 
             res.status(200).json({
                 msg: "Los tratamientos se agregaron al plan correctamente."

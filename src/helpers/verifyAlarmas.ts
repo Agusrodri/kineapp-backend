@@ -61,13 +61,18 @@ export default async () => {
 
                     const notificationBody = `Hora de realizar la repetición número ${recordatorios[i]['dataValues']['repeticion']} de tu rutina!`;
 
+                    const idPaciente = pacienteToFind['dataValues']['id'];
+                    const idTratamientoPaciente = tratamientoPacienteToFind['dataValues']['id'];
+                    const idRutina = rutinaToFind['dataValues']['id']
+
                     if (usuarioToFind) {
 
                         await Notificacion.create({
                             texto: notificationBody,
                             check: false,
                             fk_idUsuario: usuarioToFind['dataValues']['id'],
-                            titulo: "Recordatorio rutina"
+                            titulo: "Recordatorio rutina",
+                            router: `app/tratamientos-paciente/${idPaciente}/${idTratamientoPaciente}/${idRutina}`
                         })
 
                         sendNotification(usuarioToFind['dataValues']['subscription'], notificationBody)

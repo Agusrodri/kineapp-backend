@@ -22,14 +22,15 @@ export default async () => {
 
                 const usuario = await Usuario.findByPk(institucionesToNotificate[index]['dataValues']['fk_idUsuarios']);
                 const notificationBody = "Te recordamos que modifiques la lista de convenios en caso de que haya alguno de ellos que hayas cambiado en el transcurso del mes pasado.";
-
+                const idInstitucion = institucionesToNotificate[index]['dataValues']['id']
                 if (usuario) {
 
                     await Notificacion.create({
                         texto: notificationBody,
                         check: false,
                         fk_idUsuario: usuario['dataValues']['id'],
-                        titulo: "Posibles modificaciones de convenios"
+                        titulo: "Posibles modificaciones de convenios",
+                        router: `app/convenios/${idInstitucion}`
                     })
 
                     sendNotification(usuario['dataValues']['subscription'], notificationBody)

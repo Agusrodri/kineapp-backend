@@ -165,6 +165,8 @@ const conveniosController = {
                     }
                 })
 
+                if (!planesTratamientosGrales) { continue }
+
                 for (let k = 0; k < planesTratamientosGrales.length; k++) {
 
                     const tratamientoGral = await TratamientoGeneral.findOne({
@@ -173,6 +175,8 @@ const conveniosController = {
                             activo: true
                         }
                     })
+
+                    if (!tratamientoGral) { continue }
 
                     const pjTratamientoGeneral = await PjTratamientoGeneral.findOne({
                         where: {
