@@ -67,6 +67,7 @@ const rutinaController = {
                 //order: 
                 fk_idTratamientoPaciente: idTratamientoPaciente,
                 fk_idProfesional: idProfesional ? idProfesional : (idPersonaJuridica ? idPersonaJuridica : null),
+                isInstitucion: (idPersonaJuridica ? true : false),
                 profesional: nombreProfesionalToSet,
                 activo: true,
                 finalizada: false,

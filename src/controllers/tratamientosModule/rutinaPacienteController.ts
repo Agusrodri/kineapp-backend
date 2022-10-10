@@ -275,10 +275,13 @@ const rutinaPacienteController = {
             let usuarioProfesionalToNotificate = null;
             let institucionToNotificate = null;
             let usuarioInstitucionToNotificate = null;
-            if (rutina['dataValues']['fk_idProfesional']) {
+            if (!rutina['dataValues']['isInstitucion']) {
+
                 profesionalToNotificate = await Profesional.findByPk(rutina['dataValues']['fk_idProfesional']);
                 usuarioProfesionalToNotificate = await Usuario.findByPk(profesionalToNotificate['dataValues']['fk_idUsuario']);
+
             } else {
+
                 institucionToNotificate = await PersonaJuridica.findByPk(tratamientoPacienteToFind['dataValues']['fk_idPersonaJuridica']);
                 usuarioInstitucionToNotificate = await Usuario.findByPk(institucionToNotificate['dataValues']['fk_idUsuarios']);
             }
@@ -287,6 +290,7 @@ const rutinaPacienteController = {
             const usuarioPacienteToNotificate = await Usuario.findByPk(pacienteToNotificate['dataValues']['fk_idUsuario']);
 
             if (isComentarioPaciente == true) {
+
                 const notificationBody = `El paciente ${pacienteToNotificate['dataValues']['apellido']}, ${pacienteToNotificate['dataValues']['nombre']} realizó un comentario en su rutina activa.`;
                 if (profesionalToNotificate && usuarioProfesionalToNotificate['dataValues']['subscription']) {
 

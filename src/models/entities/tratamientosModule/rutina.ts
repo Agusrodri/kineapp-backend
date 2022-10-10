@@ -41,6 +41,10 @@ const Rutina = db.define('Rutina', {
 
     mostrarRutinaBandera: {
         type: DataTypes.BOOLEAN
+    },
+
+    isInstitucion: {
+        type: DataTypes.BOOLEAN
     }
 })
 
