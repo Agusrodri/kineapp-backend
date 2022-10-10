@@ -4,6 +4,10 @@ import ObraSocial from '../../models/entities/obrasSocialesModule/obraSocial';
 import { Op } from 'sequelize';
 import PlanTratamientoGeneral from '../../models/entities/obrasSocialesModule/planTratamientoGeneral';
 import TratamientoGeneral from '../../models/entities/obrasSocialesModule/tratamientoGeneral';
+import Paciente from '../../models/entities/usersModule/paciente';
+import Usuario from '../../models/entities/usersModule/usuario';
+import sendNotification from '../../helpers/sendNotification';
+import Notificacion from '../../models/entities/usersModule/notificacion';
 
 const obrasSocialesController = {
 
@@ -40,32 +44,32 @@ const obrasSocialesController = {
 
             const response = []
 
-            for(let i=0; i<planes.length; i++){
+            for (let i = 0; i < planes.length; i++) {
 
                 const planTratamientoGeneral = await PlanTratamientoGeneral.findAll({
                     where: {
                         fk_idPlan: planes[i]['dataValues']['id']
                     }
                 })
-    
+
                 const coberturas = []
-    
+
                 for (let i = 0; i < planTratamientoGeneral.length; i++) {
-    
+
                     const tratamiento = await TratamientoGeneral.findOne({
                         where: {
                             id: planTratamientoGeneral[i]['dataValues']['fk_idTratamientoGeneral'],
                             activo: true
                         }
                     })
-    
+
                     const cobertura = {
                         idTratamiento: tratamiento['dataValues']['id'],
                         tratamiento: tratamiento['dataValues']['nombre'],
                         porcentajeCobertura: planTratamientoGeneral[i]['dataValues']['porcentajeCobertura'],
                         comentarios: planTratamientoGeneral[i]['dataValues']['comentarios']
                     }
-    
+
                     coberturas.push(cobertura)
                 }
 
@@ -364,6 +368,7 @@ const obrasSocialesController = {
             const { idPlan } = req.params
             const { tratamientos } = req.body
 
+            let tratamientosNotificacion = []
             for (let i = 0; i < tratamientos.length; i++) {
 
                 const planTratamientoGeneralToFind = await PlanTratamientoGeneral.findOne({
@@ -373,8 +378,10 @@ const obrasSocialesController = {
                     }
                 })
 
+                const tratamientoGeneral = await TratamientoGeneral.findByPk(tratamientos[i]['idTratamientoGeneral']);
+                tratamientosNotificacion.push(tratamientoGeneral['dataValues']['nombre']);
+
                 if (planTratamientoGeneralToFind) {
-                    const tratamientoGeneral = await TratamientoGeneral.findByPk(tratamientos[i]['idTratamientoGeneral'])
                     throw new Error(`El tratamiento ${tratamientoGeneral['dataValues']['nombre']} ya se encuentra asociado al plan indicado, intente nuevamente.`)
                 }
 
@@ -385,6 +392,39 @@ const obrasSocialesController = {
                     fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral']
                 })
             }
+
+            let notificationBody = `Los siguientes tratamientos fueron agregados a tu plan: \n`
+
+            tratamientosNotificacion.forEach(tratamiento => {
+                notificationBody = notificationBody + '\n' + " - " + tratamiento
+            });
+
+            const pacientes = await Paciente.findAll({
+                where: {
+                    fk_idPlan: idPlan,
+                    activo: true
+                }
+            })
+
+            if (pacientes) {
+                for (let index = 0; index < pacientes.length; index++) {
+
+                    const usuario = pacientes[index]['dataValues']['fk_idUsuario'] ?
+                        await Usuario.findByPk(pacientes[index]['dataValues']['fk_idUsuario']) : null;
+
+                    if (usuario && usuario['dataValues']['subscription']) {
+
+                        await Notificacion.create({
+                            texto: notificationBody,
+                            check: false,
+                            fk_idUsuario: usuario['dataValues']['id'],
+                            titulo: "Actualización de Plan"
+                        })
+                        sendNotification(usuario['dataValues']['subscription'], notificationBody)
+                    }
+                }
+            }
+
             res.status(200).json({
                 msg: "Los tratamientos se agregaron al plan correctamente."
             })

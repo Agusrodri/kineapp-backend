@@ -5,6 +5,11 @@ import RutinaEjercicio from '../../models/entities/tratamientosModule/rutinaEjer
 import Profesional from '../../models/entities/usersModule/profesional';
 import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
 import Ejercicio from '../../models/entities/tratamientosModule/ejercicio';
+import Paciente from '../../models/entities/usersModule/paciente';
+import Usuario from '../../models/entities/usersModule/usuario';
+import Notificacion from '../../models/entities/usersModule/notificacion';
+import TratamientoParticular from '../../models/entities/obrasSocialesModule/tratamientoParticular';
+import sendNotification from '../../helpers/sendNotification';
 
 const rutinaController = {
 
@@ -12,8 +17,8 @@ const rutinaController = {
 
         try {
 
-            const { idTratamientoPaciente } = req.params
-            const { idPersonaJuridica, idProfesional, ejercicios } = req.body //consultar si pasar también el orden
+            const { idTratamientoPaciente } = req.params;
+            const { idPersonaJuridica, idProfesional, ejercicios } = req.body;
             const tratamientoPaciente = await TratamientoPaciente.findOne({
                 where: {
                     id: idTratamientoPaciente,
@@ -100,6 +105,39 @@ const rutinaController = {
                 dateLastRacha: newRutina['dataValues']['dateLastRacha'],
                 rutinaEjercicios: ejerciciosRutina
 
+            }
+
+            const paciente = await Paciente.findOne({
+                where: {
+                    id: tratamientoPaciente['dataValues']['fk_idPaciente'],
+                    activo: true
+                }
+            })
+
+            const tratamientoParticular = await TratamientoParticular.findOne({
+                where: {
+                    id: tratamientoPaciente['dataValues']['fk_idTratamiento'],
+                    activo: true
+                }
+            })
+
+            const nombreTratamiento = tratamientoParticular ? ` dentro del tratamiento ${tratamientoParticular['dataValues']['nombre']}.` : `.`;
+
+            if (paciente && paciente['dataValues']['fk_idUsuario']) {
+
+                const notificationBody = `El profesional ${newRutina['dataValues']['profesional']} te asignó una rutina${nombreTratamiento}`
+                const usuario = await Usuario.findByPk(paciente['dataValues']['fk_idUsuario']);
+
+                if (usuario && usuario['dataValues']['subscription']) {
+
+                    await Notificacion.create({
+                        texto: notificationBody,
+                        check: false,
+                        fk_idUsuario: usuario['dataValues']['id'],
+                        titulo: "Actualización de Plan"
+                    })
+                    sendNotification(usuario['dataValues']['subscription'], notificationBody)
+                }
             }
 
             res.status(200).json({
