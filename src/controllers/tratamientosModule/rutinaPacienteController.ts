@@ -11,6 +11,7 @@ import Usuario from '../../models/entities/usersModule/usuario';
 import sendNotification from '../../helpers/sendNotification';
 import Paciente from '../../models/entities/usersModule/paciente';
 import Notificacion from '../../models/entities/usersModule/notificacion';
+import PersonaJuridica from 'models/entities/usersModule/personaJuridica';
 
 const rutinaPacienteController = {
 
@@ -268,16 +269,26 @@ const rutinaPacienteController = {
                 fk_idRutina: Number(idRutina)
             })
 
-            const profesionalToNotificate = await Profesional.findByPk(rutina['dataValues']['fk_idProfesional']);
-            const usuarioProfesionalToNotificate = await Usuario.findByPk(profesionalToNotificate['dataValues']['fk_idUsuario']);
             const tratamientoPacienteToFind = await TratamientoPaciente.findByPk(rutina['dataValues']['fk_idTratamientoPaciente']);
+
+            let profesionalToNotificate = null;
+            let usuarioProfesionalToNotificate = null;
+            let institucionToNotificate = null;
+            let usuarioInstitucionToNotificate = null;
+            if (rutina['dataValues']['fk_idProfesional']) {
+                profesionalToNotificate = await Profesional.findByPk(rutina['dataValues']['fk_idProfesional']);
+                usuarioProfesionalToNotificate = await Usuario.findByPk(profesionalToNotificate['dataValues']['fk_idUsuario']);
+            } else {
+                institucionToNotificate = await PersonaJuridica.findByPk(tratamientoPacienteToFind['dataValues']['fk_idPersonaJuridica']);
+                usuarioInstitucionToNotificate = await Usuario.findByPk(institucionToNotificate['dataValues']['fk_idUsuarios']);
+            }
+
             const pacienteToNotificate = await Paciente.findByPk(tratamientoPacienteToFind['dataValues']['fk_idPaciente']);
             const usuarioPacienteToNotificate = await Usuario.findByPk(pacienteToNotificate['dataValues']['fk_idUsuario']);
 
             if (isComentarioPaciente == true) {
-
-                if (usuarioProfesionalToNotificate['dataValues']['subscription']) {
-                    const notificationBody = `El paciente ${pacienteToNotificate['dataValues']['apellido']}, ${pacienteToNotificate['dataValues']['nombre']} realizó un comentario en su rutina activa.`;
+                const notificationBody = `El paciente ${pacienteToNotificate['dataValues']['apellido']}, ${pacienteToNotificate['dataValues']['nombre']} realizó un comentario en su rutina activa.`;
+                if (profesionalToNotificate && usuarioProfesionalToNotificate['dataValues']['subscription']) {
 
                     await Notificacion.create({
                         texto: notificationBody,
@@ -286,7 +297,17 @@ const rutinaPacienteController = {
                         titulo: "Nuevo comentario de paciente en rutina"
                     })
 
-                    sendNotification(usuarioProfesionalToNotificate['dataValues']['subscription'], notificationBody)
+                    sendNotification(usuarioProfesionalToNotificate['dataValues']['subscription'], notificationBody);
+                } else if (institucionToNotificate && usuarioInstitucionToNotificate['dataValues']['subscription']) {
+
+                    await Notificacion.create({
+                        texto: notificationBody,
+                        check: false,
+                        fk_idUsuario: usuarioInstitucionToNotificate['dataValues']['id'],
+                        titulo: "Nuevo comentario de paciente en rutina"
+                    })
+
+                    sendNotification(usuarioInstitucionToNotificate['dataValues']['subscription'], notificationBody);
                 }
             } else {
 
