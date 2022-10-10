@@ -19,6 +19,7 @@ export default async (pushSubscription: string, body: string) => {
             "body": body,
             "vibrate": [100, 50, 100],
             "image": "",
+            "icon": "https://drive.google.com/file/d/13eBwmAiBEu8fRP5qf3ok6n41JoPDARXA/view?usp=sharing",
             /**"data": {
              * "dateOfArrival": Date.now(),
              * "primaryKey": 1
