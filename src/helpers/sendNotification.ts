@@ -26,7 +26,7 @@ export default async (pushSubscription: string, body: string) => {
              * } */
             "actions": [{
                 "action": "explore",
-                "title": "Go to the site"
+                "title": "Ver notificaciones"
             }]
         }
     }

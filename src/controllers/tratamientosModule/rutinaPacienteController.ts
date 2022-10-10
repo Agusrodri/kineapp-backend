@@ -275,23 +275,28 @@ const rutinaPacienteController = {
             let usuarioProfesionalToNotificate = null;
             let institucionToNotificate = null;
             let usuarioInstitucionToNotificate = null;
+            let notificationBodyPaciente = "";
             if (!rutina['dataValues']['isInstitucion']) {
 
                 profesionalToNotificate = await Profesional.findByPk(rutina['dataValues']['fk_idProfesional']);
                 usuarioProfesionalToNotificate = await Usuario.findByPk(profesionalToNotificate['dataValues']['fk_idUsuario']);
+                notificationBodyPaciente = `El profesional ${profesionalToNotificate['dataValues']['apellido']}, ${profesionalToNotificate['dataValues']['nombre']} realizó un comentario en tu rutina activa.`
 
             } else {
 
                 institucionToNotificate = await PersonaJuridica.findByPk(tratamientoPacienteToFind['dataValues']['fk_idPersonaJuridica']);
                 usuarioInstitucionToNotificate = await Usuario.findByPk(institucionToNotificate['dataValues']['fk_idUsuarios']);
+                notificationBodyPaciente = `La institución "${institucionToNotificate['dataValues']['nombre']}" realizó un comentario en tu rutina activa.`
             }
 
             const pacienteToNotificate = await Paciente.findByPk(tratamientoPacienteToFind['dataValues']['fk_idPaciente']);
             const usuarioPacienteToNotificate = await Usuario.findByPk(pacienteToNotificate['dataValues']['fk_idUsuario']);
 
+
             if (isComentarioPaciente == true) {
 
                 const notificationBody = `El paciente ${pacienteToNotificate['dataValues']['apellido']}, ${pacienteToNotificate['dataValues']['nombre']} realizó un comentario en su rutina activa.`;
+
                 if (profesionalToNotificate && usuarioProfesionalToNotificate['dataValues']['subscription']) {
 
                     await Notificacion.create({
@@ -316,16 +321,15 @@ const rutinaPacienteController = {
             } else {
 
                 if (usuarioPacienteToNotificate['dataValues']['subscription']) {
-                    const notificationBody = `El profesional ${profesionalToNotificate['dataValues']['apellido']}, ${profesionalToNotificate['dataValues']['nombre']} realizó un comentario en tu rutina activa.`;
 
                     await Notificacion.create({
-                        texto: notificationBody,
+                        texto: notificationBodyPaciente,
                         check: false,
                         fk_idUsuario: usuarioPacienteToNotificate['dataValues']['id'],
                         titulo: "Nuevo comentario de profesional en rutina"
                     })
 
-                    sendNotification(usuarioPacienteToNotificate['dataValues']['subscription'], notificationBody)
+                    sendNotification(usuarioPacienteToNotificate['dataValues']['subscription'], notificationBodyPaciente)
                 }
             }
 
