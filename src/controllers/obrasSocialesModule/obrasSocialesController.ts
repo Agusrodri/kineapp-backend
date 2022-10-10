@@ -474,7 +474,7 @@ const obrasSocialesController = {
 
                     const usuarioInstitucionToNotificate = await Usuario.findByPk(institucionToNotificate['dataValues']['fk_idUsuarios']);
                     const idInstitucion = institucionToNotificate['dataValues']['id'];
-                    const idConvenio = convenios[index]['dataValues']['fk_idPersonaJuridica'];
+                    const idConvenio = convenios[index]['dataValues']['id'];
                     if (usuarioInstitucionToNotificate && usuarioInstitucionToNotificate['dataValues']['subscription']) {
 
                         await Notificacion.create({
@@ -486,9 +486,7 @@ const obrasSocialesController = {
                         })
                         sendNotification(usuarioInstitucionToNotificate['dataValues']['subscription'], notificationBody)
                     }
-
                 }
-
             }
 
             res.status(200).json({
@@ -615,7 +613,7 @@ const obrasSocialesController = {
 
                     const usuarioInstitucionToNotificate = await Usuario.findByPk(institucionToNotificate['dataValues']['fk_idUsuarios']);
                     const idInstitucion = institucionToNotificate['dataValues']['id'];
-                    const idConvenio = convenios[index]['dataValues']['fk_idPersonaJuridica'];
+                    const idConvenio = convenios[index]['dataValues']['id'];
                     if (usuarioInstitucionToNotificate && usuarioInstitucionToNotificate['dataValues']['subscription']) {
 
                         await Notificacion.create({
