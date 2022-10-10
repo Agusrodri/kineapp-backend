@@ -11,7 +11,7 @@ import Usuario from '../../models/entities/usersModule/usuario';
 import sendNotification from '../../helpers/sendNotification';
 import Paciente from '../../models/entities/usersModule/paciente';
 import Notificacion from '../../models/entities/usersModule/notificacion';
-import PersonaJuridica from 'models/entities/usersModule/personaJuridica';
+import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
 
 const rutinaPacienteController = {
 
