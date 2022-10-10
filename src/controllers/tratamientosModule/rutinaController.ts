@@ -134,7 +134,7 @@ const rutinaController = {
                         texto: notificationBody,
                         check: false,
                         fk_idUsuario: usuario['dataValues']['id'],
-                        titulo: "Actualización de Plan"
+                        titulo: "Asignación de Rutina"
                     })
                     sendNotification(usuario['dataValues']['subscription'], notificationBody)
                 }
