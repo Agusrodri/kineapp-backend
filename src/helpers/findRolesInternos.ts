@@ -12,16 +12,18 @@ export default async (idUsuario: number) => {
         }
     })
 
-    if (!profesionalToFind) { return }
+    if (!profesionalToFind) { return [] }
 
     const pjProfesionales = await PersonaJuridicaProfesional.findAll({
         where: {
-            fk_idProfesional: profesionalToFind['dataValues']['id']
+            fk_idProfesional: profesionalToFind['dataValues']['id'],
+            activo: true
         }
     })
 
-    const rolesInternosResponse = []
+    if (!pjProfesionales) { return [] }
 
+    const rolesInternosResponse = []
     for (let i = 0; i < pjProfesionales.length; i++) {
 
         const { fk_idPersonaJuridica, fk_idRolInterno } = pjProfesionales[i]['dataValues']

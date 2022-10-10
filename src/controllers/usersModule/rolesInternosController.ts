@@ -5,7 +5,6 @@ import RolInternoPermisoInterno from "../../models/entities/usersModule/rolInter
 import PersonaJuridica from "../../models/entities/usersModule/personaJuridica"
 import PermisoInterno from "../../models/entities/usersModule/permisoInterno"
 
-
 const rolesInternosController = {
 
     getRolesInternos: async (req: Request, res: Response) => {

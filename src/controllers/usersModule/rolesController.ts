@@ -1,12 +1,10 @@
 import { NextFunction, Request, Response } from "express"
 import { Op, Sequelize } from "sequelize"
-
 import Rol from "../../models/entities/usersModule/rol";
 import RolPermiso from "../../models/entities/usersModule/rolPermiso";
 import Permiso from "../../models/entities/usersModule/permiso";
 import findRoles from "../../helpers/findRoles";
 import findRolesInternos from "../../helpers/findRolesInternos";
-
 
 const rolesController = {
 
@@ -16,7 +14,7 @@ const rolesController = {
 
             const roles = await Rol.findAll({
                 where: {
-                    id: {[Op.notIn]: [1, 74]},
+                    id: { [Op.notIn]: [1, 74] },
                     activo: true
                 }
             })

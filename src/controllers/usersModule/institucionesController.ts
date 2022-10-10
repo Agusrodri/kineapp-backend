@@ -262,8 +262,6 @@ const institucionesController = {
                 throw new Error("No se encontró la institución solicitada.")
             }
 
-
-
             const usuario = await Usuario.findOne({
                 where: {
                     id: personaJuridicaToHabilitar['dataValues']['fk_idUsuarios'],

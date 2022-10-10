@@ -2,7 +2,6 @@ import { Request, Response } from "express"
 import { Op } from 'sequelize';
 import TratamientoGeneral from "../../models/entities/obrasSocialesModule/tratamientoGeneral";
 
-
 const tratamientosGeneralesController = {
 
     getTratamientosGenerales: async (req: Request, res: Response) => {
@@ -29,7 +28,6 @@ const tratamientosGeneralesController = {
         try {
 
             const { idTratamientoGeneral } = req.params
-
             const tratamientoGeneral = await TratamientoGeneral.findOne({
                 where: {
                     id: idTratamientoGeneral,
@@ -55,7 +53,6 @@ const tratamientosGeneralesController = {
         try {
 
             const { nombre, descripcion } = req.body
-
             const tratamientoToFind = await TratamientoGeneral.findOne({
                 where: {
                     nombre: nombre,
@@ -160,8 +157,6 @@ const tratamientosGeneralesController = {
         }
     }
 
-
 }
-
 
 export default tratamientosGeneralesController;

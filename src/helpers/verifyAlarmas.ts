@@ -72,7 +72,7 @@ export default async () => {
                             check: false,
                             fk_idUsuario: usuarioToFind['dataValues']['id'],
                             titulo: "Recordatorio rutina",
-                            router: `app/tratamientos-paciente/${idPaciente}/${idTratamientoPaciente}/${idRutina}`
+                            router: `app/tratamientos-paciente/${idPaciente}/${idTratamientoPaciente}`
                         })
 
                         sendNotification(usuarioToFind['dataValues']['subscription'], notificationBody)
