@@ -18,6 +18,10 @@ const Notificacion = db.define('Notificacione', {
 
     titulo: {
         type: DataTypes.STRING
+    },
+
+    router: {
+        type: DataTypes.STRING
     }
 })
 

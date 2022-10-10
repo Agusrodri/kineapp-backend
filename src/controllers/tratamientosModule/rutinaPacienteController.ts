@@ -293,6 +293,9 @@ const rutinaPacienteController = {
             const usuarioPacienteToNotificate = await Usuario.findByPk(pacienteToNotificate['dataValues']['fk_idUsuario']);
 
 
+            const idInstitucion = tratamientoPacienteToFind['dataValues']['fk_idPersonaJuridica'];
+            const idPaciente = tratamientoPacienteToFind['dataValues']['fk_idPaciente'];
+            const idTratamiento = rutina['dataValues']['fk_idTratamientoPaciente'];
             if (isComentarioPaciente == true) {
 
                 const notificationBody = `El paciente ${pacienteToNotificate['dataValues']['apellido']}, ${pacienteToNotificate['dataValues']['nombre']} realizó un comentario en su rutina activa.`;
@@ -303,7 +306,8 @@ const rutinaPacienteController = {
                         texto: notificationBody,
                         check: false,
                         fk_idUsuario: usuarioProfesionalToNotificate['dataValues']['id'],
-                        titulo: "Nuevo comentario de paciente en rutina"
+                        titulo: "Nuevo comentario de paciente en rutina",
+                        router: `app/pacientes/${idInstitucion}/${idPaciente}/${idTratamiento}/${idRutina}/avance`
                     })
 
                     sendNotification(usuarioProfesionalToNotificate['dataValues']['subscription'], notificationBody);
@@ -313,7 +317,8 @@ const rutinaPacienteController = {
                         texto: notificationBody,
                         check: false,
                         fk_idUsuario: usuarioInstitucionToNotificate['dataValues']['id'],
-                        titulo: "Nuevo comentario de paciente en rutina"
+                        titulo: "Nuevo comentario de paciente en rutina",
+                        router: `app/pacientes/${idInstitucion}/${idPaciente}/${idTratamiento}/${idRutina}/avance`
                     })
 
                     sendNotification(usuarioInstitucionToNotificate['dataValues']['subscription'], notificationBody);
@@ -326,7 +331,8 @@ const rutinaPacienteController = {
                         texto: notificationBodyPaciente,
                         check: false,
                         fk_idUsuario: usuarioPacienteToNotificate['dataValues']['id'],
-                        titulo: "Nuevo comentario de profesional en rutina"
+                        titulo: "Nuevo comentario de profesional en rutina",
+                        router: `app/tratamientos-paciente/${idPaciente}/${idTratamiento}/${idRutina}/comments`
                     })
 
                     sendNotification(usuarioPacienteToNotificate['dataValues']['subscription'], notificationBodyPaciente)
