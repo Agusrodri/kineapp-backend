@@ -507,20 +507,6 @@ const obrasSocialesController = {
             const { idPlan } = req.params
             const { nombre, tratamientos } = req.body
 
-            const planNombre = await Plan.findOne({
-                where: {
-                    id: {
-                        [Op.notIn]: [idPlan]
-                    },
-                    nombre: nombre,
-                    activo: true
-                }
-            })
-
-            if (planNombre) {
-                throw new Error("El nombre de plan solicitado ya se encuentra en uso. Ingrese uno nuevo.")
-            }
-
             const planToEdit = await Plan.findOne({
                 where: {
                     id: idPlan,
@@ -530,6 +516,21 @@ const obrasSocialesController = {
 
             if (!planToEdit) {
                 throw new Error("No existe el plan solicitado.")
+            }
+
+            const planNombre = await Plan.findOne({
+                where: {
+                    id: {
+                        [Op.notIn]: [idPlan]
+                    },
+                    nombre: nombre,
+                    fk_idObraSocial: planToEdit['dataValues']['fk_idObraSocial'],
+                    activo: true
+                }
+            })
+
+            if (planNombre) {
+                throw new Error("El nombre de plan solicitado ya se encuentra en uso. Ingrese uno nuevo.")
             }
 
             const idObraSocial = planToEdit['dataValues']['fk_idObraSocial'];
