@@ -25,6 +25,14 @@ const Turno = db.define('Turno', {
 
     estado: {
         type: DataTypes.STRING
+    },
+
+    obraSocial: {
+        type: DataTypes.STRING
+    },
+
+    plan: {
+        type: DataTypes.STRING
     }
 })
 

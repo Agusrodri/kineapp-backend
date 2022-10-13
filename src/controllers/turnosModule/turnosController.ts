@@ -81,7 +81,12 @@ const turnosController = {
         try {
 
             const { idPersonaJuridica, idPaciente } = req.params;
-            const { horario, idTratamientoParticular, monto, nombrePersonaJuridica } = req.body;
+            const { horario,
+                idTratamientoParticular,
+                monto,
+                nombrePersonaJuridica,
+                obraSocial,
+                plan } = req.body;
 
             const configTurnos = await ConfiguracionTurnos.findOne({
                 where: {
@@ -110,8 +115,19 @@ const turnosController = {
                 fk_idPersonaJuridica: Number(idPersonaJuridica),
                 monto: monto,
                 fk_idTratamiento: idTratamientoParticular,
-                estado: "confirmado"
+                estado: "confirmado",
+                obraSocial: obraSocial,
+                plan: plan
             })
+
+            const tratamiento = await TratamientoParticular.findOne({
+                where: {
+                    id: newTurno['dataValues']['fk_idTratamiento'],
+                    fk_idPersonaJuridica: newTurno['dataValues']['fk_idPersonaJuridica'],
+                    activo: true
+                }
+            });
+
 
             const response = {
                 id: newTurno['dataValues']['id'],
@@ -121,7 +137,10 @@ const turnosController = {
                 monto: newTurno['dataValues']['monto'],
                 fk_idTratamiento: newTurno['dataValues']['fk_idTratamiento'],
                 estado: newTurno['dataValues']['estado'],
-                nombrePersonaJuridica
+                obraSocial: newTurno['dataValues']['obraSocial'],
+                plan: newTurno['dataValues']['plan'],
+                nombrePersonaJuridica,
+                tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null
             }
 
             res.status(200).json({
@@ -168,6 +187,14 @@ const turnosController = {
 
                 if (!institucion) { continue }
 
+                const tratamiento = await TratamientoParticular.findOne({
+                    where: {
+                        id: turnos[index]['dataValues']['fk_idTratamiento'],
+                        fk_idPersonaJuridica: turnos[index]['dataValues']['fk_idPersonaJuridica'],
+                        activo: true
+                    }
+                });
+
                 const response = {
                     id: turnos[index]['dataValues']['id'],
                     horario: turnos[index]['dataValues']['horario'],
@@ -176,7 +203,10 @@ const turnosController = {
                     monto: turnos[index]['dataValues']['monto'],
                     fk_idTratamiento: turnos[index]['dataValues']['fk_idTratamiento'],
                     estado: turnos[index]['dataValues']['estado'],
-                    nombrePersonaJuridica: institucion['dataValues']['nombre']
+                    obraSocial: turnos[index]['dataValues']['obraSocial'],
+                    plan: turnos[index]['dataValues']['plan'],
+                    nombrePersonaJuridica: institucion['dataValues']['nombre'],
+                    tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null
                 }
 
                 responses.push(response)
@@ -196,7 +226,6 @@ const turnosController = {
         try {
 
             const { idTurno } = req.params;
-
             const turno = await Turno.findByPk(idTurno);
 
             if (!turno) { throw new Error("No existe el turno solicitado.") }
@@ -224,11 +253,189 @@ const turnosController = {
                 monto: turno['dataValues']['monto'],
                 fk_idTratamiento: turno['dataValues']['fk_idTratamiento'],
                 estado: turno['dataValues']['estado'],
+                obraSocial: turno['dataValues']['obraSocial'],
+                plan: turno['dataValues']['plan'],
                 nombrePersonaJuridica: institucion ? institucion['dataValues']['nombre'] : null,
                 tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null
             }
 
-            res.status(200).json(response)
+            res.status(200).json(response);
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    verificarHorasBeforeTurno: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idTurno } = req.params;
+            const turno = await Turno.findByPk(idTurno);
+
+            if (!turno) { throw new Error("No existe el turno solicitado.") }
+
+            const dateTurno = new Date(turno['dataValues']['horario']).getTime();
+            const today = new Date();
+            const todayUTC = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours() + 3, today.getMinutes(), today.getSeconds());
+
+            //129600 seg -> 36 horas
+            const difDates = (dateTurno - todayUTC) / 1000;
+
+            if (difDates < 129600) {
+                throw new Error("No fue posible modificar el turno. El mismo debe modificarse con 36 horas de anterioridad como máximo.")
+            }
+
+            res.status(200).json({
+                msg: "Modificación aceptada."
+            })
+
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    modificarTurno: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idTurno } = req.params;
+            const { horario,
+                idTratamientoParticular,
+                monto,
+                nombrePersonaJuridica,
+                idPersonaJuridica } = req.body;
+
+            const turnoToEdit = await Turno.findByPk(idTurno);
+
+            if (!turnoToEdit) { throw new Error("No existe el turno solicitado.") }
+
+            if (turnoToEdit['dataValues']['estado'] != "confirmado") {
+                throw new Error("No fue posible modificar el turno ya que el mismo fue cancelado.")
+            }
+
+            await turnoToEdit.update({
+                horario: horario,
+                fk_idTratamiento: idTratamientoParticular,
+                fk_idPersonaJuridica: idPersonaJuridica,
+                monto: monto
+            })
+
+            const tratamiento = await TratamientoParticular.findOne({
+                where: {
+                    id: turnoToEdit['dataValues']['fk_idTratamiento'],
+                    fk_idPersonaJuridica: turnoToEdit['dataValues']['fk_idPersonaJuridica'],
+                    activo: true
+                }
+            });
+
+            const response = {
+                id: turnoToEdit['dataValues']['id'],
+                horario: turnoToEdit['dataValues']['horario'],
+                fk_idPaciente: turnoToEdit['dataValues']['fk_idPaciente'],
+                fk_idPersonaJuridica: turnoToEdit['dataValues']['fk_idPersonaJuridica'],
+                monto: turnoToEdit['dataValues']['monto'],
+                fk_idTratamiento: turnoToEdit['dataValues']['fk_idTratamiento'],
+                estado: turnoToEdit['dataValues']['estado'],
+                obraSocial: turnoToEdit['dataValues']['obraSocial'],
+                plan: turnoToEdit['dataValues']['plan'],
+                nombrePersonaJuridica,
+                tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null
+            }
+
+            res.status(200).json({
+                msg: "Turno actualizado con éxito.",
+                turno: response
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    cancelarTurno: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idTurno } = req.params;
+
+            const turnoToCancel = await Turno.findByPk(idTurno);
+
+            if (!turnoToCancel) { throw new Error("No existe el turno solicitado.") }
+
+            await turnoToCancel.update({ estado: "cancelado" })
+
+            res.status(200).json({
+                msg: "Turno cancelado con éxito."
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    getAllTurnosInstitucion: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idPersonaJuridica } = req.params;
+
+            const turnos = await Turno.findAll({
+                where: {
+                    fk_idPersonaJuridica: idPersonaJuridica
+                }
+            })
+
+            if (!turnos) {
+                throw new Error("La insitución no posee turnos.")
+            }
+
+            const turnosResponse = []
+            for (let index = 0; index < turnos.length; index++) {
+
+                const paciente = await Paciente.findOne({
+                    where: {
+                        id: turnos[index]['dataValues']['fk_idPaciente'],
+                        activo: true
+                    }
+                })
+
+                if (!paciente) { continue }
+
+                const tratamiento = await TratamientoParticular.findOne({
+                    where: {
+                        id: turnos[index]['dataValues']['fk_idTratamiento'],
+                        fk_idPersonaJuridica: turnos[index]['dataValues']['fk_idPersonaJuridica'],
+                        activo: true
+                    }
+                });
+
+                const turnoResponse = {
+                    id: turnos[index]['dataValues']['id'],
+                    horario: turnos[index]['dataValues']['horario'],
+                    fk_idPaciente: turnos[index]['dataValues']['fk_idPaciente'],
+                    fk_idPersonaJuridica: turnos[index]['dataValues']['fk_idPersonaJuridica'],
+                    monto: turnos[index]['dataValues']['monto'],
+                    fk_idTratamiento: turnos[index]['dataValues']['fk_idTratamiento'],
+                    estado: turnos[index]['dataValues']['estado'],
+                    obraSocial: turnos[index]['dataValues']['obraSocial'],
+                    plan: turnos[index]['dataValues']['plan'],
+                    tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null
+                }
+
+                turnosResponse.push(turnoResponse);
+            }
+
+            res.status(200).json(turnosResponse);
 
         } catch (error) {
             res.status(500).json({

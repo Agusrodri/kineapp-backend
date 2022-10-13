@@ -7,5 +7,6 @@ router.post("/calcularMonto/:idPersonaJuridica/:idPaciente", turnosController.ca
 router.post("/guardarTurno/:idPersonaJuridica/:idPaciente", turnosController.guardarTurno);
 router.get("/turnosPaciente/:idPersonaJuridica/:idPaciente", turnosController.getTurnos);
 router.get("/turnoById/:idTurno", turnosController.getTurnoById);
+router.get("/verifyHorasTurno/:idTurno", turnosController.verificarHorasBeforeTurno);
 
 export default router;
