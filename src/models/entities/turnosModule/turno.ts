@@ -20,7 +20,7 @@ const Turno = db.define('Turno', {
     },
 
     monto: {
-        type: DataTypes.INTEGER
+        type: DataTypes.FLOAT
     },
 
     estado: {
