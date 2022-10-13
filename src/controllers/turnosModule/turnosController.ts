@@ -101,6 +101,18 @@ const turnosController = {
                 }
             })
 
+            const turno = await Turno.findOne({
+                where: {
+                    horario: horario,
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    fk_idPaciente: idPaciente
+                }
+            })
+
+            if (turno) {
+                throw new Error("Ya posee un turno asignado en este horario.")
+            }
+
             if (!configTurnos && turnosToFind && turnosToFind.length >= 1) {
                 throw new Error("Horario ocupado.")
             }
