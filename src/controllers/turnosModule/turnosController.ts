@@ -1,4 +1,7 @@
 import { Request, Response } from 'express';
+import sendNotification from '../../helpers/sendNotification';
+import Notificacion from '../../models/entities/usersModule/notificacion';
+import Usuario from '../../models/entities/usersModule/usuario';
 import PlanTratamientoGeneral from '../../models/entities/obrasSocialesModule/planTratamientoGeneral';
 import TratamientoParticular from '../../models/entities/obrasSocialesModule/tratamientoParticular';
 import ConfiguracionTurnos from '../../models/entities/turnosModule/configuracionTurnos';
@@ -127,7 +130,7 @@ const turnosController = {
                 fk_idPersonaJuridica: Number(idPersonaJuridica),
                 monto: monto,
                 fk_idTratamiento: idTratamientoParticular,
-                estado: "confirmado",
+                estado: "a confirmar",
                 obraSocial: obraSocial,
                 plan: plan
             })
@@ -139,7 +142,6 @@ const turnosController = {
                     activo: true
                 }
             });
-
 
             const response = {
                 id: newTurno['dataValues']['id'],
@@ -242,6 +244,13 @@ const turnosController = {
 
             if (!turno) { throw new Error("No existe el turno solicitado.") }
 
+            const paciente = await Paciente.findOne({
+                where: {
+                    id: turno['dataValues']['fk_idPaciente'],
+                    activo: true
+                }
+            })
+
             const tratamiento = await TratamientoParticular.findOne({
                 where: {
                     id: turno['dataValues']['fk_idTratamiento'],
@@ -268,7 +277,8 @@ const turnosController = {
                 obraSocial: turno['dataValues']['obraSocial'],
                 plan: turno['dataValues']['plan'],
                 nombrePersonaJuridica: institucion ? institucion['dataValues']['nombre'] : null,
-                tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null
+                tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null,
+                paciente: paciente ? `${paciente['dataValues']['apellido']}, ${paciente['dataValues']['nombre']}` : null
             }
 
             res.status(200).json(response);
@@ -297,11 +307,15 @@ const turnosController = {
             const difDates = (dateTurno - todayUTC) / 1000;
 
             if (difDates < 129600) {
-                throw new Error("No fue posible modificar el turno. El mismo debe modificarse con 36 horas de anterioridad como máximo.")
+                return res.status(500).json({
+                    msg: "No fue posible modificar el turno. El mismo debe modificarse con 36 horas de anterioridad como máximo.",
+                    bandera: false
+                })
             }
 
             res.status(200).json({
-                msg: "Modificación aceptada."
+                msg: "Modificación aceptada.",
+                bandera: true
             })
 
 
@@ -441,13 +455,74 @@ const turnosController = {
                     estado: turnos[index]['dataValues']['estado'],
                     obraSocial: turnos[index]['dataValues']['obraSocial'],
                     plan: turnos[index]['dataValues']['plan'],
-                    tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null
+                    tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null,
+                    paciente: `${paciente['dataValues']['apellido']}, ${paciente['dataValues']['nombre']}`
                 }
 
                 turnosResponse.push(turnoResponse);
             }
 
             res.status(200).json(turnosResponse);
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    eliminarTurnoFromInstitucion: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idTurno } = req.params;
+
+            const turnoToDelete = await Turno.findByPk(idTurno);
+            if (!turnoToDelete) { throw new Error("No existe el turno solicitado.") }
+
+            const paciente = await Paciente.findOne({
+                where: {
+                    id: turnoToDelete['dataValues']['fk_idPaciente'],
+                    activo: true
+                }
+            })
+
+            if (!paciente) {
+                throw new Error("No existe un paciente relacionado al turno solicitado.")
+            }
+
+            let pacienteConUsuario: boolean = false;
+
+            paciente['dataValues']['fk_idUsuario'] ? pacienteConUsuario = true : pacienteConUsuario = false;
+
+            await Turno.destroy({
+                where: {
+                    id: idTurno
+                }
+            });
+
+            if (paciente['dataValues']['fk_idUsuario']) {
+                const usuario = await Usuario.findByPk(paciente['dataValues']['fk_idUsuario']);
+
+                if (usuario && usuario['dataValues']['subscription']) {
+                    const notificationBody = `Te informamos que el turno agendado para el ${turnoToDelete['dataValues']['horario']} ha sido cancelado por la institución.`;
+
+                    await Notificacion.create({
+                        texto: notificationBody,
+                        check: false,
+                        fk_idUsuario: usuario['dataValues']['id'],
+                        titulo: "Cancelación de turno",
+                        router: `a definir`
+                    })
+
+                    sendNotification(usuario['dataValues']['subscription'], notificationBody)
+                }
+            }
+
+            res.status(200).json({
+                msg: "Turno eliminado correctamente.",
+                pacienteConUsuario
+            });
 
         } catch (error) {
             res.status(500).json({

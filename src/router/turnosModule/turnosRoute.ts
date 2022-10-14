@@ -11,6 +11,7 @@ router.get("/verifyHorasTurno/:idTurno", turnosController.verificarHorasBeforeTu
 router.put("/modificarTurno/:idTurno", turnosController.modificarTurno);
 router.delete("/cancelarTurno/:idTurno", turnosController.cancelarTurno);
 router.get("/turnosInstitucion/:idPersonaJuridica", turnosController.getAllTurnosInstitucion);
+router.delete("/eliminarTurno/:idTurno", turnosController.eliminarTurnoFromInstitucion);
 
 
 export default router;
