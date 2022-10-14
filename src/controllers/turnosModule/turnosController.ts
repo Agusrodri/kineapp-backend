@@ -10,6 +10,7 @@ import Paciente from '../../models/entities/usersModule/paciente';
 import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
 import ObraSocial from '../../models/entities/obrasSocialesModule/obraSocial';
 import Plan from '../../models/entities/obrasSocialesModule/plan';
+import { Op } from 'sequelize/types';
 
 const turnosController = {
 
@@ -200,7 +201,10 @@ const turnosController = {
 
             const turnos = await Turno.findAll({
                 where: {
-                    fk_idPaciente: idPaciente
+                    fk_idPaciente: idPaciente,
+                    estado: {
+                        [Op.notIn]: ["cancelado"]
+                    }
                 }
             })
 
