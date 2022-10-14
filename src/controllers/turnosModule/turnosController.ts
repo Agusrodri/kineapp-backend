@@ -10,7 +10,7 @@ import Paciente from '../../models/entities/usersModule/paciente';
 import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
 import ObraSocial from '../../models/entities/obrasSocialesModule/obraSocial';
 import Plan from '../../models/entities/obrasSocialesModule/plan';
-import { Op } from 'sequelize/types';
+import { Op } from 'sequelize';
 
 const turnosController = {
 
