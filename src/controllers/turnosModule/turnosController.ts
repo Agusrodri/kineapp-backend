@@ -8,6 +8,8 @@ import ConfiguracionTurnos from '../../models/entities/turnosModule/configuracio
 import Turno from '../../models/entities/turnosModule/turno';
 import Paciente from '../../models/entities/usersModule/paciente';
 import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
+import ObraSocial from '../../models/entities/obrasSocialesModule/obraSocial';
+import Plan from '../../models/entities/obrasSocialesModule/plan';
 
 const turnosController = {
 
@@ -87,9 +89,8 @@ const turnosController = {
             const { horario,
                 idTratamientoParticular,
                 monto,
-                nombrePersonaJuridica,
-                obraSocial,
-                plan } = req.body;
+                nombrePersonaJuridica
+            } = req.body;
 
             const configTurnos = await ConfiguracionTurnos.findOne({
                 where: {
@@ -124,6 +125,20 @@ const turnosController = {
                 throw new Error("Horario ocupado.")
             }
 
+            const paciente = await Paciente.findOne({
+                where:{
+                    id: idPaciente,
+                    activo: true
+                }
+            })
+
+            if(!paciente){
+                throw new Error("No existe el paciente solicitado.")
+            }
+
+            const obraSocialPaciente = await ObraSocial.findByPk(paciente['dataValues']['fk_idObraSocial'])
+            const planPaciente = await Plan.findByPk(paciente['dataValues']['fk_idPlan'])
+
             const newTurno = await Turno.create({
                 horario: horario,
                 fk_idPaciente: Number(idPaciente),
@@ -131,8 +146,8 @@ const turnosController = {
                 monto: monto,
                 fk_idTratamiento: idTratamientoParticular,
                 estado: "a confirmar",
-                obraSocial: obraSocial,
-                plan: plan
+                obraSocial: obraSocialPaciente? obraSocialPaciente['dataValues']['nombre']: null,
+                plan: planPaciente? planPaciente['dataValues']['nombre']: null
             })
 
             const tratamiento = await TratamientoParticular.findOne({
@@ -151,8 +166,8 @@ const turnosController = {
                 monto: newTurno['dataValues']['monto'],
                 fk_idTratamiento: newTurno['dataValues']['fk_idTratamiento'],
                 estado: newTurno['dataValues']['estado'],
-                obraSocial: newTurno['dataValues']['obraSocial'],
-                plan: newTurno['dataValues']['plan'],
+                obraSocial: newTurno['dataValues']['obraSocial']? newTurno['dataValues']['obraSocial']: null,
+                plan: newTurno['dataValues']['plan']? newTurno['dataValues']['plan']: null,
                 nombrePersonaJuridica,
                 tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null
             }
@@ -525,6 +540,23 @@ const turnosController = {
             });
 
         } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    getHorariosInstitucion: async (req: Request, res: Response) => {
+
+        try{
+
+            const {idInstitucion} = req.params;
+
+
+
+
+
+        }catch(error){
             res.status(500).json({
                 msg: `${error}`
             });
