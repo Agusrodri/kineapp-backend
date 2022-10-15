@@ -70,7 +70,9 @@ const turnosController = {
 
             monto = tratamiento['dataValues']['monto'];
 
-            res.status(200).json(monto);
+            res.status(200).json({
+                monto: monto
+            });
 
         } catch (error) {
             res.status(500).json({
