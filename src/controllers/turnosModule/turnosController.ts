@@ -129,13 +129,13 @@ const turnosController = {
             }
 
             const paciente = await Paciente.findOne({
-                where:{
+                where: {
                     id: idPaciente,
                     activo: true
                 }
             })
 
-            if(!paciente){
+            if (!paciente) {
                 throw new Error("No existe el paciente solicitado.")
             }
 
@@ -149,8 +149,8 @@ const turnosController = {
                 monto: monto,
                 fk_idTratamiento: idTratamientoParticular,
                 estado: "a confirmar",
-                obraSocial: obraSocialPaciente? obraSocialPaciente['dataValues']['nombre']: null,
-                plan: planPaciente? planPaciente['dataValues']['nombre']: null
+                obraSocial: obraSocialPaciente ? obraSocialPaciente['dataValues']['nombre'] : null,
+                plan: planPaciente ? planPaciente['dataValues']['nombre'] : null
             })
 
             const tratamiento = await TratamientoParticular.findOne({
@@ -169,8 +169,8 @@ const turnosController = {
                 monto: newTurno['dataValues']['monto'],
                 fk_idTratamiento: newTurno['dataValues']['fk_idTratamiento'],
                 estado: newTurno['dataValues']['estado'],
-                obraSocial: newTurno['dataValues']['obraSocial']? newTurno['dataValues']['obraSocial']: null,
-                plan: newTurno['dataValues']['plan']? newTurno['dataValues']['plan']: null,
+                obraSocial: newTurno['dataValues']['obraSocial'] ? newTurno['dataValues']['obraSocial'] : null,
+                plan: newTurno['dataValues']['plan'] ? newTurno['dataValues']['plan'] : null,
                 nombrePersonaJuridica,
                 tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null
             }
@@ -554,15 +554,53 @@ const turnosController = {
 
     getHorariosInstitucion: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idInstitucion} = req.params;
+            const { idPersonaJuridica } = req.params;
+            const { fecha } = req.body;
 
+            const configTurnos = await ConfiguracionTurnos.findOne({
+                where: {
+                    fk_idPersonaJuridica: idPersonaJuridica
+                }
+            });
 
+            if (!configTurnos) {
+                throw new Error("La institución no posee una configuración de turnos.")
+            }
 
+            let horaInicio = configTurnos['dataValues']['horaInicioAtencion'].split(":")[0];
+            let mintuosInicio = configTurnos['dataValues']['horaInicioAtencion'].split(":")[1];
+            let horaFin = configTurnos['dataValues']['horaFinAtencion'].split(":")[0];
+            let contadorHoras = Number(horaInicio);
+            let contadorMinutos = Number(mintuosInicio);
 
+            const fechaDay = fecha.split(" ")[0];
+            const response = [];
 
-        }catch(error){
+            while (contadorHoras != horaFin) {
+
+                if (contadorMinutos == 60) {
+                    contadorHoras++;
+                    contadorMinutos = 0;
+                }
+
+                const turnoToFind = await Turno.findAll({
+                    where: {
+                        horario: `${fechaDay} ${contadorHoras}:${contadorMinutos != 30 ? contadorMinutos + "0" : contadorMinutos}:00`
+                    }
+                })
+
+                if (!turnoToFind || turnoToFind.length < configTurnos['dataValues']['pacientesSimultaneos']) {
+                    response.push(`${fechaDay} ${contadorHoras}:${contadorMinutos != 30 ? contadorMinutos + "0" : contadorMinutos}:00`)
+                }
+
+                contadorMinutos += 30;
+            }
+
+            res.status(200).json(response)
+
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
