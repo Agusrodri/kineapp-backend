@@ -13,6 +13,7 @@ router.delete("/cancelarTurno/:idTurno", turnosController.cancelarTurno);
 router.get("/turnosInstitucion/:idPersonaJuridica", turnosController.getAllTurnosInstitucion);
 router.delete("/eliminarTurno/:idTurno", turnosController.eliminarTurnoFromInstitucion);
 router.post("/horariosDisponibles/:idPersonaJuridica", turnosController.getHorariosInstitucion);
+router.post("/agregarTurnoInstitucion/:idPersonaJuridica", turnosController.agregarTurnoInstitucion);
 
 
 export default router;

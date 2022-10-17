@@ -2,6 +2,7 @@
 import Server from "./src/models/server";
 import verifyAlarmas from "./src/helpers/verifyAlarmas";
 import sendRecordatorioConvenios from "./src/helpers/sendRecordatorioConvenios";
+import verifyAlarmasTurno from "./src/helpers/verifyAlarmasTurno";
 
 if (!process.env.PORT) {
     require("dotenv").config();
@@ -19,6 +20,7 @@ server.listen();
 
 //setInterval(verifyAlarmas, 10000);
 //setInterval(sendRecordatorioConvenios, 86400000);
+//verifyAlarmasTurno()
 
 
 

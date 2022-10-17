@@ -361,7 +361,7 @@ const turnosController = {
 
             if (!turnoToEdit) { throw new Error("No existe el turno solicitado.") }
 
-            if (turnoToEdit['dataValues']['estado'] != "confirmado") {
+            if (turnoToEdit['dataValues']['estado'] == "cancelado") {
                 throw new Error("No fue posible modificar el turno ya que el mismo fue cancelado.")
             }
 
@@ -434,7 +434,6 @@ const turnosController = {
         try {
 
             const { idPersonaJuridica } = req.params;
-
             const turnos = await Turno.findAll({
                 where: {
                     fk_idPersonaJuridica: idPersonaJuridica
@@ -603,8 +602,119 @@ const turnosController = {
                 msg: `${error}`
             });
         }
-    }
+    },
 
+    agregarTurnoInstitucion: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idPersonaJuridica } = req.params;
+            const { idPaciente, idTratamientoParticular, horario, monto } = req.body;
+
+            const configTurnos = await ConfiguracionTurnos.findOne({
+                where: {
+                    fk_idPersonaJuridica: idPersonaJuridica
+                }
+            })
+
+            const turnosToFind = await Turno.findAll({
+                where: {
+                    horario: horario,
+                    fk_idPersonaJuridica: idPersonaJuridica
+                }
+            })
+
+            const turno = await Turno.findOne({
+                where: {
+                    horario: horario,
+                    fk_idPersonaJuridica: idPersonaJuridica,
+                    fk_idPaciente: idPaciente
+                }
+            })
+
+            if (turno) {
+                throw new Error("El paciente ya posee un turno asignado en este horario.")
+            }
+
+            if (!configTurnos && turnosToFind && turnosToFind.length >= 1) {
+                throw new Error("Horario ocupado.")
+            }
+
+            if (configTurnos && turnosToFind && turnosToFind.length >= configTurnos['dataValues']['pacientesSimultaneos']) {
+                throw new Error("Horario ocupado.")
+            }
+
+            const paciente = await Paciente.findOne({
+                where: {
+                    id: idPaciente,
+                    activo: true
+                }
+            })
+
+            if (!paciente) {
+                throw new Error("No existe el paciente solicitado.")
+            }
+
+            const obraSocialPaciente = await ObraSocial.findByPk(paciente['dataValues']['fk_idObraSocial'])
+            const planPaciente = await Plan.findByPk(paciente['dataValues']['fk_idPlan'])
+
+            let newTurno;
+            if (paciente['dataValues']['fk_idUsuario']) {
+                newTurno = await Turno.create({
+                    horario: horario,
+                    fk_idPaciente: Number(idPaciente),
+                    fk_idPersonaJuridica: Number(idPersonaJuridica),
+                    monto: monto,
+                    fk_idTratamiento: idTratamientoParticular,
+                    estado: "a confirmar",
+                    obraSocial: obraSocialPaciente ? obraSocialPaciente['dataValues']['nombre'] : null,
+                    plan: planPaciente ? planPaciente['dataValues']['nombre'] : null
+                })
+            } else {
+                newTurno = await Turno.create({
+                    horario: horario,
+                    fk_idPaciente: Number(idPaciente),
+                    fk_idPersonaJuridica: Number(idPersonaJuridica),
+                    monto: monto,
+                    fk_idTratamiento: idTratamientoParticular,
+                    estado: "confirmado",
+                    obraSocial: obraSocialPaciente ? obraSocialPaciente['dataValues']['nombre'] : null,
+                    plan: planPaciente ? planPaciente['dataValues']['nombre'] : null
+                })
+            }
+
+            const tratamiento = await TratamientoParticular.findOne({
+                where: {
+                    id: newTurno['dataValues']['fk_idTratamiento'],
+                    fk_idPersonaJuridica: newTurno['dataValues']['fk_idPersonaJuridica'],
+                    activo: true
+                }
+            });
+
+            const response = {
+                id: newTurno['dataValues']['id'],
+                horario: newTurno['dataValues']['horario'],
+                fk_idPaciente: newTurno['dataValues']['fk_idPaciente'],
+                fk_idPersonaJuridica: newTurno['dataValues']['fk_idPersonaJuridica'],
+                monto: newTurno['dataValues']['monto'],
+                fk_idTratamiento: newTurno['dataValues']['fk_idTratamiento'],
+                estado: newTurno['dataValues']['estado'],
+                obraSocial: newTurno['dataValues']['obraSocial'] ? newTurno['dataValues']['obraSocial'] : null,
+                plan: newTurno['dataValues']['plan'] ? newTurno['dataValues']['plan'] : null,
+                tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null
+            }
+
+            res.status(200).json({
+                msg: "Turno creado correctamente.",
+                turno: response
+            })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    }
 }
 
 export default turnosController;
