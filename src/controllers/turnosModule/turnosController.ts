@@ -575,7 +575,6 @@ const turnosController = {
             let contadorHoras = Number(horaInicio);
             let contadorMinutos = Number(mintuosInicio);
 
-            const fechaDay = fecha.split(" ")[0];
             const response = [];
 
             while (contadorHoras != horaFin) {
@@ -587,12 +586,12 @@ const turnosController = {
 
                 const turnoToFind = await Turno.findAll({
                     where: {
-                        horario: `${fechaDay} ${contadorHoras}:${contadorMinutos != 30 ? contadorMinutos + "0" : contadorMinutos}:00`
+                        horario: `${fecha} ${contadorHoras}:${contadorMinutos != 30 ? contadorMinutos + "0" : contadorMinutos}:00`
                     }
                 })
 
                 if (!turnoToFind || turnoToFind.length < configTurnos['dataValues']['pacientesSimultaneos']) {
-                    response.push(`${fechaDay} ${contadorHoras}:${contadorMinutos != 30 ? contadorMinutos + "0" : contadorMinutos}:00`)
+                    response.push(`${fecha} ${contadorHoras}:${contadorMinutos != 30 ? contadorMinutos + "0" : contadorMinutos}:00`)
                 }
 
                 contadorMinutos += 30;
