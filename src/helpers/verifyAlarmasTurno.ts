@@ -1,3 +1,4 @@
+import Paciente from "../models/entities/usersModule/paciente";
 import Turno from "../models/entities/turnosModule/turno";
 
 
@@ -25,13 +26,25 @@ export default async () => {
             const today = new Date();
             const todayUTC = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours() + 3, today.getMinutes(), today.getSeconds());
             console.log("TODAY UTC ", todayUTC)
-            const dateRecordatorio = new Date("10/16/2022 16:30:00").getTime();
-            console.log("RECORDATORIO UTC ", dateRecordatorio)
-            console.log("DIFERENCIA FECHAS: ", todayUTC - dateRecordatorio)
+
             for (let i = 0; i < recordatorios.length; i++) {
 
+                const dateRecordatorio = new Date(recordatorios[i]['dataValues']['horario']).getTime();
+                const difDatesInHours = (((todayUTC - dateRecordatorio) / 1000) / 60) / 60
+                console.log("RECORDATORIO UTC ", dateRecordatorio)
+                console.log("DIFERENCIA FECHAS: ",)
 
+                if (Math.trunc(difDatesInHours) == 168) {
+                    const paciente = await Paciente.findOne({
+                        where: {
+                            id: recordatorios[i]['dataValues']['fk_idPaciente'],
+                            activo: true
+                        }
+                    })
 
+                    if (!paciente) { continue }
+
+                }
 
             }
         }

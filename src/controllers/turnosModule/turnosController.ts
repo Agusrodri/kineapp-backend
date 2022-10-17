@@ -434,6 +434,13 @@ const turnosController = {
         try {
 
             const { idPersonaJuridica } = req.params;
+
+            const configTurnos = await ConfiguracionTurnos.findOne({
+                where: {
+                    fk_idPersonaJuridica: idPersonaJuridica
+                }
+            })
+
             const turnos = await Turno.findAll({
                 where: {
                     fk_idPersonaJuridica: idPersonaJuridica
@@ -481,7 +488,10 @@ const turnosController = {
                 turnosResponse.push(turnoResponse);
             }
 
-            res.status(200).json(turnosResponse);
+            res.status(200).json({
+                turnos: turnosResponse,
+                configuracion: configTurnos ? configTurnos : null
+            });
 
         } catch (error) {
             res.status(500).json({
