@@ -50,7 +50,7 @@ const turnosController = {
 
             if (!tratamiento) { throw new Error("No existe el tratamiento solicitado o la institución no presta el mismo.") }
 
-            let monto: number;
+            let monto: number = tratamiento['dataValues']['monto'];;
             //verificar si depende de uno general (si depende, calcular el monto con el plan de la obra social del paciente)
             if (tratamiento['dataValues']['fk_idTratamientoGeneral']) {
 
@@ -62,16 +62,15 @@ const turnosController = {
                 })
 
                 if (!planTratamientoGeneral) {
-                    throw new Error(`Su plan no posee cobertura para el tratamiento ${tratamiento['dataValues']['nombre']}`)
+                    return res.status(200).json({
+                        monto: monto
+                    });
                 }
 
                 //montoFinal = monto - monto * (porcentaje/100)
-
                 monto = tratamiento['dataValues']['monto'] - (tratamiento['dataValues']['monto'] * (planTratamientoGeneral['dataValues']['porcentajeCobertura'] / 100));
-                return res.status(200).json(monto);
+                return res.status(200).json({ monto: monto });
             }
-
-            monto = tratamiento['dataValues']['monto'];
 
             res.status(200).json({
                 monto: monto
@@ -597,7 +596,7 @@ const turnosController = {
                 contadorMinutos += 30;
             }
 
-            res.status(200).json(response)
+            res.status(200).json(response);
 
         } catch (error) {
             res.status(500).json({
