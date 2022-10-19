@@ -1,54 +1,45 @@
-import Paciente from "../models/entities/usersModule/paciente";
 import Turno from "../models/entities/turnosModule/turno";
+import sendNotificationTurnoPaciente from "./sendNotificationTurnoPaciente";
 
-
-const hours = {
-    "1": ["01", "13"],
-    "2": ["02", "14"],
-    "3": ["03", "15"],
-    "4": ["04", "16"],
-    "5": ["05", "17"],
-    "6": ["06", "18"],
-    "7": ["07", "19"],
-    "8": ["08", "20"],
-    "9": ["09", "21"],
-    "10": ["10", "22"],
-    "11": ["11", "23"],
-    "12": ["12", "00"]
-}
 export default async () => {
     console.log("Verifying alarmas turno...");
     try {
         const recordatorios = await Turno.findAll();
         if (recordatorios) {
 
-
             const today = new Date();
             const todayUTC = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours() + 3, today.getMinutes(), today.getSeconds());
-            console.log("TODAY UTC ", todayUTC)
 
             for (let i = 0; i < recordatorios.length; i++) {
-
                 const dateRecordatorio = new Date(recordatorios[i]['dataValues']['horario']).getTime();
-                const difDatesInHours = (((todayUTC - dateRecordatorio) / 1000) / 60) / 60
-                console.log("RECORDATORIO UTC ", dateRecordatorio)
-                console.log("DIFERENCIA FECHAS: ",)
+                const difDatesInHours = (((dateRecordatorio - todayUTC) / 1000) / 60) / 60
 
-                if (Math.trunc(difDatesInHours) == 168) {
-                    const paciente = await Paciente.findOne({
-                        where: {
-                            id: recordatorios[i]['dataValues']['fk_idPaciente'],
-                            activo: true
-                        }
-                    })
+                if (Math.trunc(difDatesInHours) == 168 && !recordatorios[i]['dataValues']['checkSemana']) {
 
-                    if (!paciente) { continue }
-
+                    const notificationBody = "Te recordamos que tienes un turno dentro de una semana.";
+                    const notificationTitle = "Recordatorio de turno";
+                    const notification = sendNotificationTurnoPaciente(recordatorios[i]['dataValues']['fk_idPaciente'], notificationBody, notificationTitle);
+                    notification ? await recordatorios[i].update({ checkSemana: true }) : false;
                 }
 
+                if (Math.trunc(difDatesInHours) == 72 && !recordatorios[i]['dataValues']['checkTresDias']) {
+
+                    const notificationBody = "Te recordamos que tienes un turno dentro de tres días.";
+                    const notificationTitle = "Recordatorio de turno";
+                    const notification = sendNotificationTurnoPaciente(recordatorios[i]['dataValues']['fk_idPaciente'], notificationBody, notificationTitle);
+                    notification ? await recordatorios[i].update({ checkTresDias: true }) : false;
+                }
+
+                if (Math.trunc(difDatesInHours) == 48 && !recordatorios[i]['dataValues']['checkDosDias']) {
+
+                    const notificationBody = "Tienes un turno en dos días y es necesario que confirmes la asistencia al mismo presionando la opción “Confirmar”.";
+                    const notificationTitle = "Confirmación de turno";
+                    const notification = sendNotificationTurnoPaciente(recordatorios[i]['dataValues']['fk_idPaciente'], notificationBody, notificationTitle);
+                    notification ? await recordatorios[i].update({ checkDosDias: true }) : false;
+                }
             }
         }
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 }

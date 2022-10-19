@@ -33,6 +33,18 @@ const Turno = db.define('Turno', {
 
     plan: {
         type: DataTypes.STRING
+    },
+
+    checkSemana: {
+        type: DataTypes.BOOLEAN
+    },
+
+    checkTresDias: {
+        type: DataTypes.BOOLEAN
+    },
+
+    checkDosDias: {
+        type: DataTypes.BOOLEAN
     }
 })
 
