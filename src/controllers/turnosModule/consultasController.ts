@@ -4,6 +4,7 @@ import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
 import { Op } from 'sequelize';
 import TratamientoParticular from '../../models/entities/obrasSocialesModule/tratamientoParticular';
 import Paciente from '../../models/entities/usersModule/paciente';
+import Consulta from '../../models/entities/turnosModule/consulta';
 
 const consultasController = {
 
@@ -78,9 +79,69 @@ const consultasController = {
         }
     },
 
+    crearConsulta: async (req: Request, res: Response) => {
+
+        try{
+
+            const {idTurno} = req.params;
+            const {observaciones, asistio} = req.body;
+
+            const consulta = await Consulta.findOne({
+                where:{
+                    fk_idTurno: idTurno
+                }
+            })
+
+            if(consulta){
+                throw new Error("El turno ya posee una consulta asociada.")
+            }
+
+            const newConsulta = await Consulta.create({
+                fk_idTurno: idTurno,
+                observaciones: observaciones,
+                asistio: asistio
+            })
+
+            res.status(200).json({
+                msg: "Consulta guardada con éxito.",
+                consulta: newConsulta
+            })
+
+        }catch(error){
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
     confirmarTurno: async (req: Request, res: Response) => {
-        
+
+        try{
+
+            const {idTurno} = req.params;
+            const turno = await Turno.findOne({
+                where:{
+                    id: idTurno
+                }
+            });
+
+            if(!turno){
+                throw new Error("No existe el turno solicitado.")
+            }
+
+            await turno.update({estado: "confirmado"});
+
+            res.status(200).json({
+                msg: "Turno confirmado con éxito."
+            })
+            
+        }catch(error){
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
     }
+
 
 }
 

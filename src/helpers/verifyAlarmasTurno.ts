@@ -18,7 +18,8 @@ export default async () => {
 
                     const notificationBody = "Te recordamos que tienes un turno dentro de una semana.";
                     const notificationTitle = "Recordatorio de turno";
-                    const notification = sendNotificationTurnoPaciente(recordatorios[i]['dataValues']['fk_idPaciente'], notificationBody, notificationTitle);
+                    const route = "";
+                    const notification = sendNotificationTurnoPaciente(recordatorios[i]['dataValues']['fk_idPaciente'], notificationBody, notificationTitle, route);
                     notification ? await recordatorios[i].update({ checkSemana: true }) : false;
                 }
 
@@ -26,15 +27,17 @@ export default async () => {
 
                     const notificationBody = "Te recordamos que tienes un turno dentro de tres días.";
                     const notificationTitle = "Recordatorio de turno";
-                    const notification = sendNotificationTurnoPaciente(recordatorios[i]['dataValues']['fk_idPaciente'], notificationBody, notificationTitle);
+                    const route = "";
+                    const notification = sendNotificationTurnoPaciente(recordatorios[i]['dataValues']['fk_idPaciente'], notificationBody, notificationTitle, route);
                     notification ? await recordatorios[i].update({ checkTresDias: true }) : false;
                 }
 
                 if (Math.trunc(difDatesInHours) == 48 && !recordatorios[i]['dataValues']['checkDosDias']) {
 
-                    const notificationBody = "Tienes un turno en dos días y es necesario que confirmes la asistencia al mismo presionando la opción “Confirmar”.";
+                    const notificationBody = `Tienes un turno en dos días y es necesario que confirmes la asistencia al mismo presionando la opción “Confirmar”.`;
                     const notificationTitle = "Confirmación de turno";
-                    const notification = sendNotificationTurnoPaciente(recordatorios[i]['dataValues']['fk_idPaciente'], notificationBody, notificationTitle);
+                    const route = "";
+                    const notification = sendNotificationTurnoPaciente(recordatorios[i]['dataValues']['fk_idPaciente'], notificationBody, notificationTitle, route);
                     notification ? await recordatorios[i].update({ checkDosDias: true }) : false;
                 }
             }

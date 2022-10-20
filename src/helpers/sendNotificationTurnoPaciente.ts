@@ -3,7 +3,7 @@ import Paciente from "../models/entities/usersModule/paciente";
 import Notificacion from "../models/entities/usersModule/notificacion";
 import sendNotification from "./sendNotification";
 
-export default async (fk_idPaciente: number, notificationBody: string, notificationTitle: string) => {
+export default async (fk_idPaciente: number, notificationBody: string, notificationTitle: string, route: string) => {
 
     try {
 
@@ -26,7 +26,7 @@ export default async (fk_idPaciente: number, notificationBody: string, notificat
                 check: false,
                 fk_idUsuario: usuarioToFind['dataValues']['id'],
                 titulo: notificationTitle,
-                router: `a definir`
+                router: route
             })
 
             sendNotification(usuarioToFind['dataValues']['subscription'], notificationBody);

@@ -4,5 +4,7 @@ import consultasController from "../../controllers/turnosModule/consultasControl
 const router = Router();
 
 router.post("/turnosDay/:idPersonaJuridica", consultasController.getTurnosDay);
+router.post("/crearConsulta/:idTurno", consultasController.crearConsulta);
+router.get("/confirmarTurno/:idTurno", consultasController.confirmarTurno);
 
 export default router;
