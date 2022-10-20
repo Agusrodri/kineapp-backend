@@ -129,6 +129,10 @@ const consultasController = {
                 throw new Error("No existe el turno solicitado.")
             }
 
+            if(turno['dataValues']['estado'] == "cancelado"){
+                throw new Error("El turno ya se encuentra cancelado.")
+            }
+
             await turno.update({estado: "confirmado"});
 
             res.status(200).json({
