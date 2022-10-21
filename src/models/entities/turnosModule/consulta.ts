@@ -13,6 +13,14 @@ const Consulta = db.define('Consulta', {
 
     fk_idTurno: {
         type: DataTypes.INTEGER
+    },
+
+    fk_idProfesional: {
+        type: DataTypes.INTEGER
+    },
+
+    puntuacion: {
+        type: DataTypes.INTEGER
     }
 })
 

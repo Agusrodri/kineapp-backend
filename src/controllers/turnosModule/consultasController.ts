@@ -5,6 +5,10 @@ import { Op } from 'sequelize';
 import TratamientoParticular from '../../models/entities/obrasSocialesModule/tratamientoParticular';
 import Paciente from '../../models/entities/usersModule/paciente';
 import Consulta from '../../models/entities/turnosModule/consulta';
+import Profesional from '../../models/entities/usersModule/profesional';
+import Usuario from '../../models/entities/usersModule/usuario';
+import Notificacion from '../../models/entities/usersModule/notificacion';
+import sendNotification from '../../helpers/sendNotification';
 
 const consultasController = {
 
@@ -84,7 +88,7 @@ const consultasController = {
         try{
 
             const {idTurno} = req.params;
-            const {observaciones, asistio} = req.body;
+            const {observaciones, asistio, idProfesional} = req.body;
 
             const consulta = await Consulta.findOne({
                 where:{
@@ -99,8 +103,40 @@ const consultasController = {
             const newConsulta = await Consulta.create({
                 fk_idTurno: idTurno,
                 observaciones: observaciones,
-                asistio: asistio
+                asistio: asistio,
+                fk_idProfesional: idProfesional
             })
+
+            if(asistio == true){
+                const turno = await Turno.findByPk(idTurno);
+                const profesional = await Profesional.findByPk(idProfesional);
+
+                const paciente = turno? await Paciente.findOne({
+                    where:{
+                        id: turno['dataValues']['fk_idPaciente'],
+                        activo: true
+                    }
+                }): null;
+
+                const usuarioToFind = paciente && paciente['dataValues']['fk_idUsuario'] ? 
+                    await Usuario.findByPk(paciente['dataValues']['fk_idUsuario']) : null;
+
+                const nombreProfesional = profesional ? `${profesional['dataValues']['apellido']}, ${profesional['dataValues']['nombre']}`: "";
+                const notificationBody = `Hoy te atendió ${nombreProfesional}. ¿Qué puntuación le darías?`;
+                if (usuarioToFind) {
+
+                    await Notificacion.create({
+                        texto: notificationBody,
+                        check: false,
+                        fk_idUsuario: usuarioToFind['dataValues']['id'],
+                        titulo: "Califica al profesional",
+                        router: "a definir"
+                    })
+
+                    sendNotification(usuarioToFind['dataValues']['subscription'], notificationBody);
+                    return true;
+                }
+            }
 
             res.status(200).json({
                 msg: "Consulta guardada con éxito.",
@@ -144,8 +180,144 @@ const consultasController = {
                 msg: `${error}`
             });
         }
-    }
+    },
 
+    getConsultas: async (req: Request, res: Response) => {
+
+        try{
+
+            const {idPaciente} = req.params;
+
+            const paciente = await Paciente.findOne({
+                where:{
+                    id: idPaciente,
+                    activo: true
+                }
+            })
+
+            if(!paciente){
+                throw new Error("No existe el paciente solicitado.")
+            }
+
+            const turnos = await Turno.findAll({
+                where:{
+                    fk_idPaciente: idPaciente
+                }
+            })
+
+            if (!turnos){
+                return res.status(200).json([])
+            }
+
+            const consultasResponse = [];
+            
+            for (let index = 0; index < turnos.length; index++) {
+                
+                const consulta = await Consulta.findOne({
+                    where:{
+                        fk_idTurno: turnos[index]['dataValues']['id'],
+                        asistio: true
+                    }
+                })
+
+                if(!consulta){continue}
+
+                const tratamiento = await TratamientoParticular.findByPk(turnos[index]['dataValues']['fk_idTratamiento']);
+                const profesional = await Profesional.findByPk(consulta['dataValues']['fk_idProfesional']);
+
+                const consultaToAdd = {
+                    id: consulta['dataValues']['id'],
+                    observaciones: consulta['dataValues']['observaciones'],
+                    puntuacion: consulta['dataValues']['puntuacion'] ? consulta['dataValues']['puntuacion']: null,
+                    paciente: `${paciente['dataValues']['apellido']}, ${paciente['dataValues']['nombre']}`,
+                    horario: turnos[index]['dataValues']['horario'],
+                    tratamiento: tratamiento ? tratamiento['dataValues']['nombre']: null,
+                    profesional: profesional ? `${profesional['dataValues']['apellido']}, ${profesional['dataValues']['nombre']}`: null
+                }
+
+                consultasResponse.push(consultaToAdd);
+            }
+
+            res.status(200).json(consultasResponse);
+
+        }catch(error){
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    getConsultaById: async (req: Request, res: Response) => {
+
+        try{
+
+            const {idConsulta} = req.params;
+            const consulta = await Consulta.findByPk(idConsulta);
+
+            if(!consulta){
+                throw new Error("No existe la consulta solicitada.")
+            }
+
+            const turno = await Turno.findByPk(consulta['dataValues']['fk_idTurno']);
+
+            if(!turno){
+                throw new Error("La consulta no posee un turno asociado.")
+            }
+
+            const paciente = await Paciente.findOne({
+                where:{
+                    id: turno['dataValues']['fk_idPaciente'],
+                    activo: true
+                }
+            });
+
+            const tratamiento = await TratamientoParticular.findByPk(turno['dataValues']['fk_idTratamiento']);
+            const profesional = await Profesional.findByPk(consulta['dataValues']['fk_idProfesional']);
+
+            const consultaResponse = {
+                id: consulta['dataValues']['id'],
+                observaciones: consulta['dataValues']['observaciones'],
+                puntuacion: consulta['dataValues']['puntuacion'] ? consulta['dataValues']['puntuacion']: null,
+                paciente: paciente? `${paciente['dataValues']['apellido']}, ${paciente['dataValues']['nombre']}`: null,
+                horario: turno['dataValues']['horario'],
+                tratamiento: tratamiento ? tratamiento['dataValues']['nombre']: null,
+                profesional: profesional ? `${profesional['dataValues']['apellido']}, ${profesional['dataValues']['nombre']}`: null
+            }
+
+            res.status(200).json(consultaResponse)
+
+        }catch(error){
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    },
+
+    calificarProfesional: async (req: Request, res: Response) => {
+
+        try{
+
+            const {idConsulta} = req.params;
+            const {puntuacion} = req.body;
+
+            const consulta = await Consulta.findByPk(idConsulta);
+
+            if(!consulta){
+                throw new Error("No existe la consulta solicitada.")
+            }
+
+            await consulta.update({puntuacion: puntuacion});
+
+            res.status(200).json({
+                msg: "Puntaje establecido con éxito."
+            })
+
+        }catch(error){
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+    }
 
 }
 
