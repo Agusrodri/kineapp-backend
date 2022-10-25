@@ -137,9 +137,9 @@ const consultasController = {
                     sendNotification(usuarioToFind['dataValues']['subscription'], notificationBody);
                     return true;
                 }
+            }else{
+                await turno.update({estado: "no-asistido"})
             }
-
-            await turno.update({estado: "no-asistido"})
 
             res.status(200).json({
                 msg: "Consulta guardada con éxito.",
