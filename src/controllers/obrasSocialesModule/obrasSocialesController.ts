@@ -346,7 +346,7 @@ const obrasSocialesController = {
             })
 
             if (planToFind) {
-                throw new Error("El nombre del plan que desea agregar ya existe en esta obra social, intenta nuevamente.")
+                throw new Error("El nombre que desea agregar ya está en uso")
             }
 
             const nuevoPlan = await Plan.create({
@@ -356,7 +356,7 @@ const obrasSocialesController = {
             })
 
             res.status(200).json({
-                msg: "Plan creado correctamente.",
+                msg: "Plan creado correctamente",
                 nuevoPlan
             })
 
