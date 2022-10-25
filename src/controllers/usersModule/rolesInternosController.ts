@@ -130,7 +130,7 @@ const rolesInternosController = {
             }
 
             res.status(200).json({
-                msg: `Rol ${nombreRol} creado con id ${idNuevoRol}`,
+                msg: `Rol creado correctamente`,
                 rolInterno: rolResponse
             })
 
@@ -269,7 +269,7 @@ const rolesInternosController = {
             }
 
             res.status(200).json({
-                msg: `Rol actualizado correctamente.`,
+                msg: `Rol actualizado correctamente`,
                 rolInterno: rolResponse
             })
 
@@ -302,7 +302,7 @@ const rolesInternosController = {
                 rolinternoToDelete.update({ activo: false })
 
                 res.status(200).json({
-                    msg: "Rol interno eliminado"
+                    msg: "Rol eliminado correctamente"
                 })
 
             } else {

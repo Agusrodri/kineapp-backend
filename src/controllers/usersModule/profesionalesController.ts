@@ -261,7 +261,7 @@ const profesionalesController = {
             await usuarioToUpdate.update({ password: encriptedPassword, habilitado: true })
 
             res.status(200).json({
-                msg: `Contraseña del usuario agregada con éxito.`
+                msg: `Cuenta verificada correctamente`
             })
 
         } catch (error) {
@@ -404,7 +404,7 @@ const profesionalesController = {
                 })
 
                 res.status(200).json({
-                    msg: "Profesional creado correctamente a partir de profesional.",
+                    msg: "Profesional creado correctamente",
                     usuarioProfesional,
                     newPjProfesional
                 })
@@ -447,7 +447,7 @@ const profesionalesController = {
                 })
 
                 res.status(200).json({
-                    msg: "Profesional creado correctamente a partir de paciente.",
+                    msg: "Profesional creado correctamente",
                     newProfesional,
                     newPjProfesional
                 })
@@ -551,7 +551,7 @@ const profesionalesController = {
             }
 
             res.status(200).json({
-                msg: "Profesional editado correctamente.",
+                msg: "Profesional editado correctamente",
                 profesional: response,
                 newPjProfesional: profesionalToUpdate
             })
@@ -580,11 +580,11 @@ const profesionalesController = {
             const comparePasswords = bcrypt.compareSync(actualPassword, passwordActualUsuario)
 
             if (!comparePasswords) {
-                throw new Error("Contraseña anterior errónea.")
+                throw new Error("Contraseña actual incorrecta, intente nuevamente")
             }
 
             if (actualPassword === newPassword) {
-                throw new Error("La nueva contraseña no puede coincidir con la contraseña anterior.")
+                throw new Error("La nueva contraseña debe ser diferente a la actual")
             }
 
             const salt = bcrypt.genSaltSync(12);
@@ -593,7 +593,7 @@ const profesionalesController = {
             await usuario.update({ password: newEncriptedPassword })
 
             res.status(200).json({
-                msg: "Contraseña del usuario actualizada con éxito."
+                msg: "Contraseña actualizada correctamente"
             })
 
         } catch (error) {

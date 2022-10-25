@@ -169,7 +169,7 @@ const pacientesController = {
             await usuarioToUpdate.update({ telefono: telefono })
 
             res.status(200).json({
-                msg: "Paciente actualizado con éxito."
+                msg: "Paciente actualizado correctamente"
             })
 
         } catch (error) {
@@ -202,7 +202,7 @@ const pacientesController = {
 
             if (!validPassword) {
                 return res.status(400).json({
-                    msg: "Contraseña inválida."
+                    msg: "Contraseña incorrecta"
                 })
             }
 

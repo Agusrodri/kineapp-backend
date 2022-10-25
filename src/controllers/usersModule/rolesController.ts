@@ -111,7 +111,7 @@ const rolesController = {
             }
 
             res.status(200).json({
-                msg: "Rol creado correctamente.",
+                msg: "Rol creado correctamente",
                 nuevoRol: response
             })
 
@@ -249,7 +249,7 @@ const rolesController = {
             }
 
             res.status(200).json({
-                msg: `Rol actualizado correctamente.`,
+                msg: `Rol actualizado correctamente`,
                 rol: response
             })
 
@@ -282,7 +282,7 @@ const rolesController = {
             rolToDelete.update({ activo: false })
 
             res.status(200).json({
-                msg: `Rol con id ${id} eliminado`
+                msg: `Rol eliminado correctamente`
             })
 
         } catch (error) {

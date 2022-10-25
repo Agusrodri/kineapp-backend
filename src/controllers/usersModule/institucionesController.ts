@@ -151,7 +151,7 @@ const institucionesController = {
             await sendEmail(nuevoLink, email)
 
             res.status(200).json({
-                msg: `Institución con nombre ${nombre} creada correctamente. Se envió un correo electrónico a la dirección ${email} para verificación.`,
+                msg: `Institución creada correctamente`,
                 nuevaInstitucion
             })
 
