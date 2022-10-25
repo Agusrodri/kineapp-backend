@@ -125,18 +125,18 @@ const obrasSocialesController = {
                 })
 
                 res.status(200).json({
-                    msg: "Obra social creada con éxito.",
+                    msg: "Obra social creada correctamente",
                     obraSocial: obraSocialToCreate
                 })
 
             } else if (obraSocial['dataValues']['nombre'] === nombre) {
-                throw new Error("El nombre que desea agregar ya está en uso, compruebe si la obra social ya está cargada o ingrese un nombre diferente.")
+                throw new Error("El nombre que desea agregar ya está en uso")
             } else if (obraSocial['dataValues']['cuit'] === cuit) {
-                throw new Error("El CUIT que desea agregar ya está en uso, compruebe si la obra social ya está cargada o ingrese un CUIT diferente.")
+                throw new Error("El CUIT que desea agregar ya está en uso")
             } else if (obraSocial['dataValues']['razonSocial'] === razonSocial) {
-                throw new Error("La razón social que desea agregar ya está en uso, compruebe si la obra social ya está cargada o ingrese una razón social diferente.")
+                throw new Error("La razón social que desea agregar ya está en uso")
             } else if (obraSocial['dataValues']['email'] === email) {
-                throw new Error("El email que desea agregar ya está en uso, compruebe si la obra social ya está cargada o ingrese un email diferente.")
+                throw new Error("El email que desea agregar ya está en uso")
             }
 
         } catch (error) {
@@ -210,17 +210,17 @@ const obrasSocialesController = {
                 })
 
             } else if (obrasSocialesToCompare['dataValues']['nombre'] === nombre) {
-                throw new Error("El nombre que desea agregar ya está en uso, compruebe si la obra social ya está cargada o ingrese un nombre diferente.")
+                throw new Error("El nombre que desea agregar ya está en uso")
             } else if (obrasSocialesToCompare['dataValues']['cuit'] === cuit) {
-                throw new Error("El CUIT que desea agregar ya está en uso, compruebe si la obra social ya está cargada o ingrese un CUIT diferente.")
+                throw new Error("El CUIT que desea agregar ya está en uso")
             } else if (obrasSocialesToCompare['dataValues']['razonSocial'] === razonSocial) {
-                throw new Error("La razón social que desea agregar ya está en uso, compruebe si la obra social ya está cargada o ingrese una razón social diferente.")
+                throw new Error("La razón social que desea agregar ya está en uso")
             } else if (obrasSocialesToCompare['dataValues']['email'] === email) {
-                throw new Error("El email que desea agregar ya está en uso, compruebe si la obra social ya está cargada o ingrese un email diferente.")
+                throw new Error("El email que desea agregar ya está en uso")
             }
 
             res.status(200).json({
-                msg: "Obra social actualizada con éxito."
+                msg: "Obra social actualizada correctamente"
             })
 
         } catch (error) {
@@ -249,7 +249,7 @@ const obrasSocialesController = {
             await obraSocialToDelete.update({ activo: false })
 
             res.status(200).json({
-                msg: "Obra social eliminada con éxito."
+                msg: "Obra social eliminada correctamente"
             })
 
         } catch (error) {

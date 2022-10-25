@@ -288,7 +288,7 @@ const profesionalesController = {
             })
 
             if (!usuarioToFind) {
-                throw new Error("El email ingresado no coincide con ningún usuario del sistema.")
+                throw new Error("El correo ingresado no coincide con ningún usuario del sistema")
             }
 
             const idUsuarioEncontrado = usuarioToFind['dataValues']['id']
@@ -311,7 +311,7 @@ const profesionalesController = {
                 })
 
                 if (profesionalInstitucion) {
-                    throw new Error("El email ingresado ya corresponde a un profesional de la institución indicada.")
+                    throw new Error("El correo ingresado ya corresponde a un profesional de la institución")
                 } else {
                     const { nombre, apellido, dni, fk_idTipoDNI, fechaNacimiento, numeroMatricula, nivelEducativo } = profesionalToFind['dataValues']
                     res.status(200).json({
@@ -424,7 +424,7 @@ const profesionalesController = {
                     })
 
                     if (profesionalMatricula) {
-                        throw new Error("El número de matrícula ingresado ya se encuentra en uso.")
+                        throw new Error("El número de matrícula que intenta ingresar ya pertenece a un usuario en el sistema")
                     }
                 }
 
@@ -482,7 +482,7 @@ const profesionalesController = {
             await profesionalToUpdate.update({ nombre: nombre, apellido: apellido, telefono: telefono })
 
             res.status(200).json({
-                msg: "Profesional actualizado correctamente."
+                msg: "Profesional actualizado correctamente"
             })
 
         } catch (error) {
@@ -551,7 +551,7 @@ const profesionalesController = {
             }
 
             res.status(200).json({
-                msg: "Profesional editado correctamente",
+                msg: "Profesional actualizado correctamente",
                 profesional: response,
                 newPjProfesional: profesionalToUpdate
             })
@@ -622,7 +622,7 @@ const profesionalesController = {
 
             await profesionalToDelete.update({ activo: false })
             res.status(200).json({
-                msg: "Profesional eliminado correctamente."
+                msg: "Profesional eliminado correctamente"
             })
 
         } catch (error) {

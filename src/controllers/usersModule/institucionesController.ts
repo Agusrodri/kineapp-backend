@@ -205,7 +205,7 @@ const institucionesController = {
             })
 
             res.status(200).json({
-                msg: `Institución actualizada con éxito.`,
+                msg: `Institución actualizada correctamente`,
                 institucion,
                 usuariosRol: usuarioRolToUpdate
             })
@@ -236,7 +236,7 @@ const institucionesController = {
             await institucionToDelete.update({ activo: false })
 
             res.status(200).json({
-                msg: `La institución se eliminó correctamente.`
+                msg: `Institución eliminada correctamente`
             })
 
         } catch (error) {
