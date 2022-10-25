@@ -530,7 +530,7 @@ const obrasSocialesController = {
             })
 
             if (planNombre) {
-                throw new Error("El nombre de plan solicitado ya se encuentra en uso. Ingrese uno nuevo.")
+                throw new Error("El nombre que desea agregar ya está en uso")
             }
 
             const idObraSocial = planToEdit['dataValues']['fk_idObraSocial'];
@@ -630,7 +630,7 @@ const obrasSocialesController = {
             }
 
             res.status(200).json({
-                msg: "Plan actualizado correctamente."
+                msg: "Plan actualizado correctamente"
             })
 
         } catch (error) {
