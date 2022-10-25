@@ -90,6 +90,7 @@ const consultasController = {
             const {idTurno} = req.params;
             const {observaciones, asistio, idProfesional} = req.body;
 
+            const turno = await Turno.findByPk(idTurno);
             const consulta = await Consulta.findOne({
                 where:{
                     fk_idTurno: idTurno
@@ -108,7 +109,7 @@ const consultasController = {
             })
 
             if(asistio == true){
-                const turno = await Turno.findByPk(idTurno);
+                await turno.update({estado: "asistido"})
                 const profesional = await Profesional.findByPk(idProfesional);
 
                 const paciente = turno? await Paciente.findOne({
@@ -137,6 +138,8 @@ const consultasController = {
                     return true;
                 }
             }
+
+            await turno.update({estado: "no-asistido"})
 
             res.status(200).json({
                 msg: "Consulta guardada con éxito.",

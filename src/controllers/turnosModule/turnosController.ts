@@ -147,7 +147,7 @@ const turnosController = {
                 fk_idPersonaJuridica: Number(idPersonaJuridica),
                 monto: monto,
                 fk_idTratamiento: idTratamientoParticular,
-                estado: "a confirmar",
+                estado: "a-confirmar",
                 obraSocial: obraSocialPaciente ? obraSocialPaciente['dataValues']['nombre'] : null,
                 plan: planPaciente ? planPaciente['dataValues']['nombre'] : null
             })
@@ -676,7 +676,7 @@ const turnosController = {
                     fk_idPersonaJuridica: Number(idPersonaJuridica),
                     monto: monto,
                     fk_idTratamiento: idTratamientoParticular,
-                    estado: "a confirmar",
+                    estado: "a-confirmar",
                     obraSocial: obraSocialPaciente ? obraSocialPaciente['dataValues']['nombre'] : null,
                     plan: planPaciente ? planPaciente['dataValues']['nombre'] : null
                 })
