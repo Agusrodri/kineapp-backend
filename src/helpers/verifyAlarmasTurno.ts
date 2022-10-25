@@ -36,7 +36,7 @@ export default async () => {
 
                     const notificationBody = `Tienes un turno en dos días y es necesario que confirmes la asistencia al mismo presionando la opción “Confirmar”.`;
                     const notificationTitle = "Confirmación de turno";
-                    const route = "";
+                    const route = `app/turnos-paciente/${recordatorios[i]['dataValues']['fk_idPaciente']}/${recordatorios[i]['dataValues']['id']}`;
                     const notification = sendNotificationTurnoPaciente(recordatorios[i]['dataValues']['fk_idPaciente'], notificationBody, notificationTitle, route);
                     notification ? await recordatorios[i].update({ checkDosDias: true }) : false;
                 }
