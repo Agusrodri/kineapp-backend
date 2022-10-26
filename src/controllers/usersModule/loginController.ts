@@ -590,7 +590,7 @@ const loginControllers = {
             })
 
             if (!usuario) {
-                throw new Error("No existe el usuario solicitado.")
+                throw new Error("No existe el usuario solicitado")
             }
 
             if (usuario['dataValues']['tokenPassReset']) {
@@ -615,7 +615,7 @@ const loginControllers = {
             const comparePasswords = bcrypt.compareSync(newPassword, passwordActualUsuario)
 
             if (comparePasswords) {
-                throw new Error("La contraseña es igual a la anterior.")
+                throw new Error("La contraseña ingresada es igual a la anterior")
             }
 
             const salt = bcrypt.genSaltSync(12);
@@ -624,7 +624,7 @@ const loginControllers = {
             await usuario.update({ password: newEncriptedPassword })
 
             res.status(200).json({
-                msg: `Contraseña del usuario ${usuario['dataValues']['email']} actualizada correctamente.`
+                msg: `Contraseña actualizada correctamente`
             })
 
         } catch (error) {

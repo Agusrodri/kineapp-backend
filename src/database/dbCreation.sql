@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS rutinas, txWithdrawHistory;
+DROP TABLE IF EXISTS rutinas, tratamientopacientes, ejercicios, convenios;
 
 CREATE TABLE rutinas (
     id BIGINT NOT NULL identity(1, 1),
@@ -23,11 +23,50 @@ CREATE TABLE rutinas (
 
 CREATE TABLE tratamientopacientes (
     id BIGINT NOT NULL identity(1, 1),
-    txHash NVARCHAR(300),
-    idUser BIGINT,
-    addressTo NVARCHAR(255),
-    txAmount DECIMAL(18,9),
-    txDate DATETIME
+    fechaInicio DATE,
+    fechaFinEstimada DATE,
+    fk_idPaciente BIGINT NOT NULL,
+    fk_idTratamiento BIGINT NOT NULL,
+    fk_idPersonaJuridica BIGINT NOT NULL,
+    createdAt TIMESTAMP,
+    updatedAt TIMESTAMP,
+    activo TINYINT,
+    fechaFinReal DATE,
+    nombrePaciente NVARCHAR(55),
+    finalizado TINYINT,
+    FOREIGN KEY (fk_idPaciente) REFERENCES pacientes(id),
+    FOREIGN KEY (fk_idTratamiento) REFERENCES tratamientoparticulares(id),
+    FOREIGN KEY (fk_idPersonaJuridica) REFERENCES personajuridicas(id),
+
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE ejercicios (
+    id BIGINT NOT NULL identity(1, 1),
+    nombre NVARCHAR(55),
+    complejidad NVARCHAR(55),
+    descripcion NVARCHAR(55),
+    gif NVARCHAR(55),
+    fk_idPersonaJuridica BIGINT NOT NULL,
+    createdAt TIMESTAMP,
+    updatedAt TIMESTAMP,
+    activo TINYINT,
+    FOREIGN KEY (fk_idPersonaJuridica) REFERENCES personajuridicas(id),
+
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE convenios (
+    id BIGINT NOT NULL identity(1, 1),
+    nombre NVARCHAR(55),
+    descripcion NVARCHAR(55),
+    fk_idObraSocial BIGINT NOT NULL,
+    fk_idPersonaJuridica BIGINT NOT NULL,
+    createdAt TIMESTAMP,
+    updatedAt TIMESTAMP,
+    activo TINYINT,
+    FOREIGN KEY (fk_idPersonaJuridica) REFERENCES personajuridicas(id),
+    FOREIGN KEY (fk_idObraSocial) REFERENCES obrasociales(id),
 
     PRIMARY KEY(id)
 );

@@ -573,7 +573,7 @@ const profesionalesController = {
             const usuario = await Usuario.findByPk(idUsuario)
 
             if (!usuario) {
-                throw new Error("No existe el usuario solicitado.")
+                throw new Error("No existe el usuario solicitado")
             }
 
             const passwordActualUsuario = usuario['dataValues']['password']
