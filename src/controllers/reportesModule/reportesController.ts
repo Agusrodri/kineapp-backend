@@ -5,6 +5,9 @@ import TratamientoPaciente from '../../models/entities/tratamientosModule/tratam
 import TratamientoParticular from '../../models/entities/obrasSocialesModule/tratamientoParticular';
 import ComentarioPaciente from '../../models/entities/tratamientosModule/comentarioPaciente';
 import Turno from '../../models/entities/turnosModule/turno';
+import PersonaJuridicaProfesional from '../../models/entities/usersModule/personaJuridicaProfesional';
+import Profesional from '../../models/entities/usersModule/profesional';
+import Consulta from '../../models/entities/turnosModule/consulta';
 
 const reportesController = {
 
@@ -19,14 +22,16 @@ const reportesController = {
                 cantidadPacientesNuevos,
                 cantidadPacientesPorTratamiento,
                 puntajeInstitucion,
-                cantidadTurnosNoAsistidos } = req.body;
+                cantidadTurnosNoAsistidos,
+                puntajeCadaProfesional } = req.body;
 
             const response = {
                 cantidadTratamientosFinalizados: null,
                 cantidadPacientesNuevos: null,
                 cantidadPacientesPorTratamiento: [],
                 puntajeInstitucion: [],
-                cantidadTurnosNoAsistidos: null
+                cantidadTurnosNoAsistidos: null,
+                puntajeCadaProfesional: []
             }
 
             if (cantidadTratamientosFinalizados == true) {
@@ -131,13 +136,12 @@ const reportesController = {
             }
 
             if (cantidadTurnosNoAsistidos == true) {
-
                 const turnosNoAsistidos = await Turno.findAll({
                     where: {
                         fk_idPersonaJuridica: idPersonaJuridica,
                         estado: "no-asistido",
                         horario: {
-                            [Op.like]: `%/${mes}/${anio}%`
+                            [Op.like]: `${mes}/%/${anio}%`
                         }
                     }
                 })
@@ -145,7 +149,45 @@ const reportesController = {
                 if (turnosNoAsistidos) {
                     response.cantidadTurnosNoAsistidos = turnosNoAsistidos.length;
                 }
+            }
 
+            if (puntajeCadaProfesional == true) {
+                const pjProfesional = await PersonaJuridicaProfesional.findAll({
+                    where: {
+                        fk_idPersonaJuridica: idPersonaJuridica,
+                        activo: true
+                    }
+                })
+
+                if (pjProfesional) {
+                    for (let index = 0; index < pjProfesional.length; index++) {
+                        const profesional = await Profesional.findByPk(pjProfesional[index]['dataValues']['fk_idProfesional']);
+                        const consultas = await Consulta.findAll({
+                            where: {
+                                fk_idProfesional: pjProfesional[index]['dataValues']['fk_idProfesional'],
+                                createdAt: {
+                                    [Op.between]: [new Date(`${anio}-${mes}-01`), new Date(`${anio}-${mes}-31`)]
+                                }
+                            }
+                        })
+
+                        let puntajesProfesional = []
+                        for (let index = 0; index < consultas.length; index++) {
+                            const turno = await Turno.findByPk(consultas[index]['dataValues']['fk_idTurno']);
+                            if (turno['dataValues']['fk_idPersonaJuridica'] == idPersonaJuridica) {
+                                puntajesProfesional.push(consultas[index]['dataValues']['puntuacion'])
+                            }
+                        }
+
+                        const promedioPuntajeProfesional = puntajesProfesional.reduce((a, b) => a + b, 0) / puntajesProfesional.length;
+                        const profesionalResponse = {
+                            profesional: `${profesional['dataValues']['apellido']}, ${profesional['dataValues']['nombre']}`,
+                            puntaje: promedioPuntajeProfesional ? promedioPuntajeProfesional : 0
+                        }
+
+                        response.puntajeCadaProfesional.push(profesionalResponse);
+                    }
+                }
             }
 
             res.status(200).json(response)
