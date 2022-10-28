@@ -4,6 +4,7 @@ import { Op } from 'sequelize';
 import TratamientoPaciente from '../../models/entities/tratamientosModule/tratamientoPaciente';
 import TratamientoParticular from '../../models/entities/obrasSocialesModule/tratamientoParticular';
 import ComentarioPaciente from '../../models/entities/tratamientosModule/comentarioPaciente';
+import Turno from '../../models/entities/turnosModule/turno';
 
 const reportesController = {
 
@@ -17,13 +18,15 @@ const reportesController = {
                 cantidadTratamientosFinalizados,
                 cantidadPacientesNuevos,
                 cantidadPacientesPorTratamiento,
-                puntajeInstitucion } = req.body;
+                puntajeInstitucion,
+                cantidadTurnosNoAsistidos } = req.body;
 
             const response = {
                 cantidadTratamientosFinalizados: null,
                 cantidadPacientesNuevos: null,
                 cantidadPacientesPorTratamiento: [],
-                puntajeInstitucion: []
+                puntajeInstitucion: [],
+                cantidadTurnosNoAsistidos: null
             }
 
             if (cantidadTratamientosFinalizados == true) {
@@ -125,6 +128,24 @@ const reportesController = {
                     response.puntajeInstitucion.push(puntajeMesResponse)
                     auxMes -= 1;
                 }
+            }
+
+            if (cantidadTurnosNoAsistidos == true) {
+
+                const turnosNoAsistidos = await Turno.findAll({
+                    where: {
+                        fk_idPersonaJuridica: idPersonaJuridica,
+                        estado: "no-asistido",
+                        horario: {
+                            [Op.like]: `%/${mes}/${anio}%`
+                        }
+                    }
+                })
+
+                if (turnosNoAsistidos) {
+                    response.cantidadTurnosNoAsistidos = turnosNoAsistidos.length;
+                }
+
             }
 
             res.status(200).json(response)
