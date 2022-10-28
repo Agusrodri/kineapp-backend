@@ -61,7 +61,7 @@ const tratamientosGeneralesController = {
             })
 
             if (tratamientoToFind) {
-                throw new Error("El nombre que desea agregar ya está en uso, compruebe si el tratamiento ya está cargado o ingrese un nombre diferente.")
+                throw new Error("El nombre que desea agregar ya está en uso")
             }
 
             const tratamientoGeneral = await TratamientoGeneral.create({
@@ -71,7 +71,7 @@ const tratamientosGeneralesController = {
             })
 
             res.status(200).json({
-                msg: "Tratamiento creado correctamente.",
+                msg: "Tratamiento creado correctamente",
                 tratamientoGeneral
             })
 
@@ -111,13 +111,13 @@ const tratamientosGeneralesController = {
             })
 
             if (tratamientoToFind) {
-                throw new Error("El nombre que desea agregar ya está en uso, compruebe si el tratamiento ya está cargado o ingrese un nombre diferente.")
+                throw new Error("El nombre que desea agregar ya está en uso")
             }
 
             await tratamientoGeneralToUpdate.update({ nombre: nombre, descripcion: descripcion })
 
             res.status(200).json({
-                msg: "Tratamiento actualizado con éxito.",
+                msg: "Tratamiento actualizado correctamente",
                 tratamientoGneral: tratamientoGeneralToUpdate
             })
 
@@ -147,7 +147,7 @@ const tratamientosGeneralesController = {
             await tratamientoGeneralToDelete.update({ activo: false })
 
             res.status(200).json({
-                msg: "Tratamiento eliminado correctamente."
+                msg: "Tratamiento eliminado correctamente"
             })
 
         } catch (error) {

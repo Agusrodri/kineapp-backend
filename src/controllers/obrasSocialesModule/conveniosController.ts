@@ -295,7 +295,7 @@ const conveniosController = {
             }
 
             res.status(200).json({
-                msg: "Convenio creado con éxito.",
+                msg: "Convenio creado correctamente",
                 convenio: convenioResp
             })
 
@@ -382,7 +382,7 @@ const conveniosController = {
             }
 
             res.status(200).json({
-                msg: "Convenio actualizado con éxito.",
+                msg: "Convenio actualizado correctamente",
                 convenio: convenioResp
             })
 
@@ -415,7 +415,7 @@ const conveniosController = {
             await convenioToDelete.update({ activo: false })
 
             res.status(200).json({
-                msg: "Convenio eliminado correctamente."
+                msg: "Convenio eliminado correctamente"
             })
 
         } catch (error) {

@@ -144,7 +144,7 @@ const tratamientoPacienteController = {
             }
 
             res.status(200).json({
-                msg: "Tratamiento agregado con éxito.",
+                msg: "Tratamiento agregado correctamente",
                 newTratamientoPaciente: response
             })
 
@@ -275,7 +275,7 @@ const tratamientoPacienteController = {
             }
 
             res.status(200).json({
-                msg: "Tratamiento finalizado con éxito.",
+                msg: "Tratamiento finalizado correctamente",
                 tratamientoPacienteFinalizado: response
             })
 
@@ -320,14 +320,14 @@ const tratamientoPacienteController = {
 
                 await tratamientoPaciente.update({ activo: false })
                 res.status(200).json({
-                    msg: "Tratamiento eliminado con éxito."
+                    msg: "Tratamiento eliminado correctamente"
                 })
 
             } else {
 
                 await tratamientoPaciente.update({ fechaFinReal: new Date(), activo: false })
                 res.status(200).json({
-                    msg: "Tratamiento eliminado y finalizado con éxito."
+                    msg: "Tratamiento eliminado y finalizado correctamente"
                 })
             }
 

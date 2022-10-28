@@ -125,7 +125,7 @@ const pacientesController = {
             })
 
             res.status(200).json({
-                msg: "Paciente creado correctamente."
+                msg: "Paciente creado correctamente"
             })
 
         } catch (error) {
@@ -230,7 +230,7 @@ const pacientesController = {
             await pacienteToDelete.update({ activo: false })
 
             res.status(200).json({
-                msg: "Paciente eliminado correctamente."
+                msg: "Paciente eliminado correctamente"
             })
 
         } catch (error) {

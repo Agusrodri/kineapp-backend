@@ -74,7 +74,7 @@ const tratamientosParticularesController = {
             })
 
             if (tratamientoParticular) {
-                throw new Error("Ya existe un tratamiento particular con ese nombre dentro de la institución.")
+                throw new Error("El nombre que desea agregar ya está en uso")
             }
 
             if (idTratamientoGeneral) {
@@ -97,7 +97,7 @@ const tratamientosParticularesController = {
             })
 
             res.status(200).json({
-                msg: "Tratamiento particular agregado con éxito.",
+                msg: "Tratamiento agregado correctamente",
                 nuevotratamientoParticular
             })
 
@@ -139,7 +139,7 @@ const tratamientosParticularesController = {
             })
 
             if (!tratamientoToEdit) {
-                throw new Error("No existe el tratamiento particular solicitado.")
+                throw new Error("No existe el tratamiento particular solicitado")
             }
 
             if (tratamientoToEdit['dataValues']['fk_idTratamientoGeneral']) {
@@ -149,7 +149,7 @@ const tratamientosParticularesController = {
             }
 
             res.status(200).json({
-                msg: "Tratamiento particular actualizado correctamente.",
+                msg: "Tratamiento actualizado correctamente",
                 tratamientoParticular: tratamientoToEdit
             })
 
@@ -181,7 +181,7 @@ const tratamientosParticularesController = {
             await tratamientoParticularToDelete.update({ activo: false })
 
             res.status(200).json({
-                msg: "Tratamiento partiular eliminado correctamente."
+                msg: "Tratamiento eliminado correctamente"
             })
 
         } catch (error) {

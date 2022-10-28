@@ -660,7 +660,7 @@ const obrasSocialesController = {
             await planToDelete.update({ activo: false })
 
             res.status(200).json({
-                msg: "Plan eliminado con éxito."
+                msg: "Plan eliminado correctamente"
             })
 
         } catch (error) {
