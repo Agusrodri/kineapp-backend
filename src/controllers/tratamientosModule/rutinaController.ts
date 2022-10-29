@@ -144,7 +144,7 @@ const rutinaController = {
             }
 
             res.status(200).json({
-                msg: "Rutina creada con éxito.",
+                msg: "Rutina creada correctamente",
                 rutina: rutinaResponse
             })
 
@@ -289,7 +289,7 @@ const rutinaController = {
             }
 
             res.status(200).json({
-                msg: "Rutina actualizada con éxito.",
+                msg: "Rutina actualizada correctamente",
                 rutina: responseFinal
             })
 
@@ -358,7 +358,7 @@ const rutinaController = {
             }
 
             res.status(200).json({
-                msg: "Rutina finalizada con éxito.",
+                msg: "Rutina finalizada correctamente",
                 rutina: responseFinal
             })
 
@@ -388,7 +388,7 @@ const rutinaController = {
             await rutinaToDelete.update({ activo: false, jsonRutina: null })
 
             res.status(200).json({
-                msg: "Rutina eliminada correctamente."
+                msg: "Rutina eliminada correctamente"
             })
 
         } catch (error) {

@@ -14,32 +14,32 @@ const consultasController = {
 
     getTurnosDay: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idPersonaJuridica} = req.params;
-            const {fecha} = req.body;
+            const { idPersonaJuridica } = req.params;
+            const { fecha } = req.body;
 
             const institucion = await PersonaJuridica.findOne({
-                where:{
+                where: {
                     id: idPersonaJuridica,
                     activo: true
                 }
             })
 
-            if(!institucion){
-                throw new Error("No existe la institución solicitada.")
+            if (!institucion) {
+                throw new Error("No existe la institución solicitada")
             }
 
             const turnosDay = await Turno.findAll({
-                where:{
-                    horario:{
+                where: {
+                    horario: {
                         [Op.like]: `${fecha}%`
                     },
                     fk_idPersonaJuridica: idPersonaJuridica
                 }
-            }) 
+            })
 
-            if(!turnosDay){
+            if (!turnosDay) {
                 return res.status(200).json([])
             }
 
@@ -67,7 +67,7 @@ const consultasController = {
                     obraSocial: turnosDay[index]['dataValues']['obraSocial'],
                     plan: turnosDay[index]['dataValues']['plan'],
                     nombrePersonaJuridica: institucion['dataValues']['nombre'],
-                    paciente: paciente? `${paciente['dataValues']['apellido']}, ${paciente['dataValues']['nombre']}`: null,
+                    paciente: paciente ? `${paciente['dataValues']['apellido']}, ${paciente['dataValues']['nombre']}` : null,
                     tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null
                 }
 
@@ -76,7 +76,7 @@ const consultasController = {
 
             res.status(200).json(responsesArray)
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
@@ -85,20 +85,20 @@ const consultasController = {
 
     crearConsulta: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idTurno} = req.params;
-            const {observaciones, asistio, idProfesional} = req.body;
+            const { idTurno } = req.params;
+            const { observaciones, asistio, idProfesional } = req.body;
 
             const turno = await Turno.findByPk(idTurno);
             const consulta = await Consulta.findOne({
-                where:{
+                where: {
                     fk_idTurno: idTurno
                 }
             })
 
-            if(consulta){
-                throw new Error("El turno ya posee una consulta asociada.")
+            if (consulta) {
+                throw new Error("El turno ya posee una consulta asociada")
             }
 
             const newConsulta = await Consulta.create({
@@ -108,21 +108,21 @@ const consultasController = {
                 fk_idProfesional: idProfesional
             })
 
-            if(asistio == true){
-                await turno.update({estado: "asistido"})
+            if (asistio == true) {
+                await turno.update({ estado: "asistido" })
                 const profesional = await Profesional.findByPk(idProfesional);
 
-                const paciente = turno? await Paciente.findOne({
-                    where:{
+                const paciente = turno ? await Paciente.findOne({
+                    where: {
                         id: turno['dataValues']['fk_idPaciente'],
                         activo: true
                     }
-                }): null;
+                }) : null;
 
-                const usuarioToFind = paciente && paciente['dataValues']['fk_idUsuario'] ? 
+                const usuarioToFind = paciente && paciente['dataValues']['fk_idUsuario'] ?
                     await Usuario.findByPk(paciente['dataValues']['fk_idUsuario']) : null;
 
-                const nombreProfesional = profesional ? `${profesional['dataValues']['apellido']}, ${profesional['dataValues']['nombre']}`: "";
+                const nombreProfesional = profesional ? `${profesional['dataValues']['apellido']}, ${profesional['dataValues']['nombre']}` : "";
                 const notificationBody = `Hoy te atendió ${nombreProfesional}. ¿Qué puntuación le darías?`;
                 if (usuarioToFind) {
 
@@ -131,22 +131,22 @@ const consultasController = {
                         check: false,
                         fk_idUsuario: usuarioToFind['dataValues']['id'],
                         titulo: "Califica al profesional",
-                        router: "a definir"
+                        router: `app/notificaciones/${usuarioToFind['dataValues']['id']}/puntuar-profesional/${newConsulta['dataValues']['id']}`
                     })
 
                     sendNotification(usuarioToFind['dataValues']['subscription'], notificationBody);
                     return true;
                 }
-            }else{
-                await turno.update({estado: "no-asistido"})
+            } else {
+                await turno.update({ estado: "no-asistido" })
             }
 
             res.status(200).json({
-                msg: "Consulta guardada con éxito.",
+                msg: "Consulta guardada correctamente",
                 consulta: newConsulta
             })
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
@@ -155,30 +155,30 @@ const consultasController = {
 
     confirmarTurno: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idTurno} = req.params;
+            const { idTurno } = req.params;
             const turno = await Turno.findOne({
-                where:{
+                where: {
                     id: idTurno
                 }
             });
 
-            if(!turno){
+            if (!turno) {
                 throw new Error("No existe el turno solicitado.")
             }
 
-            if(turno['dataValues']['estado'] == "cancelado"){
+            if (turno['dataValues']['estado'] == "cancelado") {
                 throw new Error("El turno ya se encuentra cancelado.")
             }
 
-            await turno.update({estado: "confirmado"});
+            await turno.update({ estado: "confirmado" });
 
             res.status(200).json({
-                msg: "Turno confirmado con éxito."
+                msg: "Turno confirmado correctamente"
             })
-            
-        }catch(error){
+
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
@@ -187,43 +187,43 @@ const consultasController = {
 
     getConsultas: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idPaciente} = req.params;
+            const { idPaciente } = req.params;
 
             const paciente = await Paciente.findOne({
-                where:{
+                where: {
                     id: idPaciente,
                     activo: true
                 }
             })
 
-            if(!paciente){
+            if (!paciente) {
                 throw new Error("No existe el paciente solicitado.")
             }
 
             const turnos = await Turno.findAll({
-                where:{
+                where: {
                     fk_idPaciente: idPaciente
                 }
             })
 
-            if (!turnos){
+            if (!turnos) {
                 return res.status(200).json([])
             }
 
             const consultasResponse = [];
-            
+
             for (let index = 0; index < turnos.length; index++) {
-                
+
                 const consulta = await Consulta.findOne({
-                    where:{
+                    where: {
                         fk_idTurno: turnos[index]['dataValues']['id'],
                         asistio: true
                     }
                 })
 
-                if(!consulta){continue}
+                if (!consulta) { continue }
 
                 const tratamiento = await TratamientoParticular.findByPk(turnos[index]['dataValues']['fk_idTratamiento']);
                 const profesional = await Profesional.findByPk(consulta['dataValues']['fk_idProfesional']);
@@ -231,11 +231,11 @@ const consultasController = {
                 const consultaToAdd = {
                     id: consulta['dataValues']['id'],
                     observaciones: consulta['dataValues']['observaciones'],
-                    puntuacion: consulta['dataValues']['puntuacion'] ? consulta['dataValues']['puntuacion']: null,
+                    puntuacion: consulta['dataValues']['puntuacion'] ? consulta['dataValues']['puntuacion'] : null,
                     paciente: `${paciente['dataValues']['apellido']}, ${paciente['dataValues']['nombre']}`,
                     horario: turnos[index]['dataValues']['horario'],
-                    tratamiento: tratamiento ? tratamiento['dataValues']['nombre']: null,
-                    profesional: profesional ? `${profesional['dataValues']['apellido']}, ${profesional['dataValues']['nombre']}`: null
+                    tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null,
+                    profesional: profesional ? `${profesional['dataValues']['apellido']}, ${profesional['dataValues']['nombre']}` : null
                 }
 
                 consultasResponse.push(consultaToAdd);
@@ -243,7 +243,7 @@ const consultasController = {
 
             res.status(200).json(consultasResponse);
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
@@ -252,23 +252,23 @@ const consultasController = {
 
     getConsultaById: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idConsulta} = req.params;
+            const { idConsulta } = req.params;
             const consulta = await Consulta.findByPk(idConsulta);
 
-            if(!consulta){
+            if (!consulta) {
                 throw new Error("No existe la consulta solicitada.")
             }
 
             const turno = await Turno.findByPk(consulta['dataValues']['fk_idTurno']);
 
-            if(!turno){
+            if (!turno) {
                 throw new Error("La consulta no posee un turno asociado.")
             }
 
             const paciente = await Paciente.findOne({
-                where:{
+                where: {
                     id: turno['dataValues']['fk_idPaciente'],
                     activo: true
                 }
@@ -280,16 +280,16 @@ const consultasController = {
             const consultaResponse = {
                 id: consulta['dataValues']['id'],
                 observaciones: consulta['dataValues']['observaciones'],
-                puntuacion: consulta['dataValues']['puntuacion'] ? consulta['dataValues']['puntuacion']: null,
-                paciente: paciente? `${paciente['dataValues']['apellido']}, ${paciente['dataValues']['nombre']}`: null,
+                puntuacion: consulta['dataValues']['puntuacion'] ? consulta['dataValues']['puntuacion'] : null,
+                paciente: paciente ? `${paciente['dataValues']['apellido']}, ${paciente['dataValues']['nombre']}` : null,
                 horario: turno['dataValues']['horario'],
-                tratamiento: tratamiento ? tratamiento['dataValues']['nombre']: null,
-                profesional: profesional ? `${profesional['dataValues']['apellido']}, ${profesional['dataValues']['nombre']}`: null
+                tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null,
+                profesional: profesional ? `${profesional['dataValues']['apellido']}, ${profesional['dataValues']['nombre']}` : null
             }
 
             res.status(200).json(consultaResponse)
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });
@@ -298,24 +298,24 @@ const consultasController = {
 
     calificarProfesional: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idConsulta} = req.params;
-            const {puntuacion} = req.body;
+            const { idConsulta } = req.params;
+            const { puntuacion } = req.body;
 
             const consulta = await Consulta.findByPk(idConsulta);
 
-            if(!consulta){
+            if (!consulta) {
                 throw new Error("No existe la consulta solicitada.")
             }
 
-            await consulta.update({puntuacion: puntuacion});
+            await consulta.update({ puntuacion: puntuacion });
 
             res.status(200).json({
-                msg: "Puntaje establecido con éxito."
+                msg: "Puntaje establecido correctamente"
             })
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });

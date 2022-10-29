@@ -422,7 +422,7 @@ const obrasSocialesController = {
                 })
             }
 
-            let notificationBody = `Los siguientes tratamientos fueron agregados al plan ${plan['dataValues']['nombre']} de la obra social ${obraSocial['dataValues']['nombre']}: `
+            let notificationBody = `La obra social ${obraSocial['dataValues']['nombre']} modificó la lista de tratamientos en sus planes. Ingrese al plan del convenio que tiene con esta obra social para visualizar los cambios y nivelar la información en caso de ser necesario.`
 
             tratamientosNotificacion.forEach((tratamiento, index) => {
                 notificationBody = notificationBody + tratamiento + (index < (tratamientosNotificacion.length - 1) ? "" : ", ")
@@ -447,7 +447,7 @@ const obrasSocialesController = {
                             texto: notificationBody,
                             check: false,
                             fk_idUsuario: usuario['dataValues']['id'],
-                            titulo: "Actualización de Plan"
+                            titulo: `Se modificaron los tratamientos de la obra social ${obraSocial['dataValues']['nombre']}`
                         })
                         sendNotification(usuario['dataValues']['subscription'], notificationBody)
                     }

@@ -280,13 +280,13 @@ const rutinaPacienteController = {
 
                 profesionalToNotificate = await Profesional.findByPk(rutina['dataValues']['fk_idProfesional']);
                 usuarioProfesionalToNotificate = await Usuario.findByPk(profesionalToNotificate['dataValues']['fk_idUsuario']);
-                notificationBodyPaciente = `El profesional ${profesionalToNotificate['dataValues']['apellido']}, ${profesionalToNotificate['dataValues']['nombre']} realizó un comentario en tu rutina activa.`
+                notificationBodyPaciente = `${profesionalToNotificate['dataValues']['apellido']}, ${profesionalToNotificate['dataValues']['nombre']} realizó comentarios en su rutina. Presione “Ver” para ir a ver los mismos.`
 
             } else {
 
                 institucionToNotificate = await PersonaJuridica.findByPk(tratamientoPacienteToFind['dataValues']['fk_idPersonaJuridica']);
                 usuarioInstitucionToNotificate = await Usuario.findByPk(institucionToNotificate['dataValues']['fk_idUsuarios']);
-                notificationBodyPaciente = `La institución "${institucionToNotificate['dataValues']['nombre']}" realizó un comentario en tu rutina activa.`
+                notificationBodyPaciente = `"${institucionToNotificate['dataValues']['nombre']}" realizó comentarios en su rutina. Presione “Ver” para ir a ver los mismos.`
             }
 
             const pacienteToNotificate = await Paciente.findByPk(tratamientoPacienteToFind['dataValues']['fk_idPaciente']);
@@ -298,7 +298,7 @@ const rutinaPacienteController = {
             const idTratamiento = rutina['dataValues']['fk_idTratamientoPaciente'];
             if (isComentarioPaciente == true) {
 
-                const notificationBody = `El paciente ${pacienteToNotificate['dataValues']['apellido']}, ${pacienteToNotificate['dataValues']['nombre']} realizó un comentario en su rutina activa.`;
+                const notificationBody = `${pacienteToNotificate['dataValues']['apellido']}, ${pacienteToNotificate['dataValues']['nombre']} hizo un comentario en la rutina que le asignaste, presione “Ver” para contestar a sus comentarios.`;
 
                 if (profesionalToNotificate && usuarioProfesionalToNotificate['dataValues']['subscription']) {
 
@@ -306,7 +306,7 @@ const rutinaPacienteController = {
                         texto: notificationBody,
                         check: false,
                         fk_idUsuario: usuarioProfesionalToNotificate['dataValues']['id'],
-                        titulo: "Nuevo comentario de paciente en rutina",
+                        titulo: `${pacienteToNotificate['dataValues']['apellido']}, ${pacienteToNotificate['dataValues']['nombre']} realizó un comentario en su rutina`,
                         router: `app/pacientes/${idInstitucion}/${idPaciente}/${idTratamiento}/${idRutina}/avance`
                     })
 
@@ -317,7 +317,7 @@ const rutinaPacienteController = {
                         texto: notificationBody,
                         check: false,
                         fk_idUsuario: usuarioInstitucionToNotificate['dataValues']['id'],
-                        titulo: "Nuevo comentario de paciente en rutina",
+                        titulo: `${pacienteToNotificate['dataValues']['apellido']}, ${pacienteToNotificate['dataValues']['nombre']} realizó un comentario en su rutina`,
                         router: `app/pacientes/${idInstitucion}/${idPaciente}/${idTratamiento}/${idRutina}/avance`
                     })
 
@@ -331,7 +331,7 @@ const rutinaPacienteController = {
                         texto: notificationBodyPaciente,
                         check: false,
                         fk_idUsuario: usuarioPacienteToNotificate['dataValues']['id'],
-                        titulo: "Nuevo comentario de profesional en rutina",
+                        titulo: "Comentarios en su rutina",
                         router: `app/tratamientos-paciente/${idPaciente}/${idTratamiento}/${idRutina}/comments`
                     })
 

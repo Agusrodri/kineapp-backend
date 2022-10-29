@@ -69,7 +69,7 @@ const ejerciciosController = {
             })
 
             if (ejercicio) {
-                throw new Error("Ya existe un ejercicio con ese nombre en la institución.")
+                throw new Error("El nombre que desea agregar ya está en uso")
             }
 
             const newEjercicio = await Ejercicio.create({
@@ -82,7 +82,7 @@ const ejerciciosController = {
             })
 
             res.status(200).json({
-                msg: "Ejercicio agregado correctamente",
+                msg: "Ejercicio creado correctamente",
                 newEjercicio
             })
 
@@ -120,7 +120,7 @@ const ejerciciosController = {
             })
 
             if (ejercicioToFind) {
-                throw new Error("El nombre que desea agregar ya está en uso, compruebe si ya está cargado o ingrese un nombre diferente.")
+                throw new Error("El nombre que desea agregar ya está en uso")
             }
 
             await ejercicio.update({
@@ -130,7 +130,7 @@ const ejerciciosController = {
             })
 
             res.status(200).json({
-                msg: "Ejercicio actualizado con éxito.",
+                msg: "Ejercicio actualizado correctamente",
                 ejercicio
             })
 
@@ -192,7 +192,7 @@ const ejerciciosController = {
             await ejercicio.update({ activo: false })
 
             res.status(200).json({
-                msg: "Ejercicio eliminado correctamente."
+                msg: "Ejercicio eliminado correctamente"
             })
 
         } catch (error) {
