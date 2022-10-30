@@ -1,18 +1,19 @@
 import { Router } from "express";
 import { check } from "express-validator";
+import validarJWT from "../../middlewares/validateJWT";
 
 import institucionesController from "../../controllers/usersModule/institucionesController";
 
 const router = Router()
 
-router.get("/instituciones", institucionesController.getInstituciones);
-router.get("/instituciones/:idPersonaJuridica", institucionesController.getInstitucionById);
-router.post("/instituciones/crear", institucionesController.createInstitucion);
-router.put("/instituciones/validar/:idUsuario", institucionesController.validarInstitucion);
-router.put("/instituciones/editar/:idUsuario", institucionesController.updateInstitucionById);
-router.delete("/instituciones/eliminar/:idPersonaJuridica", institucionesController.deleteInstitucionById);
-router.get("/instituciones/habilitar/:idPersonaJuridica", institucionesController.habilitarInstitucion);
-router.put("/instituciones/editarFromPerfil/:idPersonaJuridica", institucionesController.editarInstitucionFromPerfil);
+router.get("/instituciones", [validarJWT], institucionesController.getInstituciones);
+router.get("/instituciones/:idPersonaJuridica", [validarJWT], institucionesController.getInstitucionById);
+router.post("/instituciones/crear", [validarJWT], institucionesController.createInstitucion);
+router.put("/instituciones/validar/:idUsuario", [validarJWT], institucionesController.validarInstitucion);
+router.put("/instituciones/editar/:idUsuario", [validarJWT], institucionesController.updateInstitucionById);
+router.delete("/instituciones/eliminar/:idPersonaJuridica", [validarJWT], institucionesController.deleteInstitucionById);
+router.get("/instituciones/habilitar/:idPersonaJuridica", [validarJWT], institucionesController.habilitarInstitucion);
+router.put("/instituciones/editarFromPerfil/:idPersonaJuridica", [validarJWT], institucionesController.editarInstitucionFromPerfil);
 
 
 //module.exports = router
