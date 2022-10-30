@@ -504,7 +504,19 @@ const loginControllers = {
 
             jwt.verify(token, process.env.SECRETORPRIVATEKEY)
 
-            res.status(200).json({
+            const existsUsuarioWithToken = await Usuario.findOne({
+                where: {
+                    token: token
+                }
+            })
+
+            if (!existsUsuarioWithToken) {
+                return res.status(200).json({
+                    response: false
+                })
+            }
+
+            return res.status(200).json({
                 response: true
             })
 
