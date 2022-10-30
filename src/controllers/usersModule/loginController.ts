@@ -64,7 +64,7 @@ const loginControllers = {
             let roles = await findRoles(usuario[0]['dataValues']['id'])
             const rolesInternos = await findRolesInternos(usuario[0]['dataValues']['id'])
 
-            if (roles.length == 0 && !rolesInternos) {
+            if (roles.length == 0 && rolesInternos.length == 0) {
                 throw new Error("El usuario no posee ningún rol.")
             }
 

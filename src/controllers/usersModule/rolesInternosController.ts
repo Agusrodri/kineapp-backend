@@ -4,6 +4,7 @@ import RolInterno from "../../models/entities/usersModule/rolInterno"
 import RolInternoPermisoInterno from "../../models/entities/usersModule/rolInternoPermisoInterno"
 import PersonaJuridica from "../../models/entities/usersModule/personaJuridica"
 import PermisoInterno from "../../models/entities/usersModule/permisoInterno"
+import Usuario from "../../models/entities/usersModule/usuario"
 
 const rolesInternosController = {
 
@@ -287,7 +288,7 @@ const rolesInternosController = {
 
         try {
 
-            const { idPersonaJuridica, idRolInterno } = req.params
+            const { idPersonaJuridica, idRolInterno } = req.params;
 
             const rolinternoToDelete = await RolInterno.findOne({
                 where: {
@@ -299,14 +300,26 @@ const rolesInternosController = {
 
             if (rolinternoToDelete) {
 
-                rolinternoToDelete.update({ activo: false })
+                await rolinternoToDelete.update({ activo: false })
+
+                const usuarios = await Usuario.findAll({
+                    where: {
+                        rolInternoActivo: idRolInterno
+                    }
+                })
+
+                if (usuarios) {
+                    for (let index = 0; index < usuarios.length; index++) {
+                        await usuarios[index].update({ token: null })
+                    }
+                }
 
                 res.status(200).json({
                     msg: "Rol eliminado correctamente"
                 })
 
             } else {
-                throw new Error(`La persona jurídica no contiene el rol seleccionado`)
+                throw new Error(`La institución no contiene el rol seleccionado`)
             }
 
         } catch (error) {

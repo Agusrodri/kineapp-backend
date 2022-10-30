@@ -5,6 +5,7 @@ import RolPermiso from "../../models/entities/usersModule/rolPermiso";
 import Permiso from "../../models/entities/usersModule/permiso";
 import findRoles from "../../helpers/findRoles";
 import findRolesInternos from "../../helpers/findRolesInternos";
+import Usuario from "../../models/entities/usersModule/usuario";
 
 const rolesController = {
 
@@ -279,7 +280,21 @@ const rolesController = {
 
             }
 
-            rolToDelete.update({ activo: false })
+            await rolToDelete.update({ activo: false });
+
+            const usuarios = await Usuario.findAll({
+                where: {
+                    rolActivo: id
+                }
+            })
+
+            if (usuarios) {
+                for (let index = 0; index < usuarios.length; index++) {
+
+                    await usuarios[index].update({ token: null })
+
+                }
+            }
 
             res.status(200).json({
                 msg: `Rol eliminado correctamente`
