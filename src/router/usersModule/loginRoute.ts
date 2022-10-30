@@ -16,8 +16,8 @@ router.put("/setActivo", loginControllers.setActivo);
 router.get("/getInfoUsuario", [validarJWT], loginControllers.getInfoUsuarios);
 router.get("/getInfoPerfil/:idUsuario", [validarJWT], loginControllers.getInfoPerfil);
 router.get("/validarJWT/:token", [validarJWT], loginControllers.validateJWT);
-router.post("/emailToRestorePassword", [validarJWT], loginControllers.sendEmailToRestorePassword);
-router.put("/restorePassword/:idUsuario", [validarJWT], loginControllers.restorePassword);
+router.post("/emailToRestorePassword", loginControllers.sendEmailToRestorePassword);
+router.put("/restorePassword/:idUsuario", loginControllers.restorePassword);
 
 //notifications
 router.put("/setSubscription/:idUsuario", [validarJWT], notificationsController.setSubscription);
