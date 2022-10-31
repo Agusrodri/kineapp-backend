@@ -135,7 +135,7 @@ const consultasController = {
                     })
 
                     sendNotification(usuarioToFind['dataValues']['subscription'], notificationBody);
-                    return true;
+
                 }
             } else {
                 await turno.update({ estado: "no-asistido" })

@@ -18,7 +18,7 @@ export default async () => {
 
                     const notificationBody = "Te recordamos que tienes un turno dentro de una semana.";
                     const notificationTitle = "Recordatorio de turno";
-                    const route = "";
+                    const route = `app/turnos-paciente/${recordatorios[i]['dataValues']['fk_idPaciente']}`;
                     const notification = sendNotificationTurnoPaciente(recordatorios[i]['dataValues']['fk_idPaciente'], notificationBody, notificationTitle, route);
                     notification ? await recordatorios[i].update({ checkSemana: true }) : false;
                 }
@@ -27,7 +27,7 @@ export default async () => {
 
                     const notificationBody = "Te recordamos que tienes un turno dentro de tres días.";
                     const notificationTitle = "Recordatorio de turno";
-                    const route = "";
+                    const route = `app/turnos-paciente/${recordatorios[i]['dataValues']['fk_idPaciente']}`;
                     const notification = sendNotificationTurnoPaciente(recordatorios[i]['dataValues']['fk_idPaciente'], notificationBody, notificationTitle, route);
                     notification ? await recordatorios[i].update({ checkTresDias: true }) : false;
                 }
