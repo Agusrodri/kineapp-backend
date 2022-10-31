@@ -248,6 +248,19 @@ const obrasSocialesController = {
 
             await obraSocialToDelete.update({ activo: false })
 
+            const convenios = await Convenio.findAll({
+                where: {
+                    fk_idObraSocial: idObraSocial,
+                    activo: true
+                }
+            })
+
+            if (convenios) {
+                for (let index = 0; index < convenios.length; index++) {
+                    await convenios[index].update({ activo: false })
+                }
+            }
+
             res.status(200).json({
                 msg: "Obra social eliminada correctamente"
             })

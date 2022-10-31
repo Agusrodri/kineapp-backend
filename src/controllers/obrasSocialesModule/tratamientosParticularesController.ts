@@ -115,7 +115,6 @@ const tratamientosParticularesController = {
             const { idPersonaJuridica } = req.params
             const { idTratamientoParticular, nombre, monto, descripcion } = req.body
 
-
             const tratamientoToFind = await TratamientoParticular.findOne({
                 where: {
                     id: { [Op.notIn]: [idTratamientoParticular] },
@@ -128,7 +127,6 @@ const tratamientosParticularesController = {
             if (tratamientoToFind) {
                 throw new Error("Ya existe un tratamiento con ese nombre dentro de la institución. Por favor, ingrese un nombre diferente.")
             }
-
 
             const tratamientoToEdit = await TratamientoParticular.findOne({
                 where: {
