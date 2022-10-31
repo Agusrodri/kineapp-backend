@@ -45,6 +45,8 @@ const conveniosController = {
                         }
                     })
 
+                    if (!tratamientoGeneral) { continue }
+
                     const tratamientoToAdd = {
                         idTratamientoGeneral: tratamientoGeneral['dataValues']['id'],
                         nombre: tratamientoGeneral['dataValues']['nombre'],

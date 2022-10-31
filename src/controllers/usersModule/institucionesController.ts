@@ -19,7 +19,7 @@ const institucionesController = {
                 }
             })
 
-            if (instituciones.length != 0) {
+            if (instituciones) {
 
                 res.status(200).json(instituciones)
 
