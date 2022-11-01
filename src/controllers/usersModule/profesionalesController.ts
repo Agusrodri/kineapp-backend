@@ -164,6 +164,19 @@ const profesionalesController = {
                 telefono,
                 link } = req.body
 
+            const profesional = await Profesional.findOne({
+                where: {
+                    [Op.or]: {
+                        dni: dni,
+                        numeroMatricula: numeroMatricula
+                    }
+                }
+            })
+
+            if (profesional) {
+                throw new Error("El DNI o Matrícula que intenta ingresar ya pertenece a un usuario en el sistema")
+            }
+
             //buscar usuario con email existente
             const findUsuario = await Usuario.findOne({
                 where: {

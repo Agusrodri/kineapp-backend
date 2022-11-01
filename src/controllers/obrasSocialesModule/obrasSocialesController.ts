@@ -586,7 +586,6 @@ const obrasSocialesController = {
                         fk_idTratamientoGeneral: tratamientosPlan[index]['dataValues']['fk_idTratamientoGeneral']
                     }
                 })
-
             }
 
             await PlanTratamientoGeneral.destroy({
@@ -609,16 +608,6 @@ const obrasSocialesController = {
                 })
 
                 for (let index = 0; index < convenios.length; index++) {
-
-                    const convenio = await ConvenioTratamientoGeneral.findOne({
-                        where: {
-                            fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral'],
-                            fk_idConvenio: convenios[index]['dataValues']['id'],
-                            activo: true
-                        }
-                    })
-
-                    if (convenio) { continue }
 
                     await ConvenioTratamientoGeneral.create({
                         monto: 0,
@@ -719,6 +708,43 @@ const obrasSocialesController = {
             }
 
             await planToDelete.update({ activo: false })
+
+            //buscar los tratamientos
+            //evaluar uno por uno para ver si está en otro plan de esa obra social
+            //si está, no pasa na, y si no está, se borra
+
+            const convenios = await Convenio.findAll({
+                where: {
+                    fk_idObraSocial: planToDelete['dataValues']['fk_idObraSocial'],
+                    activo: true
+                }
+            })
+
+            for (let index = 0; index < convenios.length; index++) {
+                const conveniosTratamientos = await ConvenioTratamientoGeneral.findAll({
+                    where: {
+                        fk_idConvenio: convenios[index]['dataValues']['id'],
+                        activo: true
+                    }
+                })
+
+                for (let j = 0; j < conveniosTratamientos.length; j++) {
+                    const tratamiento = await ConvenioTratamientoGeneral.findOne({
+                        where: {
+                            fk_idConvenio: { [Op.notIn]: [convenios[index]['dataValues']['id']] },
+                            fk_idTratamientoGeneral: conveniosTratamientos[j]['dataValues']['fk_idTratamientoGeneral'],
+                            activo: true
+                        }
+                    })
+
+                    if (tratamiento) { continue }
+
+
+
+                }
+
+            }
+
 
             res.status(200).json({
                 msg: "Plan eliminado correctamente"
