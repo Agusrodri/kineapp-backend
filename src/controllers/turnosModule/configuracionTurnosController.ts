@@ -8,7 +8,7 @@ const configuracionTurnosController = {
 
             const {idPersonaJuridica} = req.params;
 
-            const {horaInicioAtencion, horaFinAtencion, pacientesSimultaneos} = req.params;
+            const {horaInicioAtencion, horaFinAtencion, pacientesSimultaneos} = req.body;
 
             await ConfiguracionTurnos.destroy({
                 where:{
