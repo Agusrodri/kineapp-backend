@@ -19,7 +19,7 @@ router.post("/uploadHabilitaciones", [
 ], fileController.uploadHabilitaciones);
 
 //download y get son particulares de cada tipo de archivo (habilitaciones o gifs) para facilitar al front
-router.get("/downloadHabilitacion/:path/:fileName", [validarJWT], fileController.downloadHabilitaciones)
+router.get("/downloadHabilitacion/:path/:fileName", fileController.downloadHabilitaciones)
 
 router.get("/getHabilitaciones/:path", [validarJWT], fileController.getHabilitacionesFiles)
 
