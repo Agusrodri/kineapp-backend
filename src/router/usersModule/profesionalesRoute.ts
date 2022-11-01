@@ -11,7 +11,7 @@ router.post("/profesionales/crearSinUsuario/:idPersonaJuridica", [validarJWT], p
 router.put("/profesionales/validar/:idUsuario", [validarJWT], profesionalesController.validarProfesional);
 router.post("/profesionales/test/buscarUsuario/:idPersonaJuridica", [validarJWT], profesionalesController.buscarUsuario);
 router.post("/profesionales/crearConUsuario/:idUsuario/:idPersonaJuridica", [validarJWT], profesionalesController.crearProfesionalConUsuario);
-router.get("/tipoDNI/all", [validarJWT], profesionalesController.getTiposDni);
+router.get("/tipoDNI/all", profesionalesController.getTiposDni);
 router.put("/profesionales/editarFromPerfil/:idProfesional", [validarJWT], profesionalesController.editarFromPerfil);
 router.put("/profesionales/editarFromInstitucion/:idPersonaJuridica", [validarJWT], profesionalesController.editarFromInstitucion);
 router.delete("/profesionales/eliminar/:idPersonaJuridica/:idProfesional", [validarJWT], profesionalesController.deleteProfesionalById);

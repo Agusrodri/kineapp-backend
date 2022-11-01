@@ -332,17 +332,7 @@ const pacientesController = {
                 obraSocial,
                 plan,
                 numeroAfiliado } = req.body
-
-            const paciente = await Paciente.findOne({
-                where: {
-                    dni: dni
-                }
-            })
-
-            if (paciente) {
-                throw new Error("El DNI que intenta ingresar ya pertenece a un usuario en el sistema")
-            }
-
+                
             const usuario = await Usuario.findOne({
                 where: {
                     id: idUsuario,

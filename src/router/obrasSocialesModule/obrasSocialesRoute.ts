@@ -4,8 +4,8 @@ import obrasSocialesController from "../../controllers/obrasSocialesModule/obras
 
 const router = Router()
 
-router.get("/obrasSociales", [validarJWT], obrasSocialesController.getObrasSociales);
-router.get("/obrasSociales/planes/:idObraSocial", [validarJWT], obrasSocialesController.getPlanesObraSocial);
+router.get("/obrasSociales", obrasSocialesController.getObrasSociales);
+router.get("/obrasSociales/planes/:idObraSocial", obrasSocialesController.getPlanesObraSocial);
 router.post("/obrasSociales/crearObraSocial", [validarJWT], obrasSocialesController.createObraSocial);
 router.get("/obrasSociales/:idObraSocial", [validarJWT], obrasSocialesController.getObraSocialById);
 router.delete("/obrasSociales/eliminarObraSocial/:idObraSocial", [validarJWT], obrasSocialesController.deleteObraSocialById);
