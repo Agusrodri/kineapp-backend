@@ -10,6 +10,7 @@ import sendNotification from '../../helpers/sendNotification';
 import Notificacion from '../../models/entities/usersModule/notificacion';
 import PersonaJuridica from '../../models/entities/usersModule/personaJuridica';
 import Convenio from '../../models/entities/obrasSocialesModule/convenio';
+import ConvenioTratamientoGeneral from '../../models/entities/obrasSocialesModule/convenioTratamientoGeneral';
 
 const obrasSocialesController = {
 
@@ -410,6 +411,13 @@ const obrasSocialesController = {
                 throw new Error("No existe la obra social asociada al plan indicado.")
             }
 
+            const convenios = await Convenio.findAll({
+                where: {
+                    fk_idObraSocial: idObraSocial,
+                    activo: true
+                }
+            })
+
             let tratamientosNotificacion = []
             for (let i = 0; i < tratamientos.length; i++) {
 
@@ -433,6 +441,14 @@ const obrasSocialesController = {
                     fk_idPlan: idPlan,
                     fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral']
                 })
+
+                for (let index = 0; index < convenios.length; index++) {
+                    await ConvenioTratamientoGeneral.create({
+                        monto: 0,
+                        fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral'],
+                        fk_idConvenio: convenios[index]['dataValues']['id']
+                    })
+                }
             }
 
             let notificationBody = `La obra social ${obraSocial['dataValues']['nombre']} modificó la lista de tratamientos en sus planes. Ingrese al plan del convenio que tiene con esta obra social para visualizar los cambios y nivelar la información en caso de ser necesario.`
@@ -467,15 +483,9 @@ const obrasSocialesController = {
                 }
             }
 
-            const convenios = await Convenio.findAll({
-                where: {
-                    fk_idObraSocial: idObraSocial,
-                    activo: true
-                }
-            })
-
             if (convenios) {
                 for (let index = 0; index < convenios.length; index++) {
+
                     const institucionToNotificate = await PersonaJuridica.findOne({
                         where: {
                             id: convenios[index]['dataValues']['fk_idPersonaJuridica'],
@@ -555,6 +565,29 @@ const obrasSocialesController = {
             })
 
             await planToEdit.update({ nombre: nombre })
+
+            const convenios = await Convenio.findAll({
+                where: {
+                    fk_idObraSocial: idObraSocial,
+                    activo: true
+                }
+            })
+
+            const tratamientosPlan = await PlanTratamientoGeneral.findAll({
+                where: {
+                    fk_idPlan: idPlan
+                }
+            })
+
+            for (let index = 0; index < tratamientosPlan.length; index++) {
+                await ConvenioTratamientoGeneral.destroy({
+                    where: {
+                        fk_idTratamientoGeneral: tratamientosPlan[index]['dataValues']['fk_idTratamientoGeneral']
+                    }
+                })
+
+            }
+
             await PlanTratamientoGeneral.destroy({
                 where: {
                     fk_idPlan: idPlan
@@ -573,6 +606,14 @@ const obrasSocialesController = {
                     fk_idPlan: idPlan,
                     fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral']
                 })
+
+                for (let index = 0; index < convenios.length; index++) {
+                    await ConvenioTratamientoGeneral.create({
+                        monto: 0,
+                        fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral'],
+                        fk_idConvenio: convenios[index]['dataValues']['id']
+                    })
+                }
             }
 
             let notificationBody = `Los siguientes tratamientos fueron agregados al plan ${planToEdit['dataValues']['nombre']} de la obra social ${obraSocial['dataValues']['nombre']}: `
@@ -607,12 +648,6 @@ const obrasSocialesController = {
                 }
             }
 
-            const convenios = await Convenio.findAll({
-                where: {
-                    fk_idObraSocial: idObraSocial,
-                    activo: true
-                }
-            })
 
             if (convenios) {
                 for (let index = 0; index < convenios.length; index++) {
