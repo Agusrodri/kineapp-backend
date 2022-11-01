@@ -208,6 +208,17 @@ const pacientesInstitucionesController = {
                 idPlan,
                 numeroAfiliado } = req.body
 
+            const usuario = await Usuario.findOne({
+                where: {
+                    email: email,
+                    activo: true
+                }
+            })
+
+            if (usuario) {
+                throw new Error("El DNI que intenta ingresar ya pertenece a un usuario en el sistema")
+            }
+
             const pacienteToFind = await Paciente.findOne({
                 where: {
                     [Op.or]: {

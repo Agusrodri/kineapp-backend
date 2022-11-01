@@ -713,7 +713,7 @@ const obrasSocialesController = {
             //evaluar uno por uno para ver si está en otro plan de esa obra social
             //si está, no pasa na, y si no está, se borra
 
-            const convenios = await Convenio.findAll({
+            /* const convenios = await Convenio.findAll({
                 where: {
                     fk_idObraSocial: planToDelete['dataValues']['fk_idObraSocial'],
                     activo: true
@@ -744,7 +744,7 @@ const obrasSocialesController = {
                 }
 
             }
-
+ */
 
             res.status(200).json({
                 msg: "Plan eliminado correctamente"
