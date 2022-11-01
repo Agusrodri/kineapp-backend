@@ -216,7 +216,7 @@ const pacientesInstitucionesController = {
             })
 
             if (usuario) {
-                throw new Error("El DNI que intenta ingresar ya pertenece a un usuario en el sistema")
+                throw new Error("El email que intenta ingresar ya pertenece a un usuario en el sistema")
             }
 
             const pacienteToFind = await Paciente.findOne({

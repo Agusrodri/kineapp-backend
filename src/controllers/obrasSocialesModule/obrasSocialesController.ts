@@ -739,8 +739,6 @@ const obrasSocialesController = {
 
                     if (tratamiento) { continue }
 
-
-
                 }
 
             }
