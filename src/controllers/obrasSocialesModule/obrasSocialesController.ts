@@ -609,6 +609,17 @@ const obrasSocialesController = {
                 })
 
                 for (let index = 0; index < convenios.length; index++) {
+
+                    const convenio = await ConvenioTratamientoGeneral.findOne({
+                        where: {
+                            fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral'],
+                            fk_idConvenio: convenios[index]['dataValues']['id'],
+                            activo: true
+                        }
+                    })
+
+                    if (convenio) { continue }
+
                     await ConvenioTratamientoGeneral.create({
                         monto: 0,
                         fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral'],
