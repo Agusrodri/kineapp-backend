@@ -223,6 +223,7 @@ const pacientesInstitucionesController = {
                 where: {
                     [Op.or]: {
                         dni: dni,
+                        emailPersonal: email,
                         [Op.and]: {
                             numeroAfiliado: numeroAfiliado,
                             fk_idObraSocial: idObraSocial
@@ -237,6 +238,8 @@ const pacientesInstitucionesController = {
             } else if ((pacienteToFind ? pacienteToFind['dataValues']['numeroAfiliado'] : 0) &&
                 (pacienteToFind ? pacienteToFind['dataValues']['fk_idObraSocial'] : 0) == idObraSocial) {
                 throw new Error("El número de afiliado ya existe dentro de la obra social indicada. Por favor, ingrese uno diferente.")
+            }else if((pacienteToFind ? pacienteToFind['dataValues']['emailPersonal'] : 0) == email){
+                throw new Error("El email ingresado ya se encuentra en uso. Por favor, ingrese uno diferente.")
             }
 
             const newPaciente = await Paciente.create({
