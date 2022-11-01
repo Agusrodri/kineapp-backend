@@ -114,6 +114,8 @@ const conveniosController = {
                     }
                 })
 
+                if (!tratamientoGeneral) { continue }
+
                 const tratamientoToAdd = {
                     idTratamientoGeneral: tratamientoGeneral['dataValues']['id'],
                     nombre: tratamientoGeneral['dataValues']['nombre'],
@@ -132,7 +134,6 @@ const conveniosController = {
                 activo: convenio['dataValues']['activo'],
                 tratamientos: tratamientos
             }
-
 
             res.status(200).json(convenioResp)
 

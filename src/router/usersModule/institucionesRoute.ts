@@ -13,6 +13,7 @@ router.put("/instituciones/validar/:idUsuario", [validarJWT], institucionesContr
 router.put("/instituciones/editar/:idUsuario", [validarJWT], institucionesController.updateInstitucionById);
 router.delete("/instituciones/eliminar/:idPersonaJuridica", [validarJWT], institucionesController.deleteInstitucionById);
 router.get("/instituciones/habilitar/:idPersonaJuridica", [validarJWT], institucionesController.habilitarInstitucion);
+router.get("/instituciones/deshabilitar/:idPersonaJuridica", [validarJWT], institucionesController.deshabilitarInstitucion);
 router.put("/instituciones/editarFromPerfil/:idPersonaJuridica", [validarJWT], institucionesController.editarInstitucionFromPerfil);
 
 

@@ -54,7 +54,7 @@ const institucionesController = {
             }
 
             //obtener los datos de la institucion que necesitamos enviar al front
-            const { id, nombre, razonSocial, domicilio, fk_idUsuarios, cuit, habMinisterioSalud, habMunicipal, habSuperintendencia } = institucion['dataValues']
+            const { id, nombre, razonSocial, domicilio, fk_idUsuarios, cuit, habMinisterioSalud, habMunicipal, habSuperintendencia, habilitado, createdAt } = institucion['dataValues']
 
             //buscar al usuario asociado a esa persona jurídica
             const usuarioInstitucion = await Usuario.findByPk(fk_idUsuarios)
@@ -89,7 +89,9 @@ const institucionesController = {
                 nombreRol: nombreRol,
                 habMinisterioSalud: habMinisterioSalud,
                 habMunicipal: habMunicipal,
-                habSuperintendencia: habSuperintendencia
+                habSuperintendencia: habSuperintendencia,
+                habilitado: habilitado,
+                createdAt: createdAt
             }
 
             res.status(200).json(responseJson)
@@ -289,6 +291,48 @@ const institucionesController = {
                 msg: `${error}`
             });
         }
+    },
+
+    deshabilitarInstitucion: async (req: Request, res: Response) => {
+
+        try {
+
+            const { idPersonaJuridica } = req.params;
+            const personaJuridicaToHabilitar = await PersonaJuridica.findOne({
+                where: {
+                    id: idPersonaJuridica,
+                    activo: true
+                }
+            })
+
+            if (!personaJuridicaToHabilitar) {
+                throw new Error("No se encontró la institución solicitada.")
+            }
+
+            const usuario = await Usuario.findOne({
+                where: {
+                    id: personaJuridicaToHabilitar['dataValues']['fk_idUsuarios'],
+                    activo: true
+                }
+            })
+
+            if (!usuario) {
+                throw new Error("No se encontró un usuario asociado a la institución solicitada.")
+            }
+
+            if (personaJuridicaToHabilitar['dataValues']['habilitado'] == false && usuario['dataValues']['habilitado'] == false) {
+                throw new Error("La institución ya se encuentra deshabilitada.")
+            }
+
+            await personaJuridicaToHabilitar.update({ habilitado: false })
+            await usuario.update({ habilitado: false })
+
+        } catch (error) {
+            res.status(500).json({
+                msg: `${error}`
+            });
+        }
+
     },
 
     editarInstitucionFromPerfil: async (req: Request, res: Response) => {
