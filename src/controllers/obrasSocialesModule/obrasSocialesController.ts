@@ -446,7 +446,8 @@ const obrasSocialesController = {
                     await ConvenioTratamientoGeneral.create({
                         monto: 0,
                         fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral'],
-                        fk_idConvenio: convenios[index]['dataValues']['id']
+                        fk_idConvenio: convenios[index]['dataValues']['id'],
+                        activo: true
                     })
                 }
             }
@@ -611,7 +612,8 @@ const obrasSocialesController = {
                     await ConvenioTratamientoGeneral.create({
                         monto: 0,
                         fk_idTratamientoGeneral: tratamientos[i]['idTratamientoGeneral'],
-                        fk_idConvenio: convenios[index]['dataValues']['id']
+                        fk_idConvenio: convenios[index]['dataValues']['id'],
+                        activo: true
                     })
                 }
             }
