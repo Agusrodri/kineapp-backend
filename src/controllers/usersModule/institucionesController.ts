@@ -283,7 +283,7 @@ const institucionesController = {
             await usuario.update({ habilitado: true })
 
             res.status(200).json({
-                msg: "Institución habilitada con éxito."
+                msg: "Institución habilitada correctamente"
             })
 
         } catch (error) {
@@ -326,6 +326,10 @@ const institucionesController = {
 
             await personaJuridicaToHabilitar.update({ habilitado: false })
             await usuario.update({ habilitado: false })
+
+            res.status(200).json({
+                msg: "Institución deshabilitada correctamente"
+            })
 
         } catch (error) {
             res.status(500).json({
