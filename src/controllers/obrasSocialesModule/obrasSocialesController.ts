@@ -709,7 +709,7 @@ const obrasSocialesController = {
 
             await planToDelete.update({ activo: false })
 
-            const planes = await Plan.findAll({
+            /* const planes = await Plan.findAll({
                 where: {
                     id: { [Op.notIn]: idPlan },
                     fk_idObraSocial: planToDelete['dataValues']['fk_idObraSocial'],
@@ -743,7 +743,7 @@ const obrasSocialesController = {
                         where: { fk_idTratamientoGeneral: planesTratamiento[j]['dataValues']['fk_idTratamientoGeneral'] }
                     })
                 }
-            }
+            } */
 
             res.status(200).json({
                 msg: "Plan eliminado correctamente"
