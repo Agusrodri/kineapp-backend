@@ -8,11 +8,11 @@ import validarJWT from "../../middlewares/validateJWT";
 
 const router = Router()
 
-router.get("/roles", [validarJWT], rolesController.getRoles);
+router.get("/roles", rolesController.getRoles);
 
-router.get("/roles/:id", [validarJWT], rolesController.getRolById);
+router.get("/roles/:id", rolesController.getRolById);
 
-router.get("/rolesUsuario/:idUsuario", [validarJWT], rolesController.getRolesUsuario)
+router.get("/rolesUsuario/:idUsuario", rolesController.getRolesUsuario)
 
 router.put("/roles/editar/:id", [
     refactors.refactorNombreRol,
@@ -21,9 +21,9 @@ router.put("/roles/editar/:id", [
     validateRequest
 ], rolesController.updateRolById);
 
-router.get("/roles/permisos/all", [validarJWT], rolesController.getPermisos);
+router.get("/roles/permisos/all", rolesController.getPermisos);
 
-router.delete("/roles/eliminar/:id", [validarJWT], rolesController.deleteRolById);
+router.delete("/roles/eliminar/:id", rolesController.deleteRolById);
 
 router.post("/roles/crear", [
     refactors.refactorNombreRol,

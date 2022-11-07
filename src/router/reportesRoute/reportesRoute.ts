@@ -6,6 +6,6 @@ import reportesController from "../../controllers/reportesModule/reportesControl
 
 const router = Router();
 
-router.post("/generarReportes/:idPersonaJuridica", [validarJWT], reportesController.generarReportes);
+router.post("/generarReportes/:idPersonaJuridica", reportesController.generarReportes);
 
 export default router;

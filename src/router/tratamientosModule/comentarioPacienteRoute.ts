@@ -4,9 +4,9 @@ import comentarioPacienteController from "../../controllers/tratamientosModule/c
 
 const router = Router()
 
-router.get("/institucionesPaciente/:idPaciente", [validarJWT], comentarioPacienteController.getInstitucionesPaciente);
-router.get("/comentariosInstitucion/:idPersonaJuridica/:idPaciente", [validarJWT], comentarioPacienteController.getComentariosInstitucion);
-router.post("/agregarComentario/:idPersonaJuridica/:idPaciente", [validarJWT], comentarioPacienteController.agregarComentario);
-router.get("/comentariosFromInstitucionView/:idPersonaJuridica", [validarJWT], comentarioPacienteController.getComentariosFromInstitucionView);
+router.get("/institucionesPaciente/:idPaciente", comentarioPacienteController.getInstitucionesPaciente);
+router.get("/comentariosInstitucion/:idPersonaJuridica/:idPaciente", comentarioPacienteController.getComentariosInstitucion);
+router.post("/agregarComentario/:idPersonaJuridica/:idPaciente", comentarioPacienteController.agregarComentario);
+router.get("/comentariosFromInstitucionView/:idPersonaJuridica", comentarioPacienteController.getComentariosFromInstitucionView);
 
 export default router;

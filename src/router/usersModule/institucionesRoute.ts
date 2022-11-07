@@ -6,15 +6,15 @@ import institucionesController from "../../controllers/usersModule/instituciones
 
 const router = Router()
 
-router.get("/instituciones", [validarJWT], institucionesController.getInstituciones);
-router.get("/instituciones/:idPersonaJuridica", [validarJWT], institucionesController.getInstitucionById);
-router.post("/instituciones/crear", [validarJWT], institucionesController.createInstitucion);
-router.put("/instituciones/validar/:idUsuario", [validarJWT], institucionesController.validarInstitucion);
-router.put("/instituciones/editar/:idUsuario", [validarJWT], institucionesController.updateInstitucionById);
-router.delete("/instituciones/eliminar/:idPersonaJuridica", [validarJWT], institucionesController.deleteInstitucionById);
-router.get("/instituciones/habilitar/:idPersonaJuridica", [validarJWT], institucionesController.habilitarInstitucion);
-router.get("/instituciones/deshabilitar/:idPersonaJuridica", [validarJWT], institucionesController.deshabilitarInstitucion);
-router.put("/instituciones/editarFromPerfil/:idPersonaJuridica", [validarJWT], institucionesController.editarInstitucionFromPerfil);
+router.get("/instituciones", institucionesController.getInstituciones);
+router.get("/instituciones/:idPersonaJuridica", institucionesController.getInstitucionById);
+router.post("/instituciones/crear", institucionesController.createInstitucion);
+router.put("/instituciones/validar/:idUsuario", institucionesController.validarInstitucion);
+router.put("/instituciones/editar/:idUsuario", institucionesController.updateInstitucionById);
+router.delete("/instituciones/eliminar/:idPersonaJuridica", institucionesController.deleteInstitucionById);
+router.get("/instituciones/habilitar/:idPersonaJuridica", institucionesController.habilitarInstitucion);
+router.get("/instituciones/deshabilitar/:idPersonaJuridica", institucionesController.deshabilitarInstitucion);
+router.put("/instituciones/editarFromPerfil/:idPersonaJuridica", institucionesController.editarInstitucionFromPerfil);
 
 
 //module.exports = router
