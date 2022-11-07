@@ -63,7 +63,7 @@ const turnosController = {
 
                 if (!planTratamientoGeneral) {
                     return res.status(200).json({
-                        monto: monto
+                        monto: Math.round(monto * 100) / 100
                     });
                 }
 
