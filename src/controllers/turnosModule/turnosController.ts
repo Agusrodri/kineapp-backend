@@ -50,7 +50,7 @@ const turnosController = {
 
             if (!tratamiento) { throw new Error("No existe el tratamiento solicitado o la institución no presta el mismo.") }
 
-            let monto: number = tratamiento['dataValues']['monto'];;
+            let monto: number = tratamiento['dataValues']['monto'];
             //verificar si depende de uno general (si depende, calcular el monto con el plan de la obra social del paciente)
             if (tratamiento['dataValues']['fk_idTratamientoGeneral']) {
 
@@ -73,7 +73,7 @@ const turnosController = {
             }
 
             res.status(200).json({
-                monto: monto
+                monto: Math.round(monto * 100) / 100
             });
 
         } catch (error) {
