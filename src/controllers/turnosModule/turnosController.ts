@@ -175,7 +175,7 @@ const turnosController = {
             }
 
             res.status(200).json({
-                msg: "Turno confirmado con éxito.",
+                msg: "Turno solicitado correctamente",
                 turno: response
             })
 
