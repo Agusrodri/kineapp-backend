@@ -5,15 +5,15 @@ import configuracionTurnosController from "../../controllers/turnosModule/config
 
 const router = Router();
 
-router.post("/turnosDay/:idPersonaJuridica", [validarJWT], consultasController.getTurnosDay);
-router.post("/crearConsulta/:idTurno", [validarJWT], consultasController.crearConsulta);
-router.get("/confirmarTurno/:idTurno", [validarJWT], consultasController.confirmarTurno);
-router.get("/consultasPaciente/:idPaciente", [validarJWT], consultasController.getConsultas);
-router.get("/consulta/:idConsulta", [validarJWT], consultasController.getConsultaById);
-router.post("/calificarProfesional/:idConsulta", [validarJWT], consultasController.calificarProfesional);
+router.post("/turnosDay/:idPersonaJuridica", consultasController.getTurnosDay);
+router.post("/crearConsulta/:idTurno", consultasController.crearConsulta);
+router.get("/confirmarTurno/:idTurno", consultasController.confirmarTurno);
+router.get("/consultasPaciente/:idPaciente", consultasController.getConsultas);
+router.get("/consulta/:idConsulta", consultasController.getConsultaById);
+router.post("/calificarProfesional/:idConsulta", consultasController.calificarProfesional);
 
 //configTurnos
-router.get("/configuracion/:idPersonaJuridica", [validarJWT], configuracionTurnosController.getConfigTurnos);
-router.post("/setConfiguracion/:idPersonaJuridica", [validarJWT], configuracionTurnosController.setConfiguracion);
+router.get("/configuracion/:idPersonaJuridica", configuracionTurnosController.getConfigTurnos);
+router.post("/setConfiguracion/:idPersonaJuridica", configuracionTurnosController.setConfiguracion);
 
 export default router;

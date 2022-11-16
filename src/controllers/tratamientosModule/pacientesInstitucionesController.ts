@@ -23,7 +23,7 @@ const pacientesInstitucionesController = {
 
                 const paciente = await Paciente.findOne({
                     where: {
-                        id: pjPacientes[i]['fk_idPaciente'],
+                        id: pjPacientes[i]['dataValues']['fk_idPaciente'],
                         activo: true
                     }
                 })
@@ -238,7 +238,7 @@ const pacientesInstitucionesController = {
             } else if ((pacienteToFind ? pacienteToFind['dataValues']['numeroAfiliado'] : 0) &&
                 (pacienteToFind ? pacienteToFind['dataValues']['fk_idObraSocial'] : 0) == idObraSocial) {
                 throw new Error("El número de afiliado ya existe dentro de la obra social indicada. Por favor, ingrese uno diferente.")
-            }else if((pacienteToFind ? pacienteToFind['dataValues']['emailPersonal'] : 0) == email){
+            } else if ((pacienteToFind ? pacienteToFind['dataValues']['emailPersonal'] : 0) == email) {
                 throw new Error("El email ingresado ya se encuentra en uso. Por favor, ingrese uno diferente.")
             }
 

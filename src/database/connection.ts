@@ -13,6 +13,26 @@ const db = new Sequelize('heroku_fe8c7e5eb423ca6', 'ba4faf146889f3', '71ce21dc',
 
 export default db
 
+//------LOCAL CONFIG-------
+
+/* import { Sequelize } from "sequelize";
+
+const db = new Sequelize('kineapp', 'root', '', {
+    host: 'localhost',
+    dialect: 'mysql',
+    pool: {
+        max: 300,
+        min: 0,
+        acquire: 60000,
+        idle: 30000
+    }
+});
+
+export default db */
+
+
+//-------HEROKU CREDENTIALS----------
+
 //user: ba4faf146889f3
 //password: 71ce21dc
 //host: us-cdbr-east-06.cleardb.net

@@ -4,11 +4,11 @@ import rutinaController from "../../controllers/tratamientosModule/rutinaControl
 
 const router = Router()
 
-router.post("/agregarRutina/:idTratamientoPaciente", [validarJWT], rutinaController.createRutina);
-router.get("/rutina/:idRutina", [validarJWT], rutinaController.getRutinaById);
-router.put("/editarRutina/:idRutina", [validarJWT], rutinaController.editarRutina);
-router.delete("/finalizarRutina/:idRutina", [validarJWT], rutinaController.finalizarRutina);
-router.delete("/eliminarRutina/:idRutina", [validarJWT], rutinaController.eliminarRutina);
-router.get("/getRutinasPaciente/:idTratamientoPaciente", [validarJWT], rutinaController.getRutinasPaciente);
+router.post("/agregarRutina/:idTratamientoPaciente", rutinaController.createRutina);
+router.get("/rutina/:idRutina", rutinaController.getRutinaById);
+router.put("/editarRutina/:idRutina", rutinaController.editarRutina);
+router.delete("/finalizarRutina/:idRutina", rutinaController.finalizarRutina);
+router.delete("/eliminarRutina/:idRutina", rutinaController.eliminarRutina);
+router.get("/getRutinasPaciente/:idTratamientoPaciente", rutinaController.getRutinasPaciente);
 
 export default router;

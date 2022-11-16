@@ -9,19 +9,19 @@ const router = Router()
 
 
 router.post("/login", loginControllers.login);
-router.get("/logout", [validarJWT], loginControllers.logout);
+router.get("/logout", loginControllers.logout);
 
 router.put("/setActivo", loginControllers.setActivo);
 //devolver el rol activo del usuario en la sesión
-router.get("/getInfoUsuario", [validarJWT], loginControllers.getInfoUsuarios);
-router.get("/getInfoPerfil/:idUsuario", [validarJWT], loginControllers.getInfoPerfil);
-router.get("/validarJWT/:token", [validarJWT], loginControllers.validateJWT);
+router.get("/getInfoUsuario", loginControllers.getInfoUsuarios);
+router.get("/getInfoPerfil/:idUsuario", loginControllers.getInfoPerfil);
+router.get("/validarJWT/:token", loginControllers.validateJWT);
 router.post("/emailToRestorePassword", loginControllers.sendEmailToRestorePassword);
 router.put("/restorePassword/:idUsuario", loginControllers.restorePassword);
 
 //notifications
-router.put("/setSubscription/:idUsuario", [validarJWT], notificationsController.setSubscription);
-router.get("/notificaciones/:idUsuario", [validarJWT], notificationsController.getNotificaciones);
-router.get("/notificacion/:idNotificacion", [validarJWT], notificationsController.getNotificacionById);
+router.put("/setSubscription/:idUsuario", notificationsController.setSubscription);
+router.get("/notificaciones/:idUsuario", notificationsController.getNotificaciones);
+router.get("/notificacion/:idNotificacion", notificationsController.getNotificacionById);
 
 export default router;
