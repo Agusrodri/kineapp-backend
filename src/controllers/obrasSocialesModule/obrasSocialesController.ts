@@ -716,7 +716,7 @@ const obrasSocialesController = {
                     activo: true
                 }
             })
-
+            
             let idsPlanes = []
             if (planes) {
                 for (let index = 0; index < planes.length; index++) {

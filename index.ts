@@ -20,7 +20,7 @@ server.listen();
 
 setInterval(verifyAlarmas, 10000);
 setInterval(sendRecordatorioConvenios, 86400000);
-setInterval(verifyAlarmasTurno, 5000);
+setInterval(verifyAlarmasTurno, 5000); 
 
 
 
