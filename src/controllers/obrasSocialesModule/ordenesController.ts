@@ -4,43 +4,44 @@ import Convenio from '../../models/entities/obrasSocialesModule/convenio';
 import db from '../../database/connection';
 import Paciente from '../../models/entities/usersModule/paciente';
 import TratamientoParticular from '../../models/entities/obrasSocialesModule/tratamientoParticular';
+import { Op } from 'sequelize';
 const ordenesController = {
 
     generarOrdenes: async (req: Request, res: Response) => {
 
-        try{
+        try {
 
-            const {idPersonaJuridica} = req.params;
+            const { idPersonaJuridica } = req.params;
+            const { mes, anio } = req.body;
             const convenios = await Convenio.findAll({
-                where:{
+                where: {
                     fk_idPersonaJuridica: idPersonaJuridica,
                     activo: true
                 }
             })
 
-            if(!convenios){
+            if (!convenios) {
                 throw new Error("No existen convenios en esta institución.")
             }
 
-            const response =[]
-            for (let i=0; i<convenios.length; i++){
-
-                console.log("CONVENIO", convenios[i])
+            const response = []
+            for (let i = 0; i < convenios.length; i++) {
 
                 const turnos = await Turno.findAll({
-                    attributes:[
+                    attributes: [
                         [db.fn('SUM', db.col('monto')), 'montoTotal'],
-                        [db.fn('COUNT', db.col('id')), 'cantidadSesiones'],  
+                        [db.fn('COUNT', db.col('id')), 'cantidadSesiones'],
                         'fk_idPaciente',
                         'fk_idTratamiento'
                     ],
-                    where:{
-                        obraSocial: convenios[i]['dataValues']['nombre']
+                    where: {
+                        obraSocial: convenios[i]['dataValues']['nombre'],
+                        createdAt: {
+                            [Op.between]: [new Date(`${anio}-${mes}-01`), new Date(`${anio}-${mes}-31`)]
+                        },
                     },
                     group: ['fk_idTratamiento', 'fk_idPaciente']
                 })
-
-                console.log("TURNOS: ", turnos)
 
                 const ordenesPagoConvenio = []
                 for (let index = 0; index < turnos.length; index++) {
@@ -48,14 +49,14 @@ const ordenesController = {
                     const paciente = await Paciente.findByPk(turnos[index]['dataValues']['fk_idPaciente'])
                     const tratamiento = await TratamientoParticular.findByPk(turnos[index]['dataValues']['fk_idTratamiento'])
 
-                    const ordenToAdd = { 
-                        paciente: paciente ? `${paciente['dataValues']['apellido']}, ${paciente['dataValues']['nombre']}`: null,
-                        numeroAfiliado: paciente ? (paciente['dataValues']['numeroAfiliado'] ? paciente['dataValues']['numeroAfiliado']: null ): null,
-                        tratamiento: tratamiento? tratamiento['dataValues']['nombre']: null,
+                    const ordenToAdd = {
+                        paciente: paciente ? `${paciente['dataValues']['apellido']}, ${paciente['dataValues']['nombre']}` : null,
+                        numeroAfiliado: paciente ? (paciente['dataValues']['numeroAfiliado'] ? paciente['dataValues']['numeroAfiliado'] : null) : null,
+                        tratamiento: tratamiento ? tratamiento['dataValues']['nombre'] : null,
                         cantidadSesiones: turnos[index]['dataValues']['cantidadSesiones'],
                         montoTotal: turnos[index]['dataValues']['montoTotal']
                     }
-                    
+
                     ordenesPagoConvenio.push(ordenToAdd);
                 }
 
@@ -67,9 +68,9 @@ const ordenesController = {
                 response.push(responseToAdd);
             }
 
-            res.status(200).json(response)
+            res.status(200).json(response);
 
-        }catch(error){
+        } catch (error) {
             res.status(500).json({
                 msg: `${error}`
             });

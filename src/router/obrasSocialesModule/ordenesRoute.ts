@@ -4,6 +4,6 @@ import ordenesController from "../../controllers/obrasSocialesModule/ordenesCont
 
 const router = Router()
 
-router.get("/ordenes/:idPersonaJuridica", ordenesController.generarOrdenes);
+router.post("/ordenes/:idPersonaJuridica", ordenesController.generarOrdenes);
 
 export default router;
