@@ -1,4 +1,4 @@
 {
-    "publicKey": "BNGSmnHU5QmHZpNdJLg7bK-fe5-5N4HZBihIT7avN85GpbLFQMSDybAIgLLUPwpxYSWMqoUA7thc0xeE0Qi3O1g",
-    "privateKey": "zbw8MoGYNxyj4CZgpCLzAMrjYuJl3YkHe2v6Fwu2U5k"
+    "publicKey": process.env.SUB_PUBLIC_KEY,
+    "privateKey": process.env.SUB_PRIVATE_KEY
 }
