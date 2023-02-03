@@ -1,4 +1,4 @@
 {
-    "publicKey": process.env.SUB_PUBLIC_KEY,
-    "privateKey": process.env.SUB_PRIVATE_KEY
+    "publicKey": // REPLACE WITH process.env.SUB_PUBLIC_KEY,
+    "privateKey": // REPLACE WITH process.env.SUB_PRIVATE_KEY
 }
